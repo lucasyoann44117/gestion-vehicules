@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
@@ -47,3 +49,12 @@ jobs:
           git -c user.name="publication" -c user.email="publication@users.noreply.github.com" \
             commit -q -m "Publication ${GITHUB_SHA::7}"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          rm -rf .git
+
+      # Si Pages est réglé sur « GitHub Actions » plutôt que sur la branche gh-pages.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sortie/wwwroot
+
+      - uses: actions/deploy-pages@v4
+        continue-on-error: true
