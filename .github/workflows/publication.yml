@@ -1,5 +1,5 @@
-# Publie l'application sur GitHub Pages à chaque envoi sur « main ».
-# Réglage du dépôt nécessaire : Settings > Pages > Source : « GitHub Actions ».
+# Publie l'application sur GitHub Pages à chaque envoi sur « main » :
+# compile, puis pousse le site sur la branche « gh-pages », que GitHub Pages sert.
 name: Publication
 
 on:
@@ -8,9 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -19,9 +17,6 @@ concurrency:
 jobs:
   publier:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploiement.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,10 +36,14 @@ jobs:
           cp sortie/wwwroot/index.html sortie/wwwroot/404.html
           # Laisser passer les dossiers qui commencent par « _ » (_framework).
           touch sortie/wwwroot/.nojekyll
+          # Jamais de données personnelles en ligne.
+          rm -rf sortie/wwwroot/donnees
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: sortie/wwwroot
-
-      - id: deploiement
-        uses: actions/deploy-pages@v4
+      - name: Envoi sur la branche gh-pages
+        run: |
+          cd sortie/wwwroot
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name="publication" -c user.email="publication@users.noreply.github.com" \
+            commit -q -m "Publication ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
