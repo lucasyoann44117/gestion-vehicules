@@ -1,0 +1,27 @@
+@* Compteur kilométrique façon tableau de bord : un chiffre par case. *@
+<div class="compteur">
+    <div class="compteur-chiffres" role="img" aria-label="@(Km is null ? "Kilométrage inconnu" : $"{Format.Km(Km)}")">
+        @foreach (var c in Texte)
+        {
+            if (char.IsDigit(c))
+            {
+                <b>@c</b>
+            }
+            else
+            {
+                <b class="sep"></b>
+            }
+        }
+    </div>
+    <div class="compteur-libelle">
+        <strong>km estimés aujourd'hui</strong>
+        <span>@Detail</span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int? Km { get; set; }
+    [Parameter] public string? Detail { get; set; }
+
+    private string Texte => Km is null ? "------" : Km.Value.ToString("#,##0", System.Globalization.CultureInfo.InvariantCulture).Replace(',', ' ');
+}

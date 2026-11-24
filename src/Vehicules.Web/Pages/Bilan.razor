@@ -1,0 +1,125 @@
+@page "/"
+@inherits PageBase
+
+<Tete Titre="@Salutation">
+    <button class="btn" @onclick="() => saisieKm = !saisieKm"><svg aria-hidden="true"><use href="#i-compteur" /></svg>Relever le km</button>
+    <a class="btn principal" href="intervention/nouvelle"><svg aria-hidden="true"><use href="#i-ajout" /></svg>Intervention</a>
+</Tete>
+
+@if (saisieKm)
+{
+    <SaisieKm Ferme="() => saisieKm = false" />
+}
+
+@if (!Etat.Donnees.Vehicules.Any())
+{
+    <section class="carte">
+        <p class="vide">Aucun véhicule pour l'instant.</p>
+        <div class="boutons gauche"><a class="btn principal" href="reglages">Ajouter un véhicule</a></div>
+    </section>
+}
+
+<section class="cartes-vehicules">
+    @foreach (var v in Etat.Vehicules)
+    {
+        <CarteVehicule Vehicule="v" />
+    }
+</section>
+
+@{
+    var echeances = Echeances.Calculer(Etat.Donnees, Etat.Aujourdhui)
+        .Where(e => Etat.VehiculeId is null || e.VehiculeId == Etat.VehiculeId)
+        .ToList();
+    var aVenir = echeances.Where(e => e.Type != TypeEcheance.DefautCt).ToList();
+    var defauts = echeances.Where(e => e.Type == TypeEcheance.DefautCt).ToList();
+}
+
+<section>
+    <div class="section-tete">
+        <h2>À venir <small>@aVenir.Count(e => e.Urgence is Urgence.Bientot or Urgence.Depasse) à traiter</small></h2>
+        <a href="pieces">Toutes les pièces</a>
+    </div>
+    @if (aVenir.Count == 0)
+    {
+        <p class="vide">Rien à signaler.</p>
+    }
+    <ul class="echeances">
+        @foreach (var e in aVenir)
+        {
+            <li class="echeance @Classe(e.Urgence)">
+                <span class="ech-icone"><svg aria-hidden="true"><use href="#@Icone(e.Type)" /></svg></span>
+                <div class="ech-haut">
+                    <strong>@e.Libelle</strong>
+                    <Pastille Urgence="e.Urgence" />
+                </div>
+                <div>
+                    @if (e.Avancement is { } av)
+                    {
+                        <div class="jauge-vie" role="img" aria-label="@Nombre(Math.Min(av, 1) * 100) % de l'intervalle écoulé"><i style="width:@Largeur(av)%"></i></div>
+                    }
+                </div>
+                <div class="ech-bas">
+                    <span>@e.Detail@(Etat.VehiculeId is null ? $" · {Etat.Vehicule(e.VehiculeId)?.Nom}" : "")</span>
+                    <span>@Prochain(e)</span>
+                </div>
+            </li>
+        }
+    </ul>
+
+    @if (defauts.Count > 0)
+    {
+        <details class="defauts">
+            <summary><svg aria-hidden="true"><use href="#i-alerte" /></svg>@defauts.Count défaut@(defauts.Count > 1 ? "s" : "") mineur@(defauts.Count > 1 ? "s" : "") relevé@(defauts.Count > 1 ? "s" : "") au dernier contrôle technique</summary>
+            <ul class="liste">
+                @foreach (var e in defauts)
+                {
+                    <li><div>@e.Libelle<br /><small>@e.Detail</small></div></li>
+                }
+            </ul>
+            <a href="controles">Gérer le suivi des défauts</a>
+        </details>
+    }
+</section>
+
+<section>
+    <div class="section-tete">
+        <h2>Dernières interventions</h2>
+        <a href="historique">Tout l'historique</a>
+    </div>
+    <ul class="liste dernieres">
+        @foreach (var i in Etat.Interventions.OrderByDescending(i => i.Date).Take(4))
+        {
+            <li>
+                <div>
+                    <span class="type t-@i.Type.ToString().ToLowerInvariant()">@Libelle(i.Type)</span><br />
+                    <strong>@i.Titre</strong><br />
+                    <small>@Date(i.Date)@(i.Km is { } k ? $" · {Km(k)}" : "") · @i.Garage</small>
+                </div>
+                <div class="droite"><span class="montant">@Euros(i.TotalTtc, 0)</span></div>
+            </li>
+        }
+    </ul>
+</section>
+
+@code {
+    private bool saisieKm;
+
+    private string Salutation => DateTime.Now.Hour switch
+    {
+        < 5 or >= 18 => "Bonsoir",
+        _ => "Bonjour",
+    };
+
+    private static string Icone(TypeEcheance t) => t switch
+    {
+        TypeEcheance.ControleTechnique => "i-ct",
+        TypeEcheance.TravailAPrevoir => "i-alerte",
+        _ => "i-pieces",
+    };
+
+    private static string Largeur(double avancement) =>
+        Math.Clamp(avancement * 100, 2, 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
+    private static string Prochain(Echeance e) =>
+        string.Join(" ou ", new[] { e.Date is { } d ? Date(d) : null, e.Km is { } k ? Km(k) : null }.Where(x => x is not null));
+}

@@ -1,0 +1,112 @@
+@page "/pneus"
+@inherits PageBase
+
+<Tete Titre="Pneus et freins" />
+
+<p class="intro">Mesure la profondeur des sculptures (jauge ou témoin d'usure) de temps en temps :
+l'application calcule l'usure en mm pour 1 000 km et le kilométrage restant avant 3 mm (conseillé) et 1,6 mm (minimum légal).</p>
+
+@foreach (var v in Etat.Vehicules)
+{
+    var mesures = Etat.Donnees.MesuresPneus.Where(m => m.VehiculeId == v.Id).ToList();
+    var etats = UsurePneus.Etats(mesures);
+    var defauts = Etat.Donnees.Controles.Where(c => c.VehiculeId == v.Id).OrderByDescending(c => c.Date).FirstOrDefault()?
+                     .Defaillances.Where(d => d.Statut == StatutSuivi.ASurveiller && d.OrganeId is "pneus-av" or "pneus-ar" or "freins-av" or "freins-ar").ToList() ?? [];
+    <section>
+        <h2>@v.Nom</h2>
+        @if (etats.Count == 0)
+        {
+            <p class="vide">Aucune mesure pour l'instant.</p>
+        }
+        else
+        {
+            <div class="grille-pneus">
+                @foreach (var e in etats)
+                {
+                    var classe = e.DerniereMm <= UsurePneus.SeuilLegalMm ? "mal" : e.DerniereMm <= UsurePneus.SeuilConseilleMm ? "att" : "ok";
+                    <article class="carte pneu @classe">
+                        <strong>@Libelle(e.Position)</strong>
+                        <span class="mm">@e.DerniereMm.ToString("0.0") mm</span>
+                        <small>Mesuré le @Date(e.DerniereDate) à @Km(e.DernierKm)</small>
+                        <small>Usure : @(e.MmPar1000Km is { } u ? $"{Nombre(u, 2)} mm / 1 000 km" : "deux mesures nécessaires")</small>
+                        @if (e.KmAvantConseille is { } kc)
+                        {
+                            <small>Encore ≈ @Km(kc) avant 3 mm</small>
+                        }
+                    </article>
+                }
+            </div>
+        }
+        @if (defauts.Count > 0)
+        {
+            <ul class="liste">
+                @foreach (var d in defauts)
+                {
+                    <li class="att"><div>@d.Libelle<br /><small>Dernier contrôle technique</small></div></li>
+                }
+            </ul>
+        }
+    </section>
+}
+
+<form class="carte formulaire" @onsubmit="Ajouter">
+    <h2>Nouvelle mesure</h2>
+    <div class="champs">
+        <label>Véhicule
+            <select @bind="vehiculeId">
+                @foreach (var v in Etat.Donnees.Vehicules)
+                {
+                    <option value="@v.Id">@v.Nom</option>
+                }
+            </select>
+        </label>
+        <label>Date <input type="date" @bind="date" /></label>
+        <label>Compteur (km) <input type="number" inputmode="numeric" @bind="km" required /></label>
+    </div>
+    <div class="champs quatre">
+        @foreach (var p in Enum.GetValues<PositionPneu>())
+        {
+            <label>@Libelle(p) (mm)
+                <input type="number" inputmode="decimal" step="0.1" min="0" max="12" @bind="profondeurs[p]" />
+            </label>
+        }
+    </div>
+    @if (erreur is not null)
+    {
+        <p class="erreur">@erreur</p>
+    }
+    <div class="boutons"><button class="btn principal" type="submit">Enregistrer la mesure</button></div>
+</form>
+
+@code {
+    private string vehiculeId = "";
+    private DateOnly date;
+    private int? km;
+    private string? erreur;
+    private readonly Dictionary<PositionPneu, decimal?> profondeurs = Enum.GetValues<PositionPneu>().ToDictionary(p => p, _ => (decimal?)null);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        vehiculeId = Etat.VehiculeId ?? Etat.Donnees.Vehicules.FirstOrDefault()?.Id ?? "";
+        date = Etat.Aujourdhui;
+        km = Etat.KmEstime(vehiculeId);
+    }
+
+    private async Task Ajouter()
+    {
+        var saisies = profondeurs.Where(p => p.Value is not null).ToList();
+        if (km is not > 0 || saisies.Count == 0) { erreur = "Indique le compteur et au moins une profondeur."; return; }
+        foreach (var (position, mm) in saisies)
+        {
+            Etat.Donnees.MesuresPneus.Add(new MesurePneu { VehiculeId = vehiculeId, Date = date, Km = km.Value, Position = position, ProfondeurMm = mm!.Value });
+        }
+        if (!Etat.Donnees.Releves.Any(r => r.VehiculeId == vehiculeId && r.Date == date))
+        {
+            Etat.Donnees.Releves.Add(new ReleveKm { VehiculeId = vehiculeId, Date = date, Km = km.Value, Source = SourceReleve.Saisie, Note = "Mesure des pneus" });
+        }
+        foreach (var p in profondeurs.Keys.ToList()) profondeurs[p] = null;
+        erreur = null;
+        await Etat.EnregistrerAsync();
+    }
+}

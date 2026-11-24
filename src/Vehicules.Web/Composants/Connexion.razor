@@ -1,0 +1,60 @@
+@inject Etat Etat
+
+<PageTitle>Connexion · Mes véhicules</PageTitle>
+<section class="connexion">
+    <form class="carte-connexion" @onsubmit="Envoyer">
+        <div class="marque-connexion">
+            <svg aria-hidden="true"><use href="#i-logo" /></svg>
+            <div>
+                <strong>Mes véhicules</strong>
+                <small>Entretien, pièces et coûts</small>
+            </div>
+        </div>
+        <label>Identifiant (e-mail)
+            <input type="email" autocomplete="username" @bind="email" required />
+        </label>
+        <label>Mot de passe
+            <span class="mdp">
+                <input type="@(voir ? "text" : "password")" autocomplete="current-password" @bind="motDePasse" required />
+                <button type="button" class="btn petit" @onclick="() => voir = !voir" aria-pressed="@voir">@(voir ? "Masquer" : "Afficher")</button>
+            </span>
+        </label>
+        @if (erreur is not null)
+        {
+            <p class="erreur" role="alert">@erreur</p>
+        }
+        <button class="btn principal" type="submit" disabled="@envoi">@(envoi ? "Connexion…" : "Se connecter")</button>
+        <small class="note">Mêmes identifiants que l'application chantier.</small>
+    </form>
+</section>
+
+@code {
+    private string email = "";
+    private string motDePasse = "";
+    private bool voir;
+    private bool envoi;
+    private string? erreur;
+
+    private async Task Envoyer()
+    {
+        envoi = true;
+        erreur = null;
+        try
+        {
+            await Etat.ConnexionAsync(email.Trim(), motDePasse);
+        }
+        catch (ErreurSupabase e)
+        {
+            erreur = e.Message;
+        }
+        catch (HttpRequestException)
+        {
+            erreur = "Pas de réseau : connexion impossible pour l'instant.";
+        }
+        finally
+        {
+            envoi = false;
+            motDePasse = "";
+        }
+    }
+}

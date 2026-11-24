@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+*.user
+TestResults/
+
+# Données personnelles du foyer : jamais dans le dépôt.
+src/Vehicules.Web/wwwroot/donnees/

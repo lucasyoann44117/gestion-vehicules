@@ -1,0 +1,72 @@
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject Etat Etat
+
+@if (Etat.ConnexionRequise)
+{
+    <Connexion />
+}
+else
+{
+    <div class="appli">
+        <aside class="barre">
+            <a class="marque" href="">
+                <svg aria-hidden="true"><use href="#i-logo" /></svg>
+                <span><strong>Mes véhicules</strong><small>Entretien et coûts</small></span>
+            </a>
+            <nav>
+                <NavLink href="" Match="NavLinkMatch.All"><svg aria-hidden="true"><use href="#i-bilan" /></svg>Bilan</NavLink>
+                <NavLink href="historique"><svg aria-hidden="true"><use href="#i-historique" /></svg>Historique</NavLink>
+                <NavLink href="pieces"><svg aria-hidden="true"><use href="#i-pieces" /></svg>Pièces</NavLink>
+                <NavLink href="couts"><svg aria-hidden="true"><use href="#i-couts" /></svg>Coûts</NavLink>
+                <NavLink href="controles" class="pc"><svg aria-hidden="true"><use href="#i-ct" /></svg>Contrôles</NavLink>
+                <NavLink href="pneus" class="pc"><svg aria-hidden="true"><use href="#i-pneu" /></svg>Pneus et freins</NavLink>
+                <NavLink href="reglages" class="pc"><svg aria-hidden="true"><use href="#i-reglages" /></svg>Réglages</NavLink>
+                <NavLink href="plus" class="mobile"><svg aria-hidden="true"><use href="#i-plus" /></svg>Plus</NavLink>
+            </nav>
+            <div class="compte @(Etat.HorsLigne ? "hors-ligne" : Etat.Local ? "" : "partage")">
+                @if (Etat.Local)
+                {
+                    <span>Données gardées sur cet appareil</span>
+                }
+                else
+                {
+                    <span>
+                        @(Etat.HorsLigne ? "Hors ligne" : "Synchronisé")<br />
+                        <small>@Etat.Utilisateur</small>
+                    </span>
+                }
+            </div>
+        </aside>
+        <main>
+            @if (Etat.HorsLigne)
+            {
+                <p class="bandeau att">Hors ligne : affichage de la dernière copie gardée sur l'appareil.</p>
+            }
+            @if (Etat.Erreur is not null)
+            {
+                <p class="bandeau mal" role="alert">@Etat.Erreur <button class="lien" @onclick="Etat.EffacerErreur">Fermer</button></p>
+            }
+            @if (!Etat.Charge)
+            {
+                <p class="chargement">Chargement…</p>
+            }
+            else
+            {
+                @Body
+            }
+        </main>
+    </div>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        Etat.Change += Rafraichir;
+        await Etat.DemarrerAsync();
+    }
+
+    private void Rafraichir() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Etat.Change -= Rafraichir;
+}

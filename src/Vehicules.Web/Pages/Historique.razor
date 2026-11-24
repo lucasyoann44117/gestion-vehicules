@@ -1,0 +1,138 @@
+@page "/historique"
+@inherits PageBase
+@inject NavigationManager Nav
+
+<Tete Titre="Historique">
+    <a class="btn principal" href="intervention/nouvelle">Ajouter</a>
+</Tete>
+
+<div class="filtres">
+    <input type="search" placeholder="Rechercher : batterie, rotule, référence…" @bind="recherche" @bind:event="oninput" aria-label="Rechercher" />
+    <select @bind="type" aria-label="Type">
+        <option value="">Tous les types</option>
+        @foreach (var t in Enum.GetValues<TypeIntervention>())
+        {
+            <option value="@t">@Libelle(t)</option>
+        }
+    </select>
+    <select @bind="organe" aria-label="Pièce">
+        <option value="">Toutes les pièces</option>
+        @foreach (var o in Etat.Donnees.Organes.Where(o => Etat.VehiculeId is null || o.VehiculeId == Etat.VehiculeId).OrderBy(o => o.Nom))
+        {
+            <option value="@o.Id">@o.Nom</option>
+        }
+    </select>
+</div>
+
+@{
+    var liste = Filtrer().OrderByDescending(i => i.Date).ToList();
+}
+<p class="resume">@liste.Count intervention@(liste.Count > 1 ? "s" : "") · @Euros(liste.Sum(i => i.TotalTtc))</p>
+
+@foreach (var annee in liste.GroupBy(i => i.Date.Year))
+{
+    <section class="annee">
+        <h2>@annee.Key <small>@Euros(annee.Sum(i => i.TotalTtc), 0)</small></h2>
+        <ol class="frise">
+            @foreach (var i in annee)
+            {
+                var v = Etat.Vehicule(i.VehiculeId);
+                <li style="--accent:@(v?.Couleur ?? "#888")">
+                    <details class="carte intervention" open="@(liste.Count <= 3)">
+                        <summary>
+                            <div class="int-titre">
+                                <span class="type t-@i.Type.ToString().ToLowerInvariant()">@Libelle(i.Type)</span>
+                                <strong>@i.Titre</strong>
+                                <small>@Date(i.Date)@(i.Km is { } k ? $" · {Km(k)}" : "")@(i.Garage is null ? "" : $" · {i.Garage}")@(Etat.VehiculeId is null && v is not null ? $" · {v.Nom}" : "")</small>
+                            </div>
+                            <strong class="montant">@Euros(i.TotalTtc)</strong>
+                        </summary>
+                        <table class="lignes">
+                            <thead><tr><th>Désignation</th><th>Pièce suivie</th><th class="nb">Qté</th><th class="nb">Montant HT</th></tr></thead>
+                            <tbody>
+                                @foreach (var l in i.Lignes)
+                                {
+                                    <tr class="@(l.Exclue ? "exclue" : "") n-@l.Nature.ToString().ToLowerInvariant()">
+                                        <td data-label="Désignation">
+                                            @l.Designation
+                                            @if (l.Reference is not null)
+                                            {
+                                                <small class="ref">@l.Reference</small>
+                                            }
+                                            <small class="nature">@Libelle(l.Nature)@(l.Exclue ? " · hors véhicule" : "")</small>
+                                        </td>
+                                        <td data-label="Pièce suivie">
+                                            @if (Etat.Organe(l.OrganeId) is { } o)
+                                            {
+                                                <a href="pieces?organe=@o.Id">@o.Nom</a>
+                                            }
+                                        </td>
+                                        <td data-label="Qté" class="nb">@l.Quantite.ToString("0.##")</td>
+                                        <td data-label="HT" class="nb">@Euros(l.MontantHt)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        Pièces @Euros(i.TotalPiecesHt) · Main-d'œuvre @Euros(i.TotalMainOeuvreHt) · Divers @Euros(i.TotalDiversHt)
+                                        @if (i.TotalHt is { } ht)
+                                        {
+                                            <span> · Total HT @Euros(ht)</span>
+                                        }
+                                        <strong> · TTC @Euros(i.TotalTtc)</strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        @if (!string.IsNullOrWhiteSpace(i.Notes))
+                        {
+                            <p class="notes">@i.Notes</p>
+                        }
+                        <div class="pied">
+                            @if (i.Documents.Count > 0)
+                            {
+                                <small>Documents : @string.Join(", ", i.Documents)</small>
+                            }
+                            @if (i.NumeroFacture is not null)
+                            {
+                                <small>Facture n° @i.NumeroFacture</small>
+                            }
+                            <a class="btn petit" href="intervention/@i.Id">Modifier</a>
+                        </div>
+                    </details>
+                </li>
+            }
+        </ol>
+    </section>
+}
+
+@code {
+    [SupplyParameterFromQuery(Name = "organe")] public string? OrganeQuery { get; set; }
+
+    private string recherche = "";
+    private string type = "";
+    private string organe = "";
+
+    protected override void OnParametersSet()
+    {
+        if (OrganeQuery is not null) organe = OrganeQuery;
+    }
+
+    private IEnumerable<Intervention> Filtrer()
+    {
+        var q = Etat.Interventions;
+        if (Enum.TryParse<TypeIntervention>(type, out var t)) q = q.Where(i => i.Type == t);
+        if (organe != "") q = q.Where(i => i.Lignes.Any(l => l.OrganeId == organe));
+        if (!string.IsNullOrWhiteSpace(recherche))
+        {
+            var mots = recherche.Trim();
+            q = q.Where(i => Contient(i.Titre, mots) || Contient(i.Garage, mots) || Contient(i.Notes, mots) || Contient(i.NumeroFacture, mots)
+                             || i.Lignes.Any(l => Contient(l.Designation, mots) || Contient(l.Reference, mots)));
+        }
+        return q;
+    }
+
+    private static bool Contient(string? texte, string mots) =>
+        texte is not null && Format.Fr.CompareInfo.IndexOf(texte, mots, System.Globalization.CompareOptions.IgnoreCase | System.Globalization.CompareOptions.IgnoreNonSpace) >= 0;
+}

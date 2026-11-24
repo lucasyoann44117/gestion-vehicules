@@ -1,0 +1,6 @@
+<span class="pastille @Classe(Urgence)">@(Texte ?? Libelle(Urgence))</span>
+
+@code {
+    [Parameter] public Urgence Urgence { get; set; }
+    [Parameter] public string? Texte { get; set; }
+}

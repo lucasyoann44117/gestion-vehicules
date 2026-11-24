@@ -1,0 +1,68 @@
+@inject Etat Etat
+
+@{
+    var releves = Etat.Releves(Vehicule.Id);
+    var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == Vehicule.Id).ToList();
+    var km = Etat.KmEstime(Vehicule.Id);
+    var dernier = Kilometrage.Tries(releves).LastOrDefault();
+    var rythme = Kilometrage.KmParAn(releves);
+    var annee = inter.Where(i => i.Date.Year == Etat.Aujourdhui.Year).Sum(i => i.TotalTtc);
+    var douzeMois = Couts.SurDouzeMois(inter, Etat.Aujourdhui);
+    var total = inter.Sum(i => i.TotalTtc);
+    var debut = inter.Count == 0 ? (DateOnly?)null : inter.Min(i => i.Date);
+    var kmSuivis = debut is { } d0 ? Kilometrage.Parcourus(releves, d0, Etat.Aujourdhui, Etat.Aujourdhui) : null;
+    var age = Vehicule.Age(Etat.Aujourdhui);
+}
+
+<article class="hero" style="--accent:@Vehicule.Couleur">
+    <svg class="hero-silhouette" aria-hidden="true"><use href="#s-@Vehicule.Silhouette" /></svg>
+    <header class="hero-tete">
+        <p class="sur-titre">@Vehicule.Marque · @Vehicule.Modele</p>
+        <h2 class="hero-nom">@Vehicule.Nom</h2>
+        <p class="hero-sous">@string.Join(" · ", new[] { Vehicule.Motorisation, age is { } a ? $"{a} ans" : null }.Where(x => x is not null))</p>
+    </header>
+    <div class="hero-droite">
+        @if (Vehicule.ImmatriculationActuelle is { } immat)
+        {
+            <span class="plaque"><span>@immat</span></span>
+        }
+    </div>
+
+    <Compteur Km="km" Detail="@(dernier is null ? "Aucun relevé" : $"Dernier relevé {Format.Km(dernier.Km)} le {Date(dernier.Date)}")" />
+
+    <div class="hero-stats">
+        <div class="tuile">
+            <span>Rythme</span>
+            <strong>@(rythme is null ? "–" : Nombre(rythme))<em>km/an</em></strong>
+            <small>Sur 2 ans de relevés</small>
+        </div>
+        <div class="tuile">
+            <span>Dépenses @Etat.Aujourdhui.Year</span>
+            <strong>@Euros(annee, 0)</strong>
+            <small>12 mois glissants : @Euros(douzeMois, 0)</small>
+        </div>
+        <div class="tuile">
+            <span>Total suivi</span>
+            <strong>@Euros(total, 0)</strong>
+            <small>@(debut is { } d ? $"Depuis {d:MMMM yyyy}" : "Aucune dépense")</small>
+        </div>
+        <div class="tuile">
+            <span>Coût au km</span>
+            <strong>@(kmSuivis is > 0 ? Euros(total / kmSuivis.Value, 2) : "–")</strong>
+            <small>@(kmSuivis is > 0 ? $"Sur {Format.Km(kmSuivis)}, hors carburant" : "Pas assez de relevés")</small>
+        </div>
+    </div>
+
+    @if (Vehicule.ValeurEstimee is { } valeur && valeur > 0)
+    {
+        var ratio = douzeMois / valeur;
+        <p class="garder @(ratio >= 1 ? "mal" : ratio >= 0.5m ? "att" : "ok")">
+            <span><strong>Garder ou changer ?</strong>
+            Les 12 derniers mois représentent @Nombre((double)(ratio * 100)) % de sa valeur estimée (@Euros(valeur, 0)).</span>
+        </p>
+    }
+</article>
+
+@code {
+    [Parameter, EditorRequired] public Vehicule Vehicule { get; set; } = default!;
+}

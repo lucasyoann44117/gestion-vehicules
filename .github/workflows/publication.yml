@@ -1,0 +1,50 @@
+# Publie l'application sur GitHub Pages à chaque envoi sur « main ».
+# Réglage du dépôt nécessaire : Settings > Pages > Source : « GitHub Actions ».
+name: Publication
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Tests
+        run: dotnet test GestionVehicules.slnx
+
+      - name: Compilation
+        run: dotnet publish src/Vehicules.Web -c Release -o sortie
+
+      - name: Adaptation à GitHub Pages
+        run: |
+          # Les adresses comme /pieces renvoient l'application, qui affiche le bon écran.
+          cp sortie/wwwroot/index.html sortie/wwwroot/404.html
+          # Laisser passer les dossiers qui commencent par « _ » (_framework).
+          touch sortie/wwwroot/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sortie/wwwroot
+
+      - id: deploiement
+        uses: actions/deploy-pages@v4

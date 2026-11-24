@@ -1,0 +1,17 @@
+{
+  "name": "Mes véhicules",
+  "short_name": "Véhicules",
+  "description": "Entretien, pièces changées et coûts des véhicules du foyer",
+  "id": "./",
+  "start_url": "./",
+  "display": "standalone",
+  "lang": "fr",
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icone-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "icone-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "icone-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

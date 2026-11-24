@@ -1,0 +1,99 @@
+@page "/pieces"
+@inherits PageBase
+
+<Tete Titre="Pièces et organes" />
+
+<p class="intro">Ce qui a été changé, quand, à quel kilométrage, et combien de temps la pièce précédente a tenu.
+Les intervalles conseillés sont indicatifs et se règlent dans <a href="reglages">Réglages</a>.</p>
+
+<div class="filtres">
+    <label class="case"><input type="checkbox" @bind="seulementChanges" /> Seulement les pièces déjà changées</label>
+</div>
+
+@foreach (var v in Etat.Vehicules)
+{
+    var etats = SuiviOrganes.Etats(Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id),
+                                   Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id),
+                                   Etat.Releves(v.Id), Etat.Aujourdhui)
+                            .Where(e => !seulementChanges || e.Changements.Count > 0)
+                            .ToList();
+    var couts = Couts.ParOrgane(Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id));
+    if (Etat.VehiculeId is null)
+    {
+        <h2 class="vehicule-titre" style="--accent:@v.Couleur">@v.Nom</h2>
+    }
+    @foreach (var cat in etats.GroupBy(e => e.Organe.Categorie))
+    {
+        <section>
+            <span class="categorie">@cat.Key</span>
+            <div class="grille-organes">
+                @foreach (var e in cat)
+                {
+                    var ouvert = selection == e.Organe.Id;
+                    <article class="carte organe @Classe(e.Urgence) @(ouvert ? "ouvert" : "")" id="o-@e.Organe.Id">
+                        <button class="organe-tete" @onclick="() => selection = ouvert ? null : e.Organe.Id" aria-expanded="@ouvert">
+                            <strong>@e.Organe.Nom</strong>
+                            <Pastille Urgence="e.Urgence" />
+                        </button>
+                        @if (e.Avancement is { } av)
+                        {
+                            <div class="jauge-vie" role="img" aria-label="@Nombre(Math.Min(av, 1) * 100) % de l'intervalle écoulé"><i style="width:@Math.Clamp(av * 100, 2, 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)%"></i></div>
+                        }
+                        @if (e.Dernier is { } d)
+                        {
+                            <dl class="faits">
+                                <div><dt>Dernier changement</dt><dd>@Date(d.Date)@(d.Km is { } k ? $" · {Km(k)}" : "")</dd></div>
+                                <div><dt>Depuis</dt><dd>@Mois(e.MoisDepuis)@(e.KmDepuis is { } kd ? $" · {Km(kd)}" : "")</dd></div>
+                                @if (e.ProchainKm is not null || e.ProchaineDate is not null)
+                                {
+                                    <div><dt>Prochain conseillé</dt><dd>@string.Join(" ou ", new[] { e.ProchainKm is { } pk ? Km(pk) : null, e.ProchaineDate is { } pd ? Date(pd) : null }.Where(x => x is not null))</dd></div>
+                                }
+                                @if (e.Durees.Count > 0)
+                                {
+                                    <div><dt>Durée de vie observée</dt><dd>@string.Join(" ; ", e.Durees.Select(x => Mois(x.Mois) + (x.Km is { } km ? $" / {Km(km)}" : "")))</dd></div>
+                                }
+                                <div><dt>Changé</dt><dd>@e.Changements.Count fois · @Euros(couts.GetValueOrDefault(e.Organe.Id), 0) TTC</dd></div>
+                            </dl>
+                        }
+                        else
+                        {
+                            <p class="vide">Pas de changement enregistré.</p>
+                        }
+                        @if (ouvert)
+                        {
+                            @if (e.Organe.Notes is not null)
+                            {
+                                <p class="notes">@e.Organe.Notes</p>
+                            }
+                            <ol class="changements">
+                                @foreach (var c in Enumerable.Reverse(e.Changements))
+                                {
+                                    <li>
+                                        <strong>@Date(c.Date)@(c.Km is { } k ? $" · {Km(k)}" : "")</strong>
+                                        <small>@c.Titre@(c.Garage is null ? "" : $" · {c.Garage}")</small>
+                                        <ul>
+                                            @foreach (var l in c.Lignes)
+                                            {
+                                                <li>@l.Designation@(l.Reference is null ? "" : $" ({l.Reference})") · @Euros(l.MontantHt) HT</li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ol>
+                            <a href="historique?organe=@e.Organe.Id">Voir dans l'historique</a>
+                        }
+                    </article>
+                }
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [SupplyParameterFromQuery(Name = "organe")] public string? OrganeQuery { get; set; }
+
+    private string? selection;
+    private bool seulementChanges;
+
+    protected override void OnParametersSet() => selection ??= OrganeQuery;
+}

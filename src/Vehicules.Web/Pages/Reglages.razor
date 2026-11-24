@@ -1,0 +1,183 @@
+@page "/reglages"
+@inherits PageBase
+@inject IJSRuntime JS
+
+<Tete Titre="Réglages" />
+
+<section>
+    <h2>Véhicules</h2>
+    @foreach (var v in Etat.Donnees.Vehicules)
+    {
+        <details class="carte formulaire" open="@(v.Id == ouvert)">
+            <summary><strong>@v.Nom</strong> <small>@v.Marque @v.Modele · @v.ImmatriculationActuelle</small></summary>
+            <div class="champs">
+                <label>Nom court <input @bind="v.Nom" /></label>
+                <label>Marque <input @bind="v.Marque" /></label>
+                <label>Modèle <input @bind="v.Modele" /></label>
+                <label>Motorisation <input @bind="v.Motorisation" /></label>
+                <label>Mise en circulation <input type="date" @bind="v.MiseEnCirculation" /></label>
+                <label>Date d'achat <input type="date" @bind="v.DateAchat" /></label>
+                <label>Valeur estimée (€) <input type="number" step="100" @bind="v.ValeurEstimee" /></label>
+                <label>Couleur <input type="color" @bind="v.Couleur" /></label>
+                <label>Silhouette
+                    <select @bind="v.Silhouette">
+                        <option value="van">Van / utilitaire</option>
+                        <option value="citadine">Citadine</option>
+                    </select>
+                </label>
+            </div>
+            <label class="large">Immatriculation actuelle
+                <input value="@v.ImmatriculationActuelle" @onchange="ev => ChangerImmat(v, ev.Value?.ToString())" />
+            </label>
+            <h3>Intervalles conseillés</h3>
+            <table class="tableau intervalles">
+                <thead><tr><th>Pièce</th><th>Tous les… km</th><th>Tous les… mois</th></tr></thead>
+                <tbody>
+                    @foreach (var o in Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id).OrderBy(o => o.Categorie).ThenBy(o => o.Nom))
+                    {
+                        <tr>
+                            <td data-label="Pièce"><input @bind="o.Nom" aria-label="Nom" /></td>
+                            <td data-label="Km"><input type="number" step="1000" @bind="o.IntervalleKm" aria-label="Intervalle en km" /></td>
+                            <td data-label="Mois"><input type="number" @bind="o.IntervalleMois" aria-label="Intervalle en mois" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="champs">
+                <label>Nouvelle pièce suivie <input @bind="nouvelOrgane" placeholder="Amortisseurs AR…" /></label>
+                <label>Catégorie <input @bind="nouvelleCategorie" list="categories" /></label>
+            </div>
+            <datalist id="categories">
+                @foreach (var c in Etat.Donnees.Organes.Select(o => o.Categorie).Distinct())
+                {
+                    <option value="@c"></option>
+                }
+            </datalist>
+            <div class="boutons">
+                <button class="btn" @onclick="() => AjouterOrgane(v)">Ajouter la pièce</button>
+                <button class="btn principal" @onclick="Enregistrer">Enregistrer</button>
+            </div>
+        </details>
+    }
+
+    <form class="carte formulaire" @onsubmit="AjouterVehicule">
+        <h3>Ajouter un véhicule</h3>
+        <div class="champs">
+            <label>Nom court <input @bind="nvNom" placeholder="Fiat 500" required /></label>
+            <label>Marque <input @bind="nvMarque" placeholder="Fiat" /></label>
+            <label>Modèle <input @bind="nvModele" placeholder="500" /></label>
+            <label>Immatriculation <input @bind="nvImmat" /></label>
+        </div>
+        <p class="note">Une liste de pièces à suivre (vidange, filtres, distribution, freins, pneus…) est créée avec des intervalles indicatifs.</p>
+        <div class="boutons"><button class="btn principal" type="submit">Ajouter</button></div>
+    </form>
+</section>
+
+<section>
+    <h2>Données</h2>
+    <p class="intro">
+        @if (Etat.Local)
+        {
+            <span>Les données sont gardées dans ce navigateur. Télécharge une sauvegarde de temps en temps.</span>
+        }
+        else
+        {
+            <span>Les données sont partagées entre les appareils du foyer (Supabase), connecté en tant que <strong>@Etat.Utilisateur</strong>.
+            Supabase garde aussi les 100 dernières versions en cas de fausse manipulation.</span>
+        }
+    </p>
+    <div class="boutons gauche">
+        <button class="btn" @onclick="Exporter">Télécharger une sauvegarde</button>
+        <label class="btn">Restaurer une sauvegarde
+            <InputFile OnChange="Importer" accept=".json,application/json" hidden />
+        </label>
+        <button class="btn danger" @onclick="Reinitialiser">@(Etat.Local ? "Revenir à l'historique d'origine" : "Réintégrer l'historique des factures")</button>
+        @if (!Etat.Local)
+        {
+            <button class="btn" @onclick="Etat.DeconnexionAsync">Se déconnecter</button>
+        }
+    </div>
+    @if (message is not null)
+    {
+        <p class="note">@message</p>
+    }
+</section>
+
+@code {
+    private string? ouvert;
+    private string nouvelOrgane = "", nouvelleCategorie = "Divers";
+    private string nvNom = "", nvMarque = "", nvModele = "", nvImmat = "";
+    private string? message;
+
+    private async Task Enregistrer()
+    {
+        await Etat.EnregistrerAsync();
+        message = "Réglages enregistrés.";
+    }
+
+    private void ChangerImmat(Vehicule v, string? numero)
+    {
+        numero = numero?.Trim().ToUpperInvariant();
+        if (string.IsNullOrEmpty(numero) || numero == v.ImmatriculationActuelle) return;
+        v.Immatriculations.Add(new Immatriculation(numero, Etat.Aujourdhui));
+    }
+
+    private void AjouterOrgane(Vehicule v)
+    {
+        if (string.IsNullOrWhiteSpace(nouvelOrgane)) return;
+        Etat.Donnees.Organes.Add(new Organe
+        {
+            Id = $"{v.Id}-{Guid.NewGuid():N}"[..Math.Min(v.Id.Length + 9, 40)],
+            VehiculeId = v.Id,
+            Nom = nouvelOrgane.Trim(),
+            Categorie = string.IsNullOrWhiteSpace(nouvelleCategorie) ? "Divers" : nouvelleCategorie.Trim(),
+        });
+        nouvelOrgane = "";
+        ouvert = v.Id;
+    }
+
+    private async Task AjouterVehicule()
+    {
+        var id = new string(nvNom.ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());
+        if (id.Length == 0) return;
+        while (Etat.Donnees.Vehicules.Any(v => v.Id == id)) id += "2";
+        var v = new Vehicule { Id = id, Nom = nvNom.Trim(), Marque = nvMarque.Trim(), Modele = nvModele.Trim(), Couleur = "#c0392b" };
+        if (!string.IsNullOrWhiteSpace(nvImmat)) v.Immatriculations.Add(new Immatriculation(nvImmat.Trim().ToUpperInvariant(), null));
+        Etat.Donnees.Vehicules.Add(v);
+        Etat.Donnees.Organes.AddRange(ModeleOrganes.Pour(id));
+        nvNom = nvMarque = nvModele = nvImmat = "";
+        ouvert = id;
+        await Etat.EnregistrerAsync();
+    }
+
+    private async Task Exporter()
+    {
+        await JS.InvokeVoidAsync("telecharger", $"vehicules-{Etat.Aujourdhui:yyyy-MM-dd}.json", Json.Ecrire(Etat.Donnees));
+    }
+
+    private async Task Importer(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            using var lecteur = new StreamReader(e.File.OpenReadStream(20_000_000));
+            var donnees = Json.Lire(await lecteur.ReadToEndAsync());
+            if (!await JS.InvokeAsync<bool>("confirm", $"Remplacer les données actuelles par cette sauvegarde ({donnees.Vehicules.Count} véhicule(s), {donnees.Interventions.Count} interventions) ?")) return;
+            await Etat.RemplacerAsync(donnees);
+            message = "Sauvegarde restaurée.";
+        }
+        catch (Exception ex) when (ex is System.Text.Json.JsonException or IOException)
+        {
+            message = "Ce fichier n'est pas une sauvegarde valide.";
+        }
+    }
+
+    private async Task Reinitialiser()
+    {
+        var question = Etat.Local
+            ? "Effacer les saisies faites sur cet appareil et recharger l'historique d'origine ?"
+            : "Réintégrer l'historique des factures ? Les saisies faites dans l'application sont gardées, mais les factures de l'historique reprennent leurs valeurs d'origine.";
+        if (!await JS.InvokeAsync<bool>("confirm", question)) return;
+        await Etat.ReinitialiserAsync();
+        message = Etat.Erreur is null ? "Historique des factures réintégré." : null;
+    }
+}

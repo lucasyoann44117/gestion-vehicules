@@ -1,0 +1,163 @@
+@page "/intervention/nouvelle"
+@page "/intervention/{Id}"
+@inherits PageBase
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<Tete Titre="@(nouvelle ? "Nouvelle intervention" : "Modifier l'intervention")" />
+
+@if (modele is null)
+{
+    <p class="vide">Intervention introuvable. <a href="historique">Retour à l'historique</a></p>
+}
+else
+{
+    <form class="carte formulaire" @onsubmit="Enregistrer">
+        <div class="champs">
+            <label>Véhicule
+                <select @bind="modele.VehiculeId">
+                    @foreach (var v in Etat.Donnees.Vehicules)
+                    {
+                        <option value="@v.Id">@v.Nom</option>
+                    }
+                </select>
+            </label>
+            <label>Date <input type="date" @bind="modele.Date" required /></label>
+            <label>Compteur (km) <input type="number" inputmode="numeric" @bind="modele.Km" /></label>
+            <label>Type
+                <select @bind="modele.Type">
+                    @foreach (var t in Enum.GetValues<TypeIntervention>())
+                    {
+                        <option value="@t">@Libelle(t)</option>
+                    }
+                </select>
+            </label>
+        </div>
+        <div class="champs">
+            <label class="large">Titre <input @bind="modele.Titre" required placeholder="Vidange, plaquettes AV…" /></label>
+            <label>Garage ou magasin <input @bind="modele.Garage" list="garages" /></label>
+            <label>N° de facture <input @bind="modele.NumeroFacture" /></label>
+        </div>
+        <datalist id="garages">
+            @foreach (var g in Etat.Donnees.Interventions.Select(i => i.Garage).Where(g => g is not null).Distinct())
+            {
+                <option value="@g"></option>
+            }
+        </datalist>
+
+        <h2>Lignes de la facture</h2>
+        <div class="lignes-saisie">
+            @foreach (var l in modele.Lignes)
+            {
+                <div class="ligne-saisie @(l.Exclue ? "exclue" : "")">
+                    <label class="large">Désignation <input @bind="l.Designation" required /></label>
+                    <label>Référence <input @bind="l.Reference" /></label>
+                    <label>Nature
+                        <select @bind="l.Nature">
+                            @foreach (var n in Enum.GetValues<NatureLigne>())
+                            {
+                                <option value="@n">@Libelle(n)</option>
+                            }
+                        </select>
+                    </label>
+                    <label>Pièce suivie
+                        <select @bind="l.OrganeId">
+                            <option value="">—</option>
+                            @foreach (var o in Etat.Donnees.Organes.Where(o => o.VehiculeId == modele.VehiculeId).OrderBy(o => o.Nom))
+                            {
+                                <option value="@o.Id">@o.Nom</option>
+                            }
+                        </select>
+                    </label>
+                    <label>Qté <input type="number" step="0.01" @bind="l.Quantite" @bind:after="() => Calculer(l)" /></label>
+                    <label>PU HT <input type="number" step="0.01" @bind="l.PrixUnitaireHt" @bind:after="() => Calculer(l)" /></label>
+                    <label>Montant HT <input type="number" step="0.01" @bind="l.MontantHt" /></label>
+                    <label class="case"><input type="checkbox" @bind="l.Exclue" /> Hors véhicule</label>
+                    <button type="button" class="btn petit" @onclick="() => modele.Lignes.Remove(l)" aria-label="Supprimer la ligne">Supprimer</button>
+                </div>
+            }
+        </div>
+        <button type="button" class="btn" @onclick="AjouterLigne">Ajouter une ligne</button>
+
+        <div class="champs">
+            <label>Total HT <input type="number" step="0.01" @bind="modele.TotalHt" placeholder="@modele.Lignes.Where(l => !l.Exclue).Sum(l => l.MontantHt).ToString("0.00")" /></label>
+            <label>Total TTC <input type="number" step="0.01" @bind="modele.TotalTtc" required /></label>
+            <label class="case"><input type="checkbox" @bind="modele.Paye" /> Payé</label>
+        </div>
+        <label class="large">Notes <textarea rows="3" @bind="modele.Notes"></textarea></label>
+        <label class="large">Documents (noms de fichiers, séparés par des virgules)
+            <input @bind="documents" />
+        </label>
+
+        @if (erreur is not null)
+        {
+            <p class="erreur">@erreur</p>
+        }
+        <div class="boutons">
+            @if (!nouvelle)
+            {
+                <button type="button" class="btn danger" @onclick="Supprimer">Supprimer</button>
+            }
+            <a class="btn" href="historique">Annuler</a>
+            <button type="submit" class="btn principal">Enregistrer</button>
+        </div>
+    </form>
+}
+
+@code {
+    [Parameter] public string? Id { get; set; }
+
+    private bool nouvelle;
+    private Intervention? modele;
+    private string documents = "";
+    private string? erreur;
+
+    protected override void OnParametersSet()
+    {
+        nouvelle = Id is null;
+        if (nouvelle)
+        {
+            var vid = Etat.VehiculeId ?? Etat.Donnees.Vehicules.FirstOrDefault()?.Id ?? "";
+            modele = new Intervention { VehiculeId = vid, Date = Etat.Aujourdhui, Lignes = [new LigneIntervention()] };
+        }
+        else if (Etat.Donnees.Interventions.FirstOrDefault(i => i.Id == Id) is { } source)
+        {
+            // On travaille sur une copie : rien ne change tant qu'on n'enregistre pas.
+            modele = Json.Lire(Json.Ecrire(new Donnees { Interventions = [source] })).Interventions[0];
+            documents = string.Join(", ", modele.Documents);
+        }
+    }
+
+    private static void Calculer(LigneIntervention l)
+    {
+        if (l.PrixUnitaireHt is { } pu) l.MontantHt = Math.Round(pu * l.Quantite, 2);
+    }
+
+    private void AjouterLigne() => modele!.Lignes.Add(new LigneIntervention());
+
+    private async Task Enregistrer()
+    {
+        var m = modele!;
+        if (string.IsNullOrWhiteSpace(m.Titre) || m.TotalTtc <= 0) { erreur = "Indique au moins un titre et le total TTC."; return; }
+        m.Lignes.RemoveAll(l => string.IsNullOrWhiteSpace(l.Designation));
+        foreach (var l in m.Lignes.Where(l => l.OrganeId == "")) l.OrganeId = null;
+        m.Documents = documents.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        Etat.Donnees.Interventions.RemoveAll(i => i.Id == m.Id);
+        Etat.Donnees.Interventions.Add(m);
+        if (m.Km is { } km && !Etat.Donnees.Releves.Any(r => r.VehiculeId == m.VehiculeId && r.Date == m.Date))
+        {
+            Etat.Donnees.Releves.Add(new ReleveKm { VehiculeId = m.VehiculeId, Date = m.Date, Km = km, Source = SourceReleve.Facture });
+        }
+        await Etat.EnregistrerAsync();
+        Nav.NavigateTo("historique");
+    }
+
+    private async Task Supprimer()
+    {
+        if (!await JS.InvokeAsync<bool>("confirm", $"Supprimer « {modele!.Titre} » du {Date(modele.Date)} ?")) return;
+        Etat.Donnees.Interventions.RemoveAll(i => i.Id == modele!.Id);
+        await Etat.EnregistrerAsync();
+        Nav.NavigateTo("historique");
+    }
+}

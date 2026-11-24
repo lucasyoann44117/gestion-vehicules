@@ -1,0 +1,27 @@
+@inherits PageBase
+
+<PageTitle>@Titre · Mes véhicules</PageTitle>
+<header class="tete">
+    <div class="tete-ligne">
+        <h1>@Titre</h1>
+        @if (ChildContent is not null)
+        {
+            <div class="actions">@ChildContent</div>
+        }
+    </div>
+    @if (Etat.Donnees.Vehicules.Count > 1)
+    {
+        <div class="puces" role="group" aria-label="Véhicule">
+            <button class="puce @(Etat.VehiculeId is null ? "active" : "")" @onclick="() => Etat.ChoisirVehicule(null)">Tous</button>
+            @foreach (var v in Etat.Donnees.Vehicules)
+            {
+                <button class="puce @(Etat.VehiculeId == v.Id ? "active" : "")" style="--accent:@v.Couleur" @onclick="() => Etat.ChoisirVehicule(v.Id)">@v.Nom</button>
+            }
+        </div>
+    }
+</header>
+
+@code {
+    [Parameter, EditorRequired] public string Titre { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

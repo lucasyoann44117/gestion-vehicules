@@ -1,0 +1,155 @@
+@page "/controles"
+@inherits PageBase
+
+<Tete Titre="Contrôles techniques" />
+
+@{
+    var controles = Etat.Controles.OrderByDescending(c => c.Date).ToList();
+}
+
+@if (controles.Count == 0)
+{
+    <p class="vide">Aucun contrôle technique enregistré.</p>
+}
+
+@foreach (var c in controles)
+{
+    var v = Etat.Vehicule(c.VehiculeId);
+    <article class="carte ct @(c.Resultat == ResultatCt.Favorable ? "ok" : "mal")" style="--accent:@(v?.Couleur ?? "#888")">
+        <header>
+            <div>
+                <strong>@(c.ContreVisite ? "Contre-visite" : "Contrôle périodique") du @Date(c.Date)</strong>
+                <small>@Km(c.Km) · @c.Centre@(c.NumeroPv is null ? "" : $" · PV {c.NumeroPv}")@(Etat.VehiculeId is null && v is not null ? $" · {v.Nom}" : "")</small>
+            </div>
+            <div class="droite">
+                <Pastille Urgence="@(c.Resultat == ResultatCt.Favorable ? Urgence.Ok : Urgence.Depasse)" Texte="@(c.Resultat == ResultatCt.Favorable ? "Favorable" : "Défavorable")" />
+                @if (c.Echeance is { } e)
+                {
+                    <small>Valable jusqu'au @Date(e)</small>
+                }
+            </div>
+        </header>
+
+        @if (c.Defaillances.Count > 0)
+        {
+            <ul class="defaillances">
+                @foreach (var d in c.Defaillances)
+                {
+                    <li class="@(d.Statut == StatutSuivi.Fait ? "fait" : "")">
+                        <div>
+                            <span class="code">@d.Code</span> @d.Libelle
+                            <small>
+                                @d.Gravite.ToString().ToLowerInvariant()
+                                @if (Etat.Organe(d.OrganeId) is { } o)
+                                {
+                                    <span> · <a href="pieces?organe=@o.Id">@o.Nom</a></span>
+                                }
+                                @if (d.InterventionId is { } iid && Etat.Donnees.Interventions.FirstOrDefault(i => i.Id == iid) is { } inter)
+                                {
+                                    <span> · réglé le @Date(inter.Date)</span>
+                                }
+                            </small>
+                        </div>
+                        <select value="@d.Statut" @onchange="ev => ChangerStatut(d, ev)" aria-label="Suivi du défaut">
+                            @foreach (var s in Enum.GetValues<StatutSuivi>())
+                            {
+                                <option value="@s">@Libelle(s)</option>
+                            }
+                        </select>
+                    </li>
+                }
+            </ul>
+        }
+        @if (c.Mesures.Count > 0)
+        {
+            <details>
+                <summary>Mesures</summary>
+                <ul class="mesures">
+                    @foreach (var m in c.Mesures)
+                    {
+                        <li>@m</li>
+                    }
+                </ul>
+            </details>
+        }
+        @if (c.Documents.Count > 0)
+        {
+            <small>Document : @string.Join(", ", c.Documents)</small>
+        }
+    </article>
+}
+
+@{
+    var recurrents = controles.SelectMany(c => c.Defaillances.Select(d => (c, d)))
+                              .GroupBy(x => x.d.Code)
+                              .Where(g => g.Select(x => x.c.Id).Distinct().Count() > 1)
+                              .ToList();
+}
+@if (recurrents.Count > 0)
+{
+    <section>
+        <h2>Défauts qui reviennent</h2>
+        <ul class="liste">
+            @foreach (var g in recurrents)
+            {
+                <li class="att">
+                    <div><strong>@g.First().d.Libelle</strong><br /><small>Relevé aux contrôles du @string.Join(", ", g.Select(x => Date(x.c.Date)).Distinct())</small></div>
+                </li>
+            }
+        </ul>
+    </section>
+}
+
+@{
+    var travaux = Etat.Donnees.Travaux.Where(t => Etat.VehiculeId is null || t.VehiculeId == Etat.VehiculeId)
+                      .OrderByDescending(t => t.DateSignalement).ToList();
+}
+@if (travaux.Count > 0)
+{
+    <section>
+        <h2>Travaux signalés par le garage</h2>
+        <ul class="defaillances carte">
+            @foreach (var t in travaux)
+            {
+                <li class="@(t.Statut is StatutSuivi.Fait or StatutSuivi.Abandonne ? "fait" : "")">
+                    <div>
+                        <strong>@t.Libelle</strong>
+                        <small>
+                            Signalé le @Date(t.DateSignalement) · @t.Source
+                            @if (t.InterventionId is { } iid && Etat.Donnees.Interventions.FirstOrDefault(i => i.Id == iid) is { } inter)
+                            {
+                                <span> · fait le @Date(inter.Date)</span>
+                            }
+                        </small>
+                    </div>
+                    <select value="@t.Statut" @onchange="ev => ChangerStatut(t, ev)" aria-label="Suivi du travail">
+                        @foreach (var s in new[] { StatutSuivi.APrevoir, StatutSuivi.Fait, StatutSuivi.Abandonne })
+                        {
+                            <option value="@s">@Libelle(s)</option>
+                        }
+                    </select>
+                </li>
+            }
+        </ul>
+    </section>
+}
+
+@code {
+    private async Task ChangerStatut(TravailAPrevoir t, ChangeEventArgs ev)
+    {
+        if (Enum.TryParse<StatutSuivi>(ev.Value?.ToString(), out var s))
+        {
+            t.Statut = s;
+            await Etat.EnregistrerAsync();
+        }
+    }
+
+    private async Task ChangerStatut(Defaillance d, ChangeEventArgs ev)
+    {
+        if (Enum.TryParse<StatutSuivi>(ev.Value?.ToString(), out var s))
+        {
+            d.Statut = s;
+            await Etat.EnregistrerAsync();
+        }
+    }
+}

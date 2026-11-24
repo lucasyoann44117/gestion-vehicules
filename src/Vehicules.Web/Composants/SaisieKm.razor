@@ -1,0 +1,58 @@
+@inject Etat Etat
+
+<form class="carte formulaire" @onsubmit="Enregistrer">
+    <h2>Nouveau relevé kilométrique</h2>
+    <div class="champs">
+        <label>Véhicule
+            <select @bind="vehiculeId">
+                @foreach (var v in Etat.Donnees.Vehicules)
+                {
+                    <option value="@v.Id">@v.Nom</option>
+                }
+            </select>
+        </label>
+        <label>Date
+            <input type="date" @bind="date" />
+        </label>
+        <label>Compteur (km)
+            <input type="number" inputmode="numeric" min="0" @bind="km" required />
+        </label>
+    </div>
+    @if (erreur is not null)
+    {
+        <p class="erreur">@erreur</p>
+    }
+    <div class="boutons">
+        <button type="button" class="btn" @onclick="Ferme">Annuler</button>
+        <button type="submit" class="btn principal">Enregistrer</button>
+    </div>
+</form>
+
+@code {
+    [Parameter] public EventCallback Ferme { get; set; }
+
+    private string vehiculeId = "";
+    private DateOnly date;
+    private int? km;
+    private string? erreur;
+
+    protected override void OnInitialized()
+    {
+        vehiculeId = Etat.VehiculeId ?? Etat.Donnees.Vehicules.FirstOrDefault()?.Id ?? "";
+        date = Etat.Aujourdhui;
+    }
+
+    private async Task Enregistrer()
+    {
+        if (km is not > 0) { erreur = "Indique le kilométrage du compteur."; return; }
+        var precedent = Kilometrage.Tries(Etat.Releves(vehiculeId)).LastOrDefault(r => r.Date <= date);
+        if (precedent is not null && km < precedent.Km)
+        {
+            erreur = $"Le compteur affichait déjà {Km(precedent.Km)} le {Date(precedent.Date)}.";
+            return;
+        }
+        Etat.Donnees.Releves.Add(new ReleveKm { VehiculeId = vehiculeId, Date = date, Km = km.Value, Source = SourceReleve.Saisie });
+        await Etat.EnregistrerAsync();
+        await Ferme.InvokeAsync();
+    }
+}

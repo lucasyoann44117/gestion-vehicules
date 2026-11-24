@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Mes véhicules</title>
+    <base href="/" />
+    <script>
+        // Sur GitHub Pages, l'application est servie depuis /<dépôt>/ : on adapte la base.
+        if (location.hostname.endsWith('github.io')) {
+            const depot = location.pathname.split('/')[1];
+            if (depot) document.querySelector('base').href = '/' + depot + '/';
+        }
+    </script>
+    <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Véhicules" />
+    <link rel="preload" id="webassembly" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="icon" type="image/svg+xml" href="icone.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icone-180.png" />
+    <script type="importmap"></script>
+</head>
+
+<body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <linearGradient id="g-logo" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ffc83d" />
+                <stop offset="1" stop-color="#f08c00" />
+            </linearGradient>
+        </defs>
+        <symbol id="i-logo" viewBox="0 0 40 40">
+            <rect width="40" height="40" rx="11" fill="url(#g-logo)" />
+            <circle cx="20" cy="20" r="10.5" fill="none" stroke="#14171a" stroke-width="3" />
+            <circle cx="20" cy="20" r="2.6" fill="#14171a" />
+            <path d="M20 20 26.5 13.5" stroke="#14171a" stroke-width="3" stroke-linecap="round" />
+            <path d="M11 25.5h18" stroke="#14171a" stroke-width="2" stroke-linecap="round" opacity=".35" />
+        </symbol>
+        <symbol id="i-bilan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17a8 8 0 1 1 16 0" /><path d="m12 17 4-5" /><path d="M4 21h16" /></symbol>
+        <symbol id="i-historique" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l3 2" /></symbol>
+        <symbol id="i-pieces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.6 1.6 0 0 0 2.3 2.3l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.5 2.5-2.3-.6-.6-2.3z" /></symbol>
+        <symbol id="i-couts" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" /></symbol>
+        <symbol id="i-ct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4V3h6v1" /><path d="m9 13 2 2 4-4" /></symbol>
+        <symbol id="i-pneu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><path d="M12 3v5M12 16v5M3 12h5M16 12h5" /></symbol>
+        <symbol id="i-reglages" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></symbol>
+        <symbol id="i-ajout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></symbol>
+        <symbol id="i-compteur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="m12 12 4-3" /><path d="M7 16h10" /></symbol>
+        <symbol id="i-alerte" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /><path d="M12 9v4M12 17h0" /></symbol>
+        <symbol id="i-document" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></symbol>
+        <!-- Silhouettes de profil, dessinées pour l'application. -->
+        <symbol id="s-van" viewBox="0 0 320 130">
+            <path d="M14 96V30q0-12 12-12h204q10 0 16 8l18 24q34 6 40 16 4 6 4 16v14q0 6-6 6h-26a26 26 0 0 0-52 0H96a26 26 0 0 0-52 0H20q-6 0-6-6z" fill="currentColor" />
+            <path d="M24 26h46v26H24zM78 26h70v26H78zM156 26h64v26h-64zM228 26h8q4 0 7 4l16 22h-31z" fill="#0c0e11" opacity=".55" />
+            <path d="M152 30v62M224 30v62" stroke="#0c0e11" stroke-width="1.5" opacity=".35" />
+            <path d="M14 66h294" stroke="#fff" stroke-width="2" opacity=".18" />
+            <path d="M292 68h12v8h-12z" fill="#fff6d0" opacity=".9" />
+            <path d="M14 88h30M96 88h128M276 88h32" stroke="#0c0e11" stroke-width="5" opacity=".35" />
+            <circle cx="70" cy="102" r="20" fill="#0c0e11" /><circle cx="70" cy="102" r="9" fill="#b8bec6" /><circle cx="70" cy="102" r="3" fill="#0c0e11" />
+            <circle cx="250" cy="102" r="20" fill="#0c0e11" /><circle cx="250" cy="102" r="9" fill="#b8bec6" /><circle cx="250" cy="102" r="3" fill="#0c0e11" />
+        </symbol>
+        <symbol id="s-citadine" viewBox="0 0 320 130">
+            <path d="M40 100V78c0-10 6-17 15-20l30-8 32-26c8-6 17-9 27-9h66c14 0 24 5 32 15l22 28c18 3 28 10 28 24v18c0 4-3 6-7 6h-16a26 26 0 0 0-52 0h-118a26 26 0 0 0-52 0H46c-4 0-6-3-6-6z" fill="currentColor" opacity=".9" />
+            <path d="M126 32c6-5 12-7 20-7h26v32h-74zM180 25h22c10 0 17 4 22 11l15 21h-59z" fill="#fff" opacity=".28" />
+            <circle cx="95" cy="106" r="20" fill="#14171a" /><circle cx="95" cy="106" r="8" fill="#c9ced4" />
+            <circle cx="249" cy="106" r="20" fill="#14171a" /><circle cx="249" cy="106" r="8" fill="#c9ced4" />
+        </symbol>
+    </svg>
+
+    <div id="app">
+        <div class="ecran-chargement">
+            <svg aria-hidden="true"><use href="#i-logo" /></svg>
+            <p>Mes véhicules</p>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        Une erreur est survenue.
+        <a href="." class="reload">Recharger</a>
+        <span class="dismiss">✕</span>
+    </div>
+
+    <script>
+        // Télécharge un texte comme fichier (sauvegarde JSON).
+        window.telecharger = (nom, texte) => {
+            const url = URL.createObjectURL(new Blob([texte], { type: 'application/json' }));
+            const a = Object.assign(document.createElement('a'), { href: url, download: nom });
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        };
+    </script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });</script>
+</body>
+
+</html>
