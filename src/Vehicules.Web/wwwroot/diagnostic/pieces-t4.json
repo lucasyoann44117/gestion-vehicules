@@ -1,39 +1,356 @@
 {
   "avertissement": "Prix indicatifs en euros TTC (ordre de grandeur pour un T4 2.5 TDI, pièces de marque équivalente et main-d'œuvre de garage indépendant). À confirmer par un devis.",
   "pieces": {
-    "joints-moteur": { "role": "Le bloc 5 cylindres est le cœur du moteur : pistons, bielles et vilebrequin y transforment la combustion en rotation. Les joints (couvre-culasse, reniflard, spi) le gardent étanche.", "emplacement": "Au centre du compartiment, posé en travers.", "usure": "Suintements d'huile, odeur d'huile chaude, fumée bleue si l'usure est interne.", "dureeVie": "Le bloc dure toute la vie du camion ; les joints 150 000 à 250 000 km.", "prixPiece": "20 à 90 € le joint", "prixPose": "80 à 300 €", "zone": "Moteur" },
-    "culasse": { "role": "Ferme le haut des cylindres et porte l'arbre à cames, les soupapes et les poussoirs : elle règle l'entrée d'air et la sortie des gaz.", "emplacement": "Sur le bloc, sous le couvre-culasse noir.", "usure": "Perte de compression, joint de culasse qui lâche (liquide qui baisse, fumée blanche), bruit de distribution.", "dureeVie": "Refaite une fois dans la vie du moteur en général (la tienne en avril 2026).", "prixPiece": "500 à 900 € de pièces pour une réfection", "prixPose": "2 000 à 3 500 €", "zone": "Moteur" },
-    "distribution": { "role": "La courroie de distribution synchronise le vilebrequin, l'arbre à cames et la pompe d'injection. Si elle casse, les soupapes touchent les pistons.", "emplacement": "Côté droit du moteur, sous le carter plastique.", "usure": "Aucun signe fiable avant la casse : on la change au kilométrage ou à l'âge.", "dureeVie": "Environ 90 000 à 120 000 km ou 5 ans sur le 2.5 TDI.", "prixPiece": "150 à 350 € le kit (galets, courroie, pompe à eau)", "prixPose": "600 à 1 000 €", "zone": "Moteur" },
-    "pompe-eau": { "role": "Fait circuler le liquide de refroidissement entre le moteur, le radiateur et le chauffage.", "emplacement": "Entraînée par la distribution, côté droit.", "usure": "Fuite rosée sous la pompe, bruit de roulement, surchauffe.", "dureeVie": "Changée avec la distribution.", "prixPiece": "40 à 100 €", "prixPose": "Comprise avec la distribution", "zone": "Refroidissement" },
-    "courroie-accessoires": { "role": "Entraîne l'alternateur, le compresseur de clim et la pompe de direction assistée.", "emplacement": "À l'avant du moteur, avec ses galets.", "usure": "Couinement à froid ou en braquant, craquelures, voyant batterie.", "dureeVie": "60 000 à 120 000 km.", "prixPiece": "30 à 150 € avec les galets", "prixPose": "100 à 250 €", "zone": "Moteur" },
-    "huile-moteur": { "role": "Lubrifie, refroidit et nettoie l'intérieur du moteur.", "emplacement": "Remplissage sur le couvre-culasse, vidange sous le carter.", "usure": "Huile noire et fluide, niveau qui baisse.", "dureeVie": "Vidange tous les 15 000 km ou 1 an.", "prixPiece": "40 à 80 € (5,5 L)", "prixPose": "120 à 200 € la vidange complète", "zone": "Entretien" },
-    "filtre-huile": { "role": "Retient les particules de l'huile moteur.", "emplacement": "Cartouche verticale à l'avant du bloc.", "usure": "Se change à chaque vidange.", "dureeVie": "15 000 km.", "prixPiece": "10 à 25 €", "prixPose": "Avec la vidange", "zone": "Entretien" },
-    "filtre-gasoil": { "role": "Filtre le gazole et sépare l'eau avant la pompe d'injection.", "emplacement": "Sur la traverse avant, au-dessus du moteur.", "usure": "Démarrage difficile, perte de puissance, prise d'air.", "dureeVie": "30 000 km ou 2 ans.", "prixPiece": "20 à 40 €", "prixPose": "40 à 80 €", "zone": "Alimentation" },
-    "filtre-air": { "role": "Filtre l'air aspiré par le moteur.", "emplacement": "Boîte noire à gauche, derrière le phare.", "usure": "Filtre gris, perte de puissance, fumée noire.", "dureeVie": "30 000 km (le filtre Green se lave).", "prixPiece": "20 à 60 €", "prixPose": "Quelques minutes", "zone": "Admission" },
-    "debitmetre": { "role": "Mesure la quantité d'air qui entre dans le moteur pour doser le gazole.", "emplacement": "Entre la boîte à air et la durite du turbo.", "usure": "Perte de puissance, fumée noire, code 00553.", "dureeVie": "150 000 à 250 000 km.", "prixPiece": "60 à 180 €", "prixPose": "Quelques minutes", "zone": "Admission" },
-    "turbo": { "role": "Utilise les gaz d'échappement pour comprimer l'air d'admission : il donne la puissance du TDI.", "emplacement": "À l'arrière du moteur, sur le collecteur d'échappement.", "usure": "Sifflement fort, fumée bleue, perte de puissance, jeu dans l'axe.", "dureeVie": "250 000 à 400 000 km selon l'entretien.", "prixPiece": "400 à 800 €", "prixPose": "700 à 1 200 €", "zone": "Admission" },
-    "electrovanne-n75": { "role": "Pilote la pression du turbo en commandant la wastegate par dépression.", "emplacement": "Près de la boîte à air, avec ses petites durites.", "usure": "Turbo intermittent, mode dégradé, code 01247.", "dureeVie": "Variable, souvent grippée vers 200 000 km.", "prixPiece": "40 à 90 €", "prixPose": "Quelques minutes", "zone": "Admission" },
-    "egr": { "role": "Réinjecte une partie des gaz d'échappement dans l'admission pour réduire la pollution.", "emplacement": "Sur la pipe d'admission.", "usure": "S'encrasse : fumée noire, perte de puissance. La tienne est nettoyée et partiellement bloquée depuis 2009.", "dureeVie": "Nettoyage tous les 80 000 km environ.", "prixPiece": "100 à 250 €", "prixPose": "100 à 300 €", "zone": "Admission" },
-    "pompe-injection": { "role": "Pompe VP37 : met le gazole sous pression et l'envoie aux injecteurs au bon moment. Elle porte l'électrovanne d'arrêt N109 et l'électrovanne d'avance N108.", "emplacement": "Côté droit, entraînée par sa propre courroie.", "usure": "Fuites au couvercle, démarrage difficile à chaud ou à froid, perte de puissance.", "dureeVie": "300 000 à 500 000 km.", "prixPiece": "600 à 1 200 € en échange standard", "prixPose": "900 à 1 600 €", "zone": "Alimentation" },
-    "injecteurs": { "role": "Pulvérisent le gazole dans chaque cylindre ; les retours ramènent le surplus au réservoir.", "emplacement": "Sur la culasse, un par cylindre, reliés par les petites durites de retour.", "usure": "Fumée noire, claquements, fuite aux bouchons ou durites de retour.", "dureeVie": "200 000 à 300 000 km (tarage).", "prixPiece": "Tarage 20 à 40 € par injecteur, neuf 150 à 250 €", "prixPose": "100 à 300 €", "zone": "Alimentation" },
-    "bougies-prechauffage": { "role": "Chauffent les cylindres avant le démarrage à froid (voyant en spirale).", "emplacement": "Vissées dans la culasse, reliées par un bus.", "usure": "Démarrage difficile à froid, fumée blanche au démarrage.", "dureeVie": "100 000 à 150 000 km.", "prixPiece": "60 à 120 € les 5", "prixPose": "100 à 200 €", "zone": "Démarrage" },
-    "relais-prechauffage": { "role": "Alimente les bougies de préchauffage selon la température du moteur.", "emplacement": "Sur la platine de relais sous le tableau de bord (relais 103).", "usure": "Plus de préchauffage, voyant qui ne s'allume pas, batterie qui se vide.", "dureeVie": "Souvent toute la vie.", "prixPiece": "30 à 60 €", "prixPose": "À faire soi-même", "zone": "Démarrage" },
-    "sonde-temperature": { "role": "Sonde G62 : donne la température du moteur au calculateur (dosage, préchauffage, avance) et à l'aiguille.", "emplacement": "Sur la sortie d'eau de la culasse.", "usure": "Démarrage difficile, test d'avance faux, codes 00522 ou 17664.", "dureeVie": "150 000 km environ.", "prixPiece": "15 à 40 €", "prixPose": "30 à 60 €", "zone": "Refroidissement" },
-    "thermostat": { "role": "Garde le liquide fermé côté moteur tant qu'il est froid, puis ouvre vers le radiateur.", "emplacement": "Dans son boîtier sur le bloc.", "usure": "Moteur qui chauffe (bloqué fermé) ou qui ne chauffe pas (bloqué ouvert).", "dureeVie": "100 000 à 200 000 km.", "prixPiece": "20 à 50 €", "prixPose": "80 à 150 €", "zone": "Refroidissement" },
-    "liquide-refroidissement": { "role": "Le G12 évacue la chaleur du moteur vers le radiateur et alimente le chauffage.", "emplacement": "Vase d'expansion à droite, radiateur à l'avant.", "usure": "Niveau qui baisse, couleur brune.", "dureeVie": "Vidange tous les 4 à 5 ans.", "prixPiece": "20 à 40 €", "prixPose": "80 à 150 €", "zone": "Refroidissement" },
-    "ventilateurs-radiateur": { "role": "Soufflent l'air à travers le radiateur à l'arrêt et en ville ; temporisés après l'arrêt.", "emplacement": "Derrière le radiateur, à l'avant.", "usure": "Surchauffe dans les bouchons, couinement, batterie vidée (relais 98).", "dureeVie": "200 000 km environ.", "prixPiece": "120 à 300 € le bloc", "prixPose": "100 à 200 €", "zone": "Refroidissement" },
-    "pompe-eau-auxiliaire": { "role": "Petite pompe électrique qui fait circuler l'eau moteur arrêté, pour le chauffage stationnaire et l'après-arrêt.", "emplacement": "Sur les durites de chauffage.", "usure": "Bruit après l'arrêt, chauffage stationnaire qui coupe, batterie vidée.", "dureeVie": "Variable.", "prixPiece": "60 à 150 €", "prixPose": "50 à 100 €", "zone": "Refroidissement" },
-    "alternateur": { "role": "Recharge la batterie et alimente l'électricité quand le moteur tourne.", "emplacement": "À l'avant du moteur, en haut, entraîné par la courroie.", "usure": "Voyant batterie, tension sous 13,5 V, odeur de chaud.", "dureeVie": "150 000 à 250 000 km.", "prixPiece": "150 à 350 €", "prixPose": "300 à 550 €", "zone": "Électricité" },
-    "demarreur": { "role": "Lance le moteur au tour de clé.", "emplacement": "Côté boîte de vitesses, en bas.", "usure": "Clic sans rotation, démarrage aléatoire.", "dureeVie": "200 000 km environ.", "prixPiece": "120 à 300 €", "prixPose": "250 à 550 €", "zone": "Électricité" },
-    "batterie": { "role": "Fournit le courant au démarrage et quand le moteur est arrêté.", "emplacement": "Sous le siège conducteur.", "usure": "Démarreur qui tourne lentement, surtout l'hiver.", "dureeVie": "5 à 7 ans.", "prixPiece": "100 à 200 €", "prixPose": "À faire soi-même", "zone": "Électricité" },
-    "batterie-auxiliaire": { "role": "Alimente l'aménagement (chauffage stationnaire, prises, frigo) sans vider la batterie de démarrage.", "emplacement": "Sous le siège passager.", "usure": "Chauffage stationnaire qui coupe, autonomie faible.", "dureeVie": "5 à 8 ans.", "prixPiece": "100 à 200 €", "prixPose": "À faire soi-même", "zone": "Électricité" },
-    "compresseur-clim": { "role": "Comprime le gaz de climatisation ; entraîné par la courroie via un embrayage électrique.", "emplacement": "À l'avant du moteur, en bas.", "usure": "Plus de froid, bruit, blocage qui peut caler le moteur.", "dureeVie": "200 000 km environ.", "prixPiece": "250 à 500 €", "prixPose": "500 à 900 € avec la recharge", "zone": "Climatisation" },
-    "clim": { "role": "Circuit de climatisation : gaz, condenseur à l'avant, pressostat, relais 140.", "emplacement": "Condenseur devant le radiateur.", "usure": "Froid qui baisse (fuite lente), pressostat qui coupe.", "dureeVie": "Recharge tous les 2 à 3 ans.", "prixPiece": "Recharge 60 à 120 €", "prixPose": "Diagnostic 60 à 150 €", "zone": "Climatisation" },
-    "pompe-vide": { "role": "Crée la dépression du master vac (assistance de freinage) et pilote le turbo et l'EGR.", "emplacement": "Sur la culasse, entraînée par l'arbre à cames.", "usure": "Pédale de frein dure, turbo paresseux.", "dureeVie": "Longue ; le tuyau vers le master vac se fend souvent avant.", "prixPiece": "80 à 250 €", "prixPose": "150 à 400 €", "zone": "Freinage" },
-    "echappement": { "role": "Évacue les gaz, réduit le bruit (silencieux) et la pollution (catalyseur). Sur ton camion : ligne inox depuis 2009, catalyseur juste avant le silencieux arrière.", "emplacement": "Sous le camion, du collecteur à l'arrière droit.", "usure": "Bruit, trous, contrôle technique (bruit, opacité).", "dureeVie": "Inox : très longue ; catalyseur 200 000 km.", "prixPiece": "Catalyseur 150 à 400 €, silencieux 100 à 250 €", "prixPose": "150 à 500 €", "zone": "Échappement" },
-    "support-moteur": { "role": "Fixent le moteur à la caisse en absorbant les vibrations.", "emplacement": "Sous le moteur et côté boîte.", "usure": "Vibrations au ralenti, à-coups en accélérant, claquement.", "dureeVie": "200 000 km environ.", "prixPiece": "40 à 120 € l'un", "prixPose": "100 à 300 €", "zone": "Moteur" },
-    "huile-boite": { "role": "Lubrifie les pignons et synchros de la boîte 5 vitesses.", "emplacement": "Boîte à gauche du moteur.", "usure": "Passages durs, sifflement.", "dureeVie": "Vidange conseillée tous les 100 000 km.", "prixPiece": "30 à 60 €", "prixPose": "80 à 150 €", "zone": "Transmission" },
-    "commande-boite": { "role": "Tringlerie entre le levier et la boîte de vitesses.", "emplacement": "Sous le camion, du levier à la boîte.", "usure": "Levier flou, vitesses dures à trouver.", "dureeVie": "Kit à refaire tous les 100 000 à 150 000 km.", "prixPiece": "30 à 80 € le kit", "prixPose": "150 à 300 €", "zone": "Transmission" },
-    "chauffage-stationnaire": { "role": "Eberspächer D4WS : chaudière au gazole qui chauffe le liquide moteur et l'habitacle moteur arrêté.", "emplacement": "Sous le plancher avant droit.", "usure": "Démarre puis coupe, fumée, codes défaut (le tien : 01414).", "dureeVie": "Entretien tous les 2 à 3 ans, la faire tourner chaque mois.", "prixPiece": "Bougie 40 à 80 €, ventilateur 150 à 300 €", "prixPose": "150 à 400 € chez un spécialiste", "zone": "Chauffage" }
+    "joints-moteur": {
+      "role": "Le bloc 5 cylindres est le cœur du moteur : pistons, bielles et vilebrequin y transforment la combustion en rotation. Les joints (couvre-culasse, reniflard, spi) le gardent étanche.",
+      "emplacement": "Au centre du compartiment, posé en travers.",
+      "usure": "Suintements d'huile, odeur d'huile chaude, fumée bleue si l'usure est interne.",
+      "dureeVie": "Le bloc dure toute la vie du camion ; les joints 150 000 à 250 000 km.",
+      "prixPiece": "20 à 90 € le joint",
+      "prixPose": "80 à 300 €",
+      "zone": "Moteur"
+    },
+    "culasse": {
+      "role": "Ferme le haut des cylindres et porte l'arbre à cames, les soupapes et les poussoirs : elle règle l'entrée d'air et la sortie des gaz.",
+      "emplacement": "Sur le bloc, sous le couvre-culasse noir.",
+      "usure": "Perte de compression, joint de culasse qui lâche (liquide qui baisse, fumée blanche), bruit de distribution.",
+      "dureeVie": "Refaite une fois dans la vie du moteur en général (la tienne en avril 2026).",
+      "prixPiece": "500 à 900 € de pièces pour une réfection",
+      "prixPose": "2 000 à 3 500 €",
+      "zone": "Moteur"
+    },
+    "distribution": {
+      "role": "La courroie de distribution synchronise le vilebrequin, l'arbre à cames et la pompe d'injection. Si elle casse, les soupapes touchent les pistons.",
+      "emplacement": "Côté droit du moteur, sous le carter plastique.",
+      "usure": "Aucun signe fiable avant la casse : on la change au kilométrage ou à l'âge.",
+      "dureeVie": "Environ 90 000 à 120 000 km ou 5 ans sur le 2.5 TDI.",
+      "prixPiece": "150 à 350 € le kit (galets, courroie, pompe à eau)",
+      "prixPose": "600 à 1 000 €",
+      "zone": "Moteur"
+    },
+    "pompe-eau": {
+      "role": "Fait circuler le liquide de refroidissement entre le moteur, le radiateur et le chauffage.",
+      "emplacement": "Entraînée par la distribution, côté droit.",
+      "usure": "Fuite rosée sous la pompe, bruit de roulement, surchauffe.",
+      "dureeVie": "Changée avec la distribution.",
+      "prixPiece": "40 à 100 €",
+      "prixPose": "Comprise avec la distribution",
+      "zone": "Refroidissement"
+    },
+    "courroie-accessoires": {
+      "role": "Entraîne l'alternateur, le compresseur de clim et la pompe de direction assistée.",
+      "emplacement": "À l'avant du moteur, avec ses galets.",
+      "usure": "Couinement à froid ou en braquant, craquelures, voyant batterie.",
+      "dureeVie": "60 000 à 120 000 km.",
+      "prixPiece": "30 à 150 € avec les galets",
+      "prixPose": "100 à 250 €",
+      "zone": "Moteur"
+    },
+    "huile-moteur": {
+      "role": "Lubrifie, refroidit et nettoie l'intérieur du moteur.",
+      "emplacement": "Remplissage sur le couvre-culasse, vidange sous le carter.",
+      "usure": "Huile noire et fluide, niveau qui baisse.",
+      "dureeVie": "Vidange tous les 15 000 km ou 1 an.",
+      "prixPiece": "40 à 80 € (5,5 L)",
+      "prixPose": "120 à 200 € la vidange complète",
+      "zone": "Entretien"
+    },
+    "filtre-huile": {
+      "role": "Retient les particules de l'huile moteur.",
+      "emplacement": "Cartouche verticale à l'avant du bloc.",
+      "usure": "Se change à chaque vidange.",
+      "dureeVie": "15 000 km.",
+      "prixPiece": "10 à 25 €",
+      "prixPose": "Avec la vidange",
+      "zone": "Entretien"
+    },
+    "filtre-gasoil": {
+      "role": "Filtre le gazole et sépare l'eau avant la pompe d'injection.",
+      "emplacement": "Sur la traverse avant, au-dessus du moteur.",
+      "usure": "Démarrage difficile, perte de puissance, prise d'air.",
+      "dureeVie": "30 000 km ou 2 ans.",
+      "prixPiece": "20 à 40 €",
+      "prixPose": "40 à 80 €",
+      "zone": "Alimentation"
+    },
+    "filtre-air": {
+      "role": "Filtre l'air aspiré par le moteur.",
+      "emplacement": "Boîte noire à gauche, derrière le phare.",
+      "usure": "Filtre gris, perte de puissance, fumée noire.",
+      "dureeVie": "30 000 km (le filtre Green se lave).",
+      "prixPiece": "20 à 60 €",
+      "prixPose": "Quelques minutes",
+      "zone": "Admission"
+    },
+    "debitmetre": {
+      "role": "Mesure la quantité d'air qui entre dans le moteur pour doser le gazole.",
+      "emplacement": "Entre la boîte à air et la durite du turbo.",
+      "usure": "Perte de puissance, fumée noire, code 00553.",
+      "dureeVie": "150 000 à 250 000 km.",
+      "prixPiece": "60 à 180 €",
+      "prixPose": "Quelques minutes",
+      "zone": "Admission"
+    },
+    "turbo": {
+      "role": "Utilise les gaz d'échappement pour comprimer l'air d'admission : il donne la puissance du TDI.",
+      "emplacement": "À l'arrière du moteur, sur le collecteur d'échappement.",
+      "usure": "Sifflement fort, fumée bleue, perte de puissance, jeu dans l'axe.",
+      "dureeVie": "250 000 à 400 000 km selon l'entretien.",
+      "prixPiece": "400 à 800 €",
+      "prixPose": "700 à 1 200 €",
+      "zone": "Admission"
+    },
+    "electrovanne-n75": {
+      "role": "Pilote la pression du turbo en commandant la wastegate par dépression.",
+      "emplacement": "Près de la boîte à air, avec ses petites durites.",
+      "usure": "Turbo intermittent, mode dégradé, code 01247.",
+      "dureeVie": "Variable, souvent grippée vers 200 000 km.",
+      "prixPiece": "40 à 90 €",
+      "prixPose": "Quelques minutes",
+      "zone": "Admission"
+    },
+    "egr": {
+      "role": "Réinjecte une partie des gaz d'échappement dans l'admission pour réduire la pollution.",
+      "emplacement": "Sur la pipe d'admission.",
+      "usure": "S'encrasse : fumée noire, perte de puissance. La tienne est nettoyée et partiellement bloquée depuis 2009.",
+      "dureeVie": "Nettoyage tous les 80 000 km environ.",
+      "prixPiece": "100 à 250 €",
+      "prixPose": "100 à 300 €",
+      "zone": "Admission"
+    },
+    "pompe-injection": {
+      "role": "Pompe VP37 : met le gazole sous pression et l'envoie aux injecteurs au bon moment. Elle porte l'électrovanne d'arrêt N109 et l'électrovanne d'avance N108.",
+      "emplacement": "Côté droit, entraînée par sa propre courroie.",
+      "usure": "Fuites au couvercle, démarrage difficile à chaud ou à froid, perte de puissance.",
+      "dureeVie": "300 000 à 500 000 km.",
+      "prixPiece": "600 à 1 200 € en échange standard",
+      "prixPose": "900 à 1 600 €",
+      "zone": "Alimentation"
+    },
+    "injecteurs": {
+      "role": "Pulvérisent le gazole dans chaque cylindre ; les retours ramènent le surplus au réservoir.",
+      "emplacement": "Sur la culasse, un par cylindre, reliés par les petites durites de retour.",
+      "usure": "Fumée noire, claquements, fuite aux bouchons ou durites de retour.",
+      "dureeVie": "200 000 à 300 000 km (tarage).",
+      "prixPiece": "Tarage 20 à 40 € par injecteur, neuf 150 à 250 €",
+      "prixPose": "100 à 300 €",
+      "zone": "Alimentation"
+    },
+    "bougies-prechauffage": {
+      "role": "Chauffent les cylindres avant le démarrage à froid (voyant en spirale).",
+      "emplacement": "Vissées dans la culasse, reliées par un bus.",
+      "usure": "Démarrage difficile à froid, fumée blanche au démarrage.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "60 à 120 € les 5",
+      "prixPose": "100 à 200 €",
+      "zone": "Démarrage"
+    },
+    "relais-prechauffage": {
+      "role": "Alimente les bougies de préchauffage selon la température du moteur.",
+      "emplacement": "Sur la platine de relais sous le tableau de bord (relais 103).",
+      "usure": "Plus de préchauffage, voyant qui ne s'allume pas, batterie qui se vide.",
+      "dureeVie": "Souvent toute la vie.",
+      "prixPiece": "30 à 60 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Démarrage"
+    },
+    "sonde-temperature": {
+      "role": "Sonde G62 : donne la température du moteur au calculateur (dosage, préchauffage, avance) et à l'aiguille.",
+      "emplacement": "Sur la sortie d'eau de la culasse.",
+      "usure": "Démarrage difficile, test d'avance faux, codes 00522 ou 17664.",
+      "dureeVie": "150 000 km environ.",
+      "prixPiece": "15 à 40 €",
+      "prixPose": "30 à 60 €",
+      "zone": "Refroidissement"
+    },
+    "thermostat": {
+      "role": "Garde le liquide fermé côté moteur tant qu'il est froid, puis ouvre vers le radiateur.",
+      "emplacement": "Dans son boîtier sur le bloc.",
+      "usure": "Moteur qui chauffe (bloqué fermé) ou qui ne chauffe pas (bloqué ouvert).",
+      "dureeVie": "100 000 à 200 000 km.",
+      "prixPiece": "20 à 50 €",
+      "prixPose": "80 à 150 €",
+      "zone": "Refroidissement"
+    },
+    "liquide-refroidissement": {
+      "role": "Le G12 évacue la chaleur du moteur vers le radiateur et alimente le chauffage.",
+      "emplacement": "Vase d'expansion à droite, radiateur à l'avant.",
+      "usure": "Niveau qui baisse, couleur brune.",
+      "dureeVie": "Vidange tous les 4 à 5 ans.",
+      "prixPiece": "20 à 40 €",
+      "prixPose": "80 à 150 €",
+      "zone": "Refroidissement"
+    },
+    "ventilateurs-radiateur": {
+      "role": "Soufflent l'air à travers le radiateur à l'arrêt et en ville ; temporisés après l'arrêt.",
+      "emplacement": "Derrière le radiateur, à l'avant.",
+      "usure": "Surchauffe dans les bouchons, couinement, batterie vidée (relais 98).",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "120 à 300 € le bloc",
+      "prixPose": "100 à 200 €",
+      "zone": "Refroidissement"
+    },
+    "pompe-eau-auxiliaire": {
+      "role": "Petite pompe électrique qui fait circuler l'eau moteur arrêté, pour le chauffage stationnaire et l'après-arrêt.",
+      "emplacement": "Sur les durites de chauffage.",
+      "usure": "Bruit après l'arrêt, chauffage stationnaire qui coupe, batterie vidée.",
+      "dureeVie": "Variable.",
+      "prixPiece": "60 à 150 €",
+      "prixPose": "50 à 100 €",
+      "zone": "Refroidissement"
+    },
+    "alternateur": {
+      "role": "Recharge la batterie et alimente l'électricité quand le moteur tourne.",
+      "emplacement": "À l'avant du moteur, en haut, entraîné par la courroie.",
+      "usure": "Voyant batterie, tension sous 13,5 V, odeur de chaud.",
+      "dureeVie": "150 000 à 250 000 km.",
+      "prixPiece": "150 à 350 €",
+      "prixPose": "300 à 550 €",
+      "zone": "Électricité"
+    },
+    "demarreur": {
+      "role": "Lance le moteur au tour de clé.",
+      "emplacement": "Côté boîte de vitesses, en bas.",
+      "usure": "Clic sans rotation, démarrage aléatoire.",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "120 à 300 €",
+      "prixPose": "250 à 550 €",
+      "zone": "Électricité"
+    },
+    "batterie": {
+      "role": "Fournit le courant au démarrage et quand le moteur est arrêté.",
+      "emplacement": "Sous le siège conducteur.",
+      "usure": "Démarreur qui tourne lentement, surtout l'hiver.",
+      "dureeVie": "5 à 7 ans.",
+      "prixPiece": "100 à 200 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Électricité"
+    },
+    "batterie-auxiliaire": {
+      "role": "Alimente l'aménagement (chauffage stationnaire, prises, frigo) sans vider la batterie de démarrage.",
+      "emplacement": "Sous le siège passager.",
+      "usure": "Chauffage stationnaire qui coupe, autonomie faible.",
+      "dureeVie": "5 à 8 ans.",
+      "prixPiece": "100 à 200 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Électricité"
+    },
+    "compresseur-clim": {
+      "role": "Comprime le gaz de climatisation ; entraîné par la courroie via un embrayage électrique.",
+      "emplacement": "À l'avant du moteur, en bas.",
+      "usure": "Plus de froid, bruit, blocage qui peut caler le moteur.",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "250 à 500 €",
+      "prixPose": "500 à 900 € avec la recharge",
+      "zone": "Climatisation"
+    },
+    "clim": {
+      "role": "Circuit de climatisation : gaz, condenseur à l'avant, pressostat, relais 140.",
+      "emplacement": "Condenseur devant le radiateur.",
+      "usure": "Froid qui baisse (fuite lente), pressostat qui coupe.",
+      "dureeVie": "Recharge tous les 2 à 3 ans.",
+      "prixPiece": "Recharge 60 à 120 €",
+      "prixPose": "Diagnostic 60 à 150 €",
+      "zone": "Climatisation"
+    },
+    "pompe-vide": {
+      "role": "Crée la dépression du master vac (assistance de freinage) et pilote le turbo et l'EGR.",
+      "emplacement": "Sur la culasse, entraînée par l'arbre à cames.",
+      "usure": "Pédale de frein dure, turbo paresseux.",
+      "dureeVie": "Longue ; le tuyau vers le master vac se fend souvent avant.",
+      "prixPiece": "80 à 250 €",
+      "prixPose": "150 à 400 €",
+      "zone": "Freinage"
+    },
+    "echappement": {
+      "role": "Évacue les gaz, réduit le bruit (silencieux) et la pollution (catalyseur). Sur ton camion : ligne inox depuis 2009, catalyseur juste avant le silencieux arrière.",
+      "emplacement": "Sous le camion, du collecteur à l'arrière droit.",
+      "usure": "Bruit, trous, contrôle technique (bruit, opacité).",
+      "dureeVie": "Inox : très longue ; catalyseur 200 000 km.",
+      "prixPiece": "Catalyseur 150 à 400 €, silencieux 100 à 250 €",
+      "prixPose": "150 à 500 €",
+      "zone": "Échappement"
+    },
+    "support-moteur": {
+      "role": "Fixent le moteur à la caisse en absorbant les vibrations.",
+      "emplacement": "Sous le moteur et côté boîte.",
+      "usure": "Vibrations au ralenti, à-coups en accélérant, claquement.",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "40 à 120 € l'un",
+      "prixPose": "100 à 300 €",
+      "zone": "Moteur"
+    },
+    "huile-boite": {
+      "role": "Lubrifie les pignons et synchros de la boîte 5 vitesses.",
+      "emplacement": "Boîte à gauche du moteur.",
+      "usure": "Passages durs, sifflement.",
+      "dureeVie": "Vidange conseillée tous les 100 000 km.",
+      "prixPiece": "30 à 60 €",
+      "prixPose": "80 à 150 €",
+      "zone": "Transmission"
+    },
+    "commande-boite": {
+      "role": "Tringlerie entre le levier et la boîte de vitesses.",
+      "emplacement": "Sous le camion, du levier à la boîte.",
+      "usure": "Levier flou, vitesses dures à trouver.",
+      "dureeVie": "Kit à refaire tous les 100 000 à 150 000 km.",
+      "prixPiece": "30 à 80 € le kit",
+      "prixPose": "150 à 300 €",
+      "zone": "Transmission"
+    },
+    "chauffage-stationnaire": {
+      "role": "Eberspächer D4WS : chaudière au gazole qui chauffe le liquide moteur et l'habitacle moteur arrêté.",
+      "emplacement": "Sous le plancher avant droit.",
+      "usure": "Démarre puis coupe, fumée, codes défaut (le tien : 01414).",
+      "dureeVie": "Entretien tous les 2 à 3 ans, la faire tourner chaque mois.",
+      "prixPiece": "Bougie 40 à 80 €, ventilateur 150 à 300 €",
+      "prixPose": "150 à 400 € chez un spécialiste",
+      "zone": "Chauffage"
+    },
+    "tableau-de-bord": {
+      "role": "Regroupe le combiné d'instruments, les commandes et le Climatronic (climatisation automatique avec réglage de l'avant et de l'arrière).",
+      "emplacement": "Devant le conducteur et le passager.",
+      "usure": "Aiguilles qui bloquent (soudures du combiné), afficheur du Climatronic qui s'éteint, fusibles 30 A du pulseur arrière.",
+      "dureeVie": "Toute la vie du camion ; le combiné se ressoude.",
+      "prixPiece": "Combiné d'occasion 80 à 250 €",
+      "prixPose": "Réparation du combiné 100 à 200 €",
+      "zone": "Habitacle"
+    },
+    "sieges-pivotants": {
+      "role": "Deux sièges individuels du Multivan qui pivotent et se déplacent sur les rails, pour rouler face à la route ou faire salon autour de la table.",
+      "emplacement": "Derrière les sièges avant, sur les rails du plancher.",
+      "usure": "Verrous de rails grippés, mécanisme de pivot dur, tissu usé.",
+      "dureeVie": "Toute la vie ; graisser les verrous.",
+      "prixPiece": "Siège d'occasion 100 à 300 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Habitacle"
+    },
+    "table-multivan": {
+      "role": "Table pliante d'origine, rangée contre la paroi, qui se déplie entre les sièges pivotants et la banquette.",
+      "emplacement": "Côté droit, entre les sièges du milieu et la banquette.",
+      "usure": "Pied qui prend du jeu, charnières.",
+      "dureeVie": "Toute la vie.",
+      "prixPiece": "Occasion 50 à 150 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Habitacle"
+    },
+    "banquette-lit": {
+      "role": "Banquette 3 places qui se rabat en lit (« mode nuit ») ; un coffre de rangement et le chauffage arrière sont dessous.",
+      "emplacement": "À l'arrière, sur les rails.",
+      "usure": "Mécanisme de rabattement dur, verrous de rails, coutures.",
+      "dureeVie": "Toute la vie ; graisser les articulations.",
+      "prixPiece": "Occasion 200 à 600 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Habitacle"
+    },
+    "chauffage-arriere": {
+      "role": "Petit radiateur alimenté par le liquide moteur et pulseur V47 qui soufflent l'air chaud à l'arrière.",
+      "emplacement": "Sous la banquette arrière, trappe d'accès.",
+      "usure": "Fuite de liquide (niveau qui baisse), pulseur muet (fusible 30 A, code 01027), résistance de pulseur.",
+      "dureeVie": "200 000 km environ pour le radiateur.",
+      "prixPiece": "Radiateur 60 à 150 €, pulseur 80 à 200 €",
+      "prixPose": "100 à 250 €",
+      "zone": "Habitacle"
+    }
   }
 }

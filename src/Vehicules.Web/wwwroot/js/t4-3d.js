@@ -41,7 +41,7 @@ const COULEURS_ETAT = { ok: 0x16a34a, att: 0xf59e0b, mal: 0xdc2626, neutre: 0x6b
 
 // ---------- Systèmes : position éclatée de chaque groupe ----------
 const SYSTEMES = {
-  carrosserie: { nom: 'Carrosserie et éclairage', eclat: [0, 2.1, 0] },
+  carrosserie: { nom: 'Carrosserie et éclairage', eclat: [0, 3.1, 0] },
   moteur: { nom: 'Moteur 2.5 TDI', eclat: [1.3, 0.7, 0.2] },
   refroidissement: { nom: 'Refroidissement et clim', eclat: [2.3, 0.45, 0] },
   transmission: { nom: 'Boîte et transmission', eclat: [0.7, 0.15, -1.35] },
@@ -51,6 +51,7 @@ const SYSTEMES = {
   freinage: { nom: 'Commande de freinage', eclat: [-0.4, 0.55, -1.6] },
   echappement: { nom: 'Échappement', eclat: [-0.3, 0.05, 1.75] },
   electricite: { nom: 'Électricité et équipements', eclat: [0.2, 1.0, -1.7] },
+  habitacle: { nom: 'Habitacle Multivan', eclat: [-0.3, 1.25, 0] },
 };
 
 // ---------- État ----------
@@ -485,6 +486,74 @@ function construireElectricite() {
     placer(boite(0.3, 0.12, 0.14, M.noir(), 0.03), 0.3, 0.36, 0.55), [0.2, 0, 0.3]);
 }
 
+function construireHabitacle() {
+  const S = 'habitacle';
+  const tissu = () => new THREE.MeshStandardMaterial({ color: 0x3d4450, roughness: 0.95 });
+  const tissuBleu = () => new THREE.MeshStandardMaterial({ color: 0x2b3f66, roughness: 0.95 });
+  const planche = () => new THREE.MeshStandardMaterial({ color: 0x2a2d32, roughness: 0.7 });
+
+  // Siège : assise, dossier, appui-tête ; orientation +1 vers l'avant, -1 dos à la route.
+  const siege = (sens = 1, largeur = 0.5) => {
+    const g = new THREE.Group();
+    g.add(placer(boite(0.5, 0.12, largeur, tissu(), 0.05), 0, 0, 0));
+    const dossier = placer(boite(0.12, 0.6, largeur, tissuBleu(), 0.05), -0.22 * sens, 0.33, 0);
+    dossier.rotation.z = 0.12 * sens;
+    g.add(dossier, placer(boite(0.1, 0.17, largeur * 0.55, tissu(), 0.04), -0.26 * sens, 0.72, 0));
+    g.add(placer(cylindre(0.05, 0.2, M.noir()), 0, -0.14, 0));
+    return g;
+  };
+
+  // Plancher et rails (Multivan à partir de 2000).
+  const plancher = grouper(placer(boite(3.6, 0.03, 1.66, planche(), 0.01), -0.55, 0.42, 0));
+  for (const z of [-0.62, -0.18, 0.18, 0.62]) plancher.add(placer(boite(2.4, 0.015, 0.04, M.alu(), 0.005), -0.9, 0.44, z));
+  piece(S, 'plancher', 'Plancher et rails de sièges', null, plancher, [0, -0.25, 0]);
+
+  // Tableau de bord, Climatronic, volant (conduite à gauche, côté -Z), levier de vitesses.
+  const tdb = grouper(
+    placer(boite(0.38, 0.32, 1.62, planche(), 0.08), 1.32, 1.02, 0),
+    placer(boite(0.04, 0.12, 0.2, M.noir(), 0.02), 1.12, 1.06, 0.02),
+    placer(boite(0.02, 0.09, 0.16, new THREE.MeshStandardMaterial({ color: 0x0b2a6b, emissive: 0x1a56c8, emissiveIntensity: 0.6 }), 0.01), 1.1, 1.07, 0.02),
+  );
+  piece(S, 'tableau-de-bord', 'Tableau de bord et Climatronic', 'tableau-de-bord', tdb, [0.45, 0.2, 0]);
+  const volant = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.022, 10, 40), M.noir());
+  volant.rotation.y = Math.PI / 2;
+  volant.rotation.x = 0.4;
+  piece(S, 'volant', 'Volant et colonne de direction', 'direction', grouper(
+    placer(volant, 1.02, 1.12, -0.45),
+    placer(cylindre(0.03, 0.38, M.noir(), 'x'), 1.2, 1.04, -0.45).rotateZ(0.5),
+  ), [0.25, 0.35, -0.2]);
+  piece(S, 'levier', 'Levier de vitesses', 'commande-boite', grouper(
+    placer(cylindre(0.012, 0.32, M.noir()), 1.05, 0.8, -0.05).rotateZ(-0.35),
+    placer(sphere(0.035, M.noir()), 0.99, 0.95, -0.05),
+  ), [0.3, 0.2, 0.05]);
+
+  // Sièges avant (conducteur à gauche).
+  piece(S, 'siege-conducteur', 'Siège conducteur', null, placer(siege(1), 0.68, 0.62, -0.45), [0.15, 0.35, -0.55]);
+  piece(S, 'siege-passager', 'Siège passager', null, placer(siege(1), 0.68, 0.62, 0.45), [0.15, 0.35, 0.55]);
+
+  // Deux sièges individuels pivotants sur rails, dos à la route.
+  piece(S, 'sieges-pivotants', 'Sièges pivotants sur rails', 'sieges-pivotants', grouper(
+    placer(siege(-1, 0.5), -0.15, 0.62, -0.42),
+    placer(siege(-1, 0.5), -0.15, 0.62, 0.42),
+  ), [0.1, 0.55, 0]);
+
+  // Table pliante du Multivan.
+  piece(S, 'table', 'Table pliante', 'table-multivan', grouper(
+    placer(boite(0.55, 0.03, 0.38, new THREE.MeshStandardMaterial({ color: 0x6b5a48, roughness: 0.6 }), 0.02), -0.72, 0.98, 0.55),
+    placer(cylindre(0.02, 0.5, M.alu()), -0.72, 0.72, 0.55),
+  ), [-0.1, 0.75, 0.45]);
+
+  // Banquette arrière 3 places rabattable en lit, chauffage arrière dessous.
+  const banquette = grouper(
+    placer(boite(0.55, 0.16, 1.5, tissu(), 0.06), -1.45, 0.66, 0),
+    placer(boite(0.13, 0.62, 1.5, tissuBleu(), 0.06), -1.75, 1.02, 0).rotateZ(0.12),
+  );
+  for (const z of [-0.5, 0, 0.5]) banquette.add(placer(boite(0.1, 0.16, 0.3, tissu(), 0.04), -1.8, 1.42, z));
+  piece(S, 'banquette', 'Banquette-lit arrière', 'banquette-lit', banquette, [-0.35, 0.65, 0]);
+  piece(S, 'chauffage-ar', 'Chauffage arrière (radiateur et pulseur)', 'chauffage-arriere',
+    placer(boite(0.3, 0.16, 0.35, M.noir(), 0.03), -1.45, 0.5, 0.4), [-0.2, -0.1, 0.65]);
+}
+
 function construire() {
   for (const id of Object.keys(SYSTEMES)) {
     groupes[id] = new THREE.Group();
@@ -501,6 +570,7 @@ function construire() {
   construireFreinage();
   construireEchappement();
   construireElectricite();
+  construireHabitacle();
   for (const g of Object.values(groupes)) g.userData.base.copy(g.position);
 }
 
@@ -549,6 +619,7 @@ export function demarrer(element, refDotnet) {
   scene.add(grille);
 
   construire();
+  creerTraits();
 
   etiquette = document.createElement('div');
   etiquette.className = 'etiquette-3d';
@@ -621,15 +692,47 @@ export function vue(nom) {
 }
 /** Place la caméra pour voir tout le camion (et l'éclaté), quel que soit le format de l'écran. */
 function vueInitiale(immediat = false) {
-  const rayon = 2.9 + eclatCible * 1.9;
+  const rayon = 2.9 + eclatCible * 3.0;
   const demiV = THREE.MathUtils.degToRad(camera.fov / 2);
   const demiH = Math.atan(Math.tan(demiV) * camera.aspect);
   const distance = rayon / Math.sin(Math.min(demiV, demiH));
   const direction = directionVue.clone().normalize();
-  cible.set(eclatCible * 0.45, 0.9 + eclatCible * 0.5, 0);
+  cible.set(eclatCible * 0.45, 0.9 + eclatCible * 1.1, 0);
   camCible.copy(cible).addScaledVector(direction, distance);
   if (immediat) { camera.position.copy(camCible); controles.target.copy(cible); }
   else animationCamera = true;
+}
+
+// ---------- Traits de rappel de l'éclaté ----------
+// Un trait fin relie chaque pièce écartée à sa place dans le camion, comme sur une planche d'atelier.
+let traits = null;
+const _a = new THREE.Vector3(), _b = new THREE.Vector3();
+
+function creerTraits() {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pieces.length * 6), 3));
+  traits = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xffc83d, transparent: true, opacity: 0, depthWrite: false }));
+  traits.frustumCulled = false;
+  scene.add(traits);
+}
+
+function majTraitsDeRappel() {
+  if (!traits) return;
+  const pos = traits.geometry.attributes.position.array;
+  const visible = Math.max(focus ? eclatFocus : eclatGlobal, 0);
+  traits.material.opacity = Math.min(0.55, visible * 0.7);
+  traits.visible = visible > 0.05;
+  if (!traits.visible) return;
+  pieces.forEach((p, i) => {
+    const g = groupes[p.systeme];
+    const montre = !focus || p.systeme === focus;
+    // Place d'origine (groupe et pièce en position montée) et place actuelle.
+    _a.copy(p.base).add(g.userData.base);
+    p.objet.getWorldPosition(_b);
+    if (!montre || p.systeme === 'carrosserie' && !focus) _b.copy(_a);
+    pos.set([_a.x, _a.y, _a.z, _b.x, _b.y, _b.z], i * 6);
+  });
+  traits.geometry.attributes.position.needsUpdate = true;
 }
 
 function boucle() {
@@ -642,10 +745,12 @@ function boucle() {
     const t = focus === id ? Math.max(eclatGlobal, 0.35) : eclatGlobal;
     g.position.set(g.userData.base.x + e[0] * t, g.userData.base.y + e[1] * t, g.userData.base.z + e[2] * t);
   }
+  // Vrai éclaté : chaque pièce s'écarte aussi de sa place, pas seulement son groupe.
   for (const p of pieces) {
-    const t = p.systeme === focus ? eclatFocus : 0;
+    const t = Math.max(p.systeme === focus ? eclatFocus : 0, focus ? 0 : eclatGlobal * 0.9);
     p.objet.position.copy(p.base).addScaledVector(p.eclatLocal, t);
   }
+  majTraitsDeRappel();
   if (animationCamera) {
     controles.target.lerp(cible, 0.08);
     camera.position.lerp(camCible, 0.08);
@@ -739,6 +844,7 @@ export function arreter() {
   etiquette?.remove();
   pieces.length = 0;
   for (const k of Object.keys(groupes)) delete groupes[k];
+  traits = null;
   focus = null; selection = null; survol = null; eclatGlobal = eclatCible = eclatFocus = 0;
   cible.set(0, 0.9, 0); camCible.set(5.8, 3.0, 6.4);
   rendu = scene = camera = controles = hote = dotnet = etiquette = null;
