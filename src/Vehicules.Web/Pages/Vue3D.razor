@@ -164,6 +164,10 @@
             </div>
         </nav>
     }
+    @if (credit is not null && systeme is null)
+    {
+        <small class="credit-3d">@credit</small>
+    }
 </div>
 
 @code {
@@ -213,7 +217,7 @@
     private DotNetObjectReference<Vue3D>? reference;
     private bool pret, etats, fantome;
     private int eclat;
-    private string? erreur, systeme, nomSysteme;
+    private string? erreur, systeme, nomSysteme, credit;
     private PieceVue? piece;
     private List<PieceVue> piecesSysteme = [];
 
@@ -237,6 +241,7 @@
             await module.InvokeVoidAsync("observerPanneau", panneau);
             toutes = await module.InvokeAsync<List<PieceTrouvable>>("listePieces");
             listeZones = await module.InvokeAsync<List<Zone>>("zones");
+            credit = await module.InvokeAsync<string?>("credit");
             pret = true;
             if (PieceQuery is not null) await module.InvokeVoidAsync("choisirPiece", PieceQuery);
         }

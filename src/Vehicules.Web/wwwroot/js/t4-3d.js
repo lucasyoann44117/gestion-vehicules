@@ -304,6 +304,109 @@ function construireCarrosserie() {
     tube([[0.95, 0.9, -0.86], [0.8, 0.95, -0.9], [0.55, 1.0, -0.9], [0.4, 0.95, -0.88]], 0.012, M.orangeTr()), [0, 0, -0.4]);
 }
 
+// ---------- Caisse détaillée (modèle 3D externe, facultatif) ----------
+// « Volkswagen Transporter MK4 (T4) 1990-2003 » par Merc_TV (szymonpasterczyk734) sur Sketchfab, licence CC BY 4.0 :
+// nettoyé (habitacle, roue, pare-chocs noirs et tôles fourgon retirés), allégé et regroupé par matière.
+// Repère du fichier : avant vers +X, sol à 0, 4,79 m de long. Absent, on garde la caisse dessinée ci-dessus.
+const CAISSE_DETAILLEE = 'modeles/t4-caisse.glb';
+const DECALAGE_CAISSE = [0.115, 0.10, 0];   // centre ses passages de roue sur nos essieux
+// Le modèle est un peu étroit et bas : on le ramène aux cotes du Multivan (1,84 m de large, 1,94 m de haut).
+const ECHELLE_CAISSE = [1, 1.055, 1.055];
+const versCaisse = (x, y, z) => [x * ECHELLE_CAISSE[0] + DECALAGE_CAISSE[0], y * ECHELLE_CAISSE[1] + DECALAGE_CAISSE[1], z * ECHELLE_CAISSE[2] + DECALAGE_CAISSE[2]];
+// Pièces de la caisse dessinée que le modèle remplace, et matières du modèle qui leur reviennent.
+const REMPLACEMENT = {
+  caisse: ['peinture', 'noir', 'gris', 'chrome'],
+  vitrages: ['vitre', 'pareBrise'],
+  feux: ['phare', 'feuRouge', 'clignotant'],
+};
+const SUPPRIMEES = ['pare-chocs', 'calandre', 'prise-air', 'essuie-glaces', 'retros'];
+// Le capot du modèle est plus bas et plus arrondi aux angles que celui de la caisse dessinée :
+// ces pièces du compartiment moteur dépasseraient, on les tasse de quelques centimètres (dx, dy).
+const TASSEMENT_SOUS_CAPOT = {
+  'boite-air-ronde': [-0.04, -0.16], 'echangeur': [0, -0.075], 'filtre-gazole': [-0.03, -0.06],
+  'vase-expansion': [0, -0.065], 'traverse-avant': [-0.1, 0],
+};
+const MATIERES_CAISSE = {
+  peinture: M.peinture, vitre: M.vitre, pareBrise: M.pareBrise, chrome: M.chrome,
+  noir: () => new THREE.MeshStandardMaterial({ color: 0x15171a, metalness: 0.1, roughness: 0.7 }),
+  gris: () => new THREE.MeshStandardMaterial({ color: 0x4a4e53, metalness: 0.1, roughness: 0.7 }),
+  phare: M.phare, feuRouge: M.rouge, clignotant: M.orangeTr,
+};
+const CREDIT_CAISSE = 'Caisse 3D : « Volkswagen Transporter MK4 (T4) » par Merc_TV (Sketchfab), CC BY 4.0, modifiée';
+let caisseDetaillee = null;   // promesse du chargement, partagée entre les ouvertures de la vue
+let caissePosee = false;
+
+/** Mention de l'auteur du modèle de caisse, quand il est affiché (licence CC BY). */
+export function credit() { return caissePosee ? CREDIT_CAISSE : null; }
+
+function chargerCaisseDetaillee() {
+  caisseDetaillee ??= (async () => {
+    try {
+      const { GLTFLoader } = await import('https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js');
+      const url = new URL(CAISSE_DETAILLEE, document.baseURI).href;
+      const tete = await fetch(url, { method: 'HEAD' });
+      if (!tete.ok) return null;
+      return (await new GLTFLoader().loadAsync(url)).scene;
+    } catch { return null; }
+  })();
+  return caisseDetaillee;
+}
+
+function poserCaisseDetaillee(modele) {
+  const meshes = {};
+  modele.traverse(o => { if (o.isMesh) meshes[o.name] = o; });
+  const S = 'carrosserie';
+  for (const p of [...pieces]) {
+    const tasse = TASSEMENT_SOUS_CAPOT[p.cle];
+    if (tasse && p.systeme !== S) { p.base.x += tasse[0]; p.base.y += tasse[1]; p.objet.position.copy(p.base); }
+    if (p.systeme !== S) continue;
+    if (SUPPRIMEES.includes(p.cle)) {
+      groupes[S].remove(p.objet);
+      pieces.splice(pieces.indexOf(p), 1);
+      continue;
+    }
+    const matieres = REMPLACEMENT[p.cle];
+    // Les pièces retirées font partie du modèle : on les retrouve en cherchant la caisse.
+    if (p.cle === 'caisse') p.nom = 'Caisse bleu Atlantis (pare-chocs, calandre, rétros, essuie-glaces)';
+    if (p.cle === 'decors') {
+      p.nom = 'Monogrammes ATLANTIS';
+      // On garde seulement les monogrammes ATLANTIS, recollés sur le flanc du modèle.
+      for (const o of [...p.objet.children]) {
+        if (o.material?.map) o.position.set(...versCaisse(-1.8, 1.03, Math.sign(o.position.z) * 0.874)).add(new THREE.Vector3(0, 0, Math.sign(o.position.z) * 0.004));
+        else p.objet.remove(o);
+      }
+    }
+    if (p.cle === 'plaques') {
+      // Points relevés sur le modèle : bouclier avant, et creux de plaque du hayon.
+      const [av, ar] = p.objet.children;
+      av.position.set(...versCaisse(2.364 + 0.012, 0.41, 0));
+      ar.position.set(...versCaisse(-2.321 - 0.012, 0.6, 0));
+    }
+    if (!matieres) continue;
+    // La pièce garde son nom, son clic et son éclaté ; seule sa forme change.
+    const racine = new THREE.Group();
+    racine.userData.cle = p.cle;
+    racine.position.copy(p.base);
+    for (const nom of matieres) {
+      const source = meshes[nom];
+      if (!source) continue;
+      const m = new THREE.Mesh(source.geometry, MATIERES_CAISSE[nom]());
+      if (nom === 'vitre' || nom === 'pareBrise') m.material.side = THREE.DoubleSide;
+      m.position.set(DECALAGE_CAISSE[0] - p.base.x, DECALAGE_CAISSE[1] - p.base.y, DECALAGE_CAISSE[2] - p.base.z);
+      m.scale.set(...ECHELLE_CAISSE);
+      m.userData.couleur = m.material.color.clone();
+      m.userData.opacite = m.material.opacity;
+      m.userData.transparent = m.material.transparent;
+      m.castShadow = m.receiveShadow = true;
+      racine.add(m);
+    }
+    groupes[S].remove(p.objet);
+    groupes[S].add(racine);
+    p.objet = racine;
+    p.centre = new THREE.Box3().setFromObject(racine).getCenter(new THREE.Vector3()).sub(racine.position);
+  }
+}
+
 // Le moteur est celui des planches (planches-3d.js), dessiné pièce par pièce, ici en vraies matières.
 // Repère des planches : X le long du vilebrequin (distribution), Y vers le haut, Z vers l'avant.
 // Dans le camion, le 5 cylindres est en travers : distribution côté droit (+Z), avant moteur vers la calandre (+X).
@@ -645,7 +748,9 @@ function construire() {
 
 export async function demarrer(element, refDotnet) {
   arreter();
+  const caisse = chargerCaisseDetaillee();
   catalogueMoteur ??= await chargerCatalogueMoteur();
+  const modeleCaisse = await caisse;
   hote = element;
   dotnet = refDotnet;
   rendu = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -688,7 +793,8 @@ export async function demarrer(element, refDotnet) {
   scene.add(grille);
 
   construire();
-  creerTraits();
+  caissePosee = !!modeleCaisse;
+  if (modeleCaisse) poserCaisseDetaillee(modeleCaisse);  creerTraits();
 
   etiquette = document.createElement('div');
   etiquette.className = 'etiquette-3d';
