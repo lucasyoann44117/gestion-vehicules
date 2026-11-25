@@ -1759,6 +1759,9 @@
               "titre": "Pressostat changé, pas de fuite",
               "url": "https://t4zone.info/forum/viewtopic.php?t=102656"
             }
+          ],
+          "codes": [
+            "00792"
           ]
         },
         {
@@ -2204,6 +2207,32 @@
             "00513"
           ],
           "difficulte": "moyen"
+        },
+        {
+          "id": "contacteur-frein",
+          "libelle": "Contacteur de pédale de frein (F) défaillant",
+          "frequence": 3,
+          "verifications": [
+            "Code 16955 « Brake Switch (F): Implausible Signal » (P0571) au VAG-COM",
+            "Les feux stop ne s'allument plus : le défaut revient aussitôt effacé",
+            "Vérifier la prise du contacteur au-dessus de la pédale ; s'il est bien branché, le remplacer"
+          ],
+          "organes": [
+            "eclairage"
+          ],
+          "codes": [
+            "16955",
+            "P0571"
+          ],
+          "difficulte": "facile",
+          "cout": "15 à 40 €",
+          "image": "T4 contacteur pédale de frein emplacement",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : voyant de préchauffage qui clignote en Écosse, code 16955 et feux stop éteints",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
         }
       ],
       "questions": [],
@@ -2448,7 +2477,13 @@
           "organes": [
             "chauffage-stationnaire"
           ],
-          "difficulte": "moyen"
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : mini-pompe à eau du chauffage remplacée",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
         },
         {
           "id": "pulseur-ar",
@@ -2466,6 +2501,104 @@
             {
               "titre": "Pulseur de chauffage arrière : fusible 30 A grillé",
               "url": "https://t4zone.info/forum/viewtopic.php?t=27309"
+            }
+          ]
+        },
+        {
+          "id": "eber-verrouille",
+          "libelle": "Chauffage stationnaire verrouillé après plusieurs défauts",
+          "frequence": 4,
+          "verifications": [
+            "Le chrono démarre, le relais claque, mais la chaudière ne s'allume pas et rien ne s'affiche",
+            "Après 5 défauts de suite (surchauffe, démarrages ratés), le D4WS se bloque tout seul",
+            "Allumer la chaudière puis l'interroger au VAG-COM (sinon elle n'est pas détectée), effacer les défauts, couper le contact : elle redémarre"
+          ],
+          "organes": [
+            "chauffage-stationnaire"
+          ],
+          "codes": [
+            "01414"
+          ],
+          "difficulte": "facile",
+          "cout": "0 € avec un VAG-COM",
+          "image": "Eberspächer D4WS T4 VAG-COM déverrouillage",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : D4WS verrouillé, déverrouillé en effaçant les défauts au VAG-COM chaudière allumée",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
+        },
+        {
+          "id": "eber-ventilateur",
+          "libelle": "Ventilateur d'air de combustion (V6) du D4WS en panne",
+          "frequence": 3,
+          "verifications": [
+            "Code 01414 « Combustion-Air Blower (V6) – circuit ouvert » au VAG-COM",
+            "La fumée sort par le petit tube plastique au lieu de l'échappement, puis la chaudière se coupe",
+            "Le ventilateur est intégré à la chaudière : souvent, on remplace la chaudière complète"
+          ],
+          "organes": [
+            "chauffage-stationnaire"
+          ],
+          "codes": [
+            "01414"
+          ],
+          "difficulte": "difficile",
+          "cout": "350 à 1 200 € (chaudière)",
+          "image": "Eberspächer D4WS ventilateur air de combustion",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : 01414 V6 circuit ouvert, fumée par le tube plastique",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
+        },
+        {
+          "id": "eber-tension",
+          "libelle": "Batteries trop faibles pour le chauffage stationnaire",
+          "frequence": 4,
+          "verifications": [
+            "Le relais sous le siège conducteur claque sans arrêt, la chaudière démarre puis s'arrête au bout de quelques minutes",
+            "Mesurer les batteries : moins de 12 V pendant le fonctionnement, c'est trop faible",
+            "Recharger à fond ou changer la batterie auxiliaire (10 ans d'âge = à remplacer)"
+          ],
+          "organes": [
+            "batterie",
+            "batterie-auxiliaire",
+            "chauffage-stationnaire"
+          ],
+          "codes": [],
+          "difficulte": "facile",
+          "cout": "100 à 200 € la batterie",
+          "image": "T4 Multivan batterie auxiliaire chauffage stationnaire",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : relais qui claque et chaudière qui se coupe, batteries rechargées puis changées",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
+        },
+        {
+          "id": "eber-age",
+          "libelle": "Chaudière en fin de vie (échangeur de plus de 10 ans)",
+          "frequence": 2,
+          "verifications": [
+            "Le manuel du Multivan prévoit le remplacement de l'échangeur du chauffage d'appoint au bout de 10 ans",
+            "Pannes à répétition malgré bougie et joints changés : remplacer la chaudière complète",
+            "Entretien : faire tourner le chauffage 10 minutes chaque mois, même l'été ; 120 minutes au plus d'affilée"
+          ],
+          "organes": [
+            "chauffage-stationnaire"
+          ],
+          "codes": [],
+          "difficulte": "difficile",
+          "cout": "350 à 1 200 €",
+          "image": "remplacement chaudière Eberspächer D4WS T4",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : chaudière D4WS remplacée en 2013, conseils d'entretien Eberspächer",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190&start=30"
             }
           ]
         }
@@ -2906,6 +3039,228 @@
         "direction floue louvoie",
         "tire droite parallelisme"
       ]
+    },
+    {
+      "id": "feux-stop",
+      "titre": "Les feux stop ne s'allument plus",
+      "systeme": "Électricité",
+      "descriptions": [
+        "Les feux stop ne fonctionnent plus",
+        "On me signale que je n'ai plus de feux stop",
+        "Le voyant de préchauffage clignote et les stops sont éteints"
+      ],
+      "motsCles": [
+        "feux stop",
+        "stop",
+        "frein",
+        "pedale",
+        "contacteur",
+        "eclairage"
+      ],
+      "recherches": [
+        "T4 feux stop ne fonctionnent plus contacteur",
+        "T4 16955 brake switch"
+      ],
+      "questions": [],
+      "causes": [
+        {
+          "id": "contacteur-frein",
+          "libelle": "Contacteur de pédale de frein (F) défaillant",
+          "frequence": 5,
+          "verifications": [
+            "Lire les codes : 16955 / P0571",
+            "Contrôler la prise et le réglage du contacteur au-dessus de la pédale",
+            "Le remplacer s'il ne commute plus"
+          ],
+          "organes": [
+            "eclairage"
+          ],
+          "codes": [
+            "16955",
+            "P0571"
+          ],
+          "difficulte": "facile",
+          "cout": "15 à 40 €",
+          "image": "T4 contacteur pédale de frein",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : feux stop en panne, contacteur de pédale de frein",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
+        },
+        {
+          "id": "ampoules-stop",
+          "libelle": "Ampoules de stop grillées",
+          "frequence": 3,
+          "verifications": [
+            "Regarder les deux feux et le 3e feu stop : si un seul est éteint, c'est l'ampoule"
+          ],
+          "organes": [
+            "eclairage"
+          ],
+          "codes": [],
+          "difficulte": "facile",
+          "cout": "2 à 5 €",
+          "image": "T4 ampoule feu stop",
+          "sources": []
+        },
+        {
+          "id": "fusible-stop",
+          "libelle": "Fusible des feux stop",
+          "frequence": 2,
+          "verifications": [
+            "Tous les stops éteints d'un coup : contrôler le fusible correspondant"
+          ],
+          "organes": [],
+          "codes": [],
+          "difficulte": "facile",
+          "cout": "1 €",
+          "image": "T4 boîte à fusibles",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "pare-brise",
+      "titre": "Bruit d'air ou pare-brise qui se décolle",
+      "systeme": "Carrosserie",
+      "descriptions": [
+        "Sifflement d'air au-dessus de 90 km/h",
+        "Le pare-brise sort de son logement en haut",
+        "Bruit de vent selon la direction du vent"
+      ],
+      "motsCles": [
+        "pare-brise",
+        "parebrise",
+        "bruit d'air",
+        "sifflement",
+        "vent",
+        "joint"
+      ],
+      "recherches": [
+        "T4 pare-brise qui se décolle",
+        "T4 joint de pare-brise sifflement"
+      ],
+      "questions": [],
+      "causes": [
+        {
+          "id": "collage-pare-brise",
+          "libelle": "Collage du pare-brise qui lâche",
+          "frequence": 4,
+          "verifications": [
+            "Regarder le haut du pare-brise : il dépasse de son logement",
+            "Dépannage provisoire : le remettre en place et le maintenir avec un adhésif étanche",
+            "Faire recoller ou remplacer par un poseur de vitrage"
+          ],
+          "organes": [],
+          "codes": [],
+          "difficulte": "difficile",
+          "cout": "0 € (assurance bris de glace) à 500 €",
+          "image": "T4 pare-brise décollé",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : pare-brise décollé en Écosse, tenu à l'adhésif jusqu'au retour",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
+        },
+        {
+          "id": "joint-pare-brise",
+          "libelle": "Joint ou baguette de pare-brise abîmé",
+          "frequence": 3,
+          "verifications": [
+            "Sifflement sans jeu visible : contrôler le joint et la baguette"
+          ],
+          "organes": [],
+          "codes": [],
+          "difficulte": "moyen",
+          "cout": "30 à 120 €",
+          "image": "T4 joint pare-brise",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "echappement-perce",
+      "titre": "Échappement bruyant ou percé",
+      "systeme": "Échappement",
+      "descriptions": [
+        "L'échappement fait plus de bruit",
+        "Fuite d'air à l'échappement, ligne fissurée",
+        "Le contrôleur signale une fuite d'échappement"
+      ],
+      "motsCles": [
+        "echappement",
+        "bruit",
+        "perce",
+        "fuite",
+        "ligne",
+        "inox",
+        "silencieux",
+        "catalyseur"
+      ],
+      "recherches": [
+        "T4 ligne inox fissurée soudure",
+        "T4 2.5 TDI fuite échappement"
+      ],
+      "questions": [],
+      "causes": [
+        {
+          "id": "soudures-inox",
+          "libelle": "Soudures de ligne inox fissurées",
+          "frequence": 3,
+          "verifications": [
+            "Regarder les soudures : fissures tout autour d'un raccord",
+            "Les lignes inox du commerce sont souvent soudées par points : faire reprendre la soudure"
+          ],
+          "organes": [
+            "echappement"
+          ],
+          "codes": [],
+          "difficulte": "moyen",
+          "cout": "0 à 100 € (soudure)",
+          "image": "ligne inox T4 soudure fissurée",
+          "sources": [
+            {
+              "titre": "BZH ATLANTIS : ligne inox percée au contrôle technique 2012, ressoudée",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=12&t=190"
+            }
+          ]
+        },
+        {
+          "id": "silentblocs-echappement",
+          "libelle": "Silentblocs d'échappement cassés",
+          "frequence": 3,
+          "verifications": [
+            "La ligne tape sous le camion ou pend : contrôler les caoutchoucs de suspension"
+          ],
+          "organes": [
+            "echappement"
+          ],
+          "codes": [],
+          "difficulte": "facile",
+          "cout": "10 à 40 €",
+          "image": "T4 silentbloc échappement",
+          "sources": []
+        },
+        {
+          "id": "joint-collecteur",
+          "libelle": "Joint de collecteur ou de descente fuyard",
+          "frequence": 2,
+          "verifications": [
+            "Bruit de « tac-tac » moteur froid, traces noires près du collecteur"
+          ],
+          "organes": [
+            "echappement"
+          ],
+          "codes": [],
+          "difficulte": "moyen",
+          "cout": "20 à 150 €",
+          "image": "T4 2.5 TDI joint collecteur",
+          "sources": []
+        }
+      ]
     }
   ],
   "codes": [
@@ -3190,6 +3545,43 @@
       ],
       "pannes": [
         "chauffage"
+      ]
+    },
+    {
+      "code": "16955",
+      "libelle": "Contacteur de pédale de frein (F) : signal non plausible (P0571)",
+      "composant": "Contacteur de pédale de frein",
+      "pistes": [
+        "Vérifier que les feux stop s'allument",
+        "Contrôler la prise du contacteur au-dessus de la pédale",
+        "Remplacer le contacteur"
+      ],
+      "pannes": [
+        "feux-stop",
+        "voyant-prechauffage"
+      ]
+    },
+    {
+      "code": "P0571",
+      "libelle": "Contacteur de pédale de frein (code OBD générique)",
+      "composant": "Contacteur de pédale de frein",
+      "pistes": [
+        "Voir 16955"
+      ],
+      "pannes": [
+        "feux-stop"
+      ]
+    },
+    {
+      "code": "00792",
+      "libelle": "Climatronic : pressostat de climatisation (F129)",
+      "composant": "Pressostat F129",
+      "pistes": [
+        "Contrôler la charge de gaz",
+        "Contrôler le pressostat et sa prise"
+      ],
+      "pannes": [
+        "clim"
       ]
     }
   ]
