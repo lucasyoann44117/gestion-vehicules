@@ -148,7 +148,15 @@
 
     @if (systeme is null && pret)
     {
-        <p class="aide-3d">Touche une zone du camion pour l'ouvrir, puis une pièce pour voir son historique.</p>
+        <nav class="zones-3d" aria-label="Zones du camion">
+            <span>Ouvrir une zone</span>
+            <div>
+                @foreach (var z in listeZones.OrderBy(z => z.Id == "moteur" ? 0 : 1))
+                {
+                    <button class="puce-3d @(z.Id == "moteur" ? "active" : "")" @onclick="() => Focaliser(z.Id)">@z.Nom <small>@z.Pieces</small></button>
+                }
+            </div>
+        </nav>
     }
 </div>
 
@@ -159,6 +167,9 @@
     private bool reduit, rechercheOuverte;
     private string recherche = "";
     private List<PieceTrouvable> toutes = [];
+
+    private List<Zone> listeZones = [];
+    public sealed record Zone(string Id, string Nom, int Pieces);
 
     public sealed record PieceTrouvable(string Cle, string Nom, string? Organe, string Systeme, string NomSysteme);
 
@@ -219,6 +230,7 @@
             await module.InvokeVoidAsync("demarrer", toile, reference);
             await module.InvokeVoidAsync("observerPanneau", panneau);
             toutes = await module.InvokeAsync<List<PieceTrouvable>>("listePieces");
+            listeZones = await module.InvokeAsync<List<Zone>>("zones");
             pret = true;
             if (PieceQuery is not null) await module.InvokeVoidAsync("choisirPiece", PieceQuery);
         }

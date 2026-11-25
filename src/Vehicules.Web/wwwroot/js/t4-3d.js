@@ -9,6 +9,7 @@ import * as THREE from 'https://esm.sh/three@0.170.0';
 import { OrbitControls } from 'https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'https://esm.sh/three@0.170.0/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js';
+import { piecesMoteur } from './planches-3d.js';
 
 // ---------- Cotes du véhicule ----------
 const AV = 1.60;          // essieu avant (sous le bas du pare-brise, mesuré sur la photo de profil)
@@ -97,8 +98,10 @@ function piece(systeme, cle, nom, organe, objet, eclatLocal = [0, 0, 0]) {
     o.receiveShadow = true;
   });
   objet.userData.cle = cle;
+  // Centre de la pièce par rapport à son point d'ancrage : les traits de l'éclaté partent de là.
+  const centre = new THREE.Box3().setFromObject(objet).getCenter(new THREE.Vector3()).sub(objet.position);
   groupes[systeme].add(objet);
-  pieces.push({ cle, nom, organe, systeme, objet, base: objet.position.clone(), eclatLocal: new THREE.Vector3(...eclatLocal) });
+  pieces.push({ cle, nom, organe, systeme, objet, base: objet.position.clone(), centre, eclatLocal: new THREE.Vector3(...eclatLocal) });
   return objet;
 }
 
@@ -276,55 +279,51 @@ function construireCarrosserie() {
     tube([[0.95, 0.9, -0.86], [0.8, 0.95, -0.9], [0.55, 1.0, -0.9], [0.4, 0.95, -0.88]], 0.012, M.orangeTr()), [0, 0, -0.4]);
 }
 
+// Le moteur est celui des planches (planches-3d.js), dessiné pièce par pièce, ici en vraies matières.
+// Repère des planches : X le long du vilebrequin (distribution), Y vers le haut, Z vers l'avant.
+// Dans le camion, le 5 cylindres est en travers : distribution côté droit (+Z), avant moteur vers la calandre (+X).
+const SELECTION_MOTEUR = {
+  '103': null, '115': null, '109': null, '129': null, '130': null, '903': null,
+  '121': ['boitier-thermostat', 'thermostat', 'sonde-g62'],
+  '253': ['collecteur', 'joints-collecteur'],
+};
+const VERS_CAMION = new THREE.Matrix4().set(0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
+let catalogueMoteur = null;   // noms et pièces suivies, lus dans diagnostic/planches-moteur.json
+
+async function chargerCatalogueMoteur() {
+  try {
+    const r = await fetch(new URL('diagnostic/planches-moteur.json', document.baseURI));
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+}
+
+function matiereMoteur(teinte) {
+  switch (teinte) {
+    case 'clair': return M.alu();
+    case 'moyen': return M.acier();
+    case 'fonce': return M.noir();
+    case 'gomme': return M.gomme();
+    case 'verre': return new THREE.MeshStandardMaterial({ color: 0x1d2024, roughness: 0.7, transparent: true, opacity: 0.3, depthWrite: false });
+    default: return M.alu();
+  }
+}
+
 function construireMoteur() {
   const S = 'moteur';
-  const g = groupes[S];
-  g.position.set(1.86, 0.72, 0.08);
-  piece(S, 'bloc', 'Bloc moteur 5 cylindres', 'joints-moteur', boite(0.4, 0.34, 0.66, M.fonte(), 0.03), [0, -0.05, 0]);
-  piece(S, 'carter', 'Carter et huile moteur', 'huile-moteur', placer(boite(0.36, 0.09, 0.58, M.noir(), 0.02), 0, -0.23, 0), [0, -0.4, 0]);
-  piece(S, 'culasse', 'Culasse (arbre à cames, soupapes, joint)', 'culasse', placer(boite(0.38, 0.12, 0.64, M.alu(), 0.02), 0, 0.23, 0), [0, 0.35, 0]);
-  piece(S, 'couvre-culasse', 'Couvre-culasse et joints', 'joints-moteur', placer(boite(0.3, 0.06, 0.6, M.noir(), 0.025), 0, 0.32, 0), [0, 0.65, 0]);
-  piece(S, 'distribution', 'Kit de distribution', 'distribution', grouper(
-    placer(boite(0.4, 0.5, 0.025, M.noir(), 0.04), 0, 0.03, 0.345),
-    placer(new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.012, 8, 40), M.gomme()), 0.02, 0.05, 0.37),
-  ), [0, 0.05, 0.5]);
-  piece(S, 'pompe-eau', 'Pompe à eau', 'pompe-eau', placer(cylindre(0.05, 0.06, M.alu(), 'z'), 0.1, -0.08, 0.36), [0.15, -0.05, 0.42]);
-  piece(S, 'alternateur', 'Alternateur', 'alternateur', placer(cylindre(0.075, 0.16, M.alu(), 'z'), 0.27, 0.08, 0.16), [0.42, 0.12, 0.05]);
-  piece(S, 'compresseur', 'Compresseur de clim', 'compresseur-clim', placer(cylindre(0.07, 0.18, M.acier(), 'z'), 0.26, -0.14, 0.14), [0.42, -0.18, 0.05]);
-  piece(S, 'courroie-acc', 'Courroie et galets d\'accessoires', 'courroie-accessoires',
-    tube([[0.05, -0.22, 0.27], [0.3, -0.24, 0.27], [0.36, 0.1, 0.27], [0.24, 0.17, 0.27], [0.04, 0.0, 0.27]], 0.011, M.gomme(), true), [0.25, 0, 0.3]);
-  piece(S, 'turbo', 'Turbo', 'turbo', grouper(
-    placer(new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.035, 12, 30), M.rouille()), 0, 0, 0),
-    placer(cylindre(0.04, 0.1, M.rouille(), 'z'), 0, 0, 0.05),
-  ), [-0.4, 0.15, 0]).position.set(-0.27, 0.1, -0.12);
-  pieces.at(-1).base.copy(pieces.at(-1).objet.position);
-  piece(S, 'demarreur', 'Démarreur', 'demarreur', placer(cylindre(0.045, 0.2, M.noir(), 'x'), -0.18, -0.14, -0.38), [-0.3, -0.1, -0.2]);
-  piece(S, 'filtre-huile', 'Filtre à huile', 'filtre-huile', placer(cylindre(0.04, 0.1, M.orange()), 0.23, -0.12, -0.2), [0.35, -0.12, -0.1]);
-  piece(S, 'filtre-gazole', 'Filtre à gazole', 'filtre-gasoil', placer(cylindre(0.045, 0.13, M.noir()), 0.15, 0.36, 0.22), [0.2, 0.35, 0.1]);
-  piece(S, 'filtre-air', 'Boîte à air et filtre', 'filtre-air', placer(boite(0.22, 0.13, 0.28, M.noir(), 0.04), 0.02, 0.44, -0.2), [0, 0.6, -0.2]);
-  piece(S, 'pompe-vide', 'Pompe à vide (master vac)', 'pompe-vide', placer(cylindre(0.05, 0.07, M.acier(), 'z'), -0.12, 0.2, -0.37), [-0.2, 0.2, -0.25]);
-  piece(S, 'pompe-injection', 'Pompe d\'injection VP37', 'pompe-injection', placer(boite(0.12, 0.16, 0.12, M.alu(), 0.02), -0.15, 0.05, 0.25), [-0.3, 0, 0.2]);
-  // Pièces de l'admission, de l'alimentation et du démarrage.
-  const injecteurs = new THREE.Group();
-  const bougies = new THREE.Group();
-  for (let i = 0; i < 5; i++) {
-    const z = -0.24 + i * 0.12;
-    injecteurs.add(placer(cylindre(0.014, 0.09, M.acier()), 0.08, 0.34, z));
-    injecteurs.add(placer(cylindre(0.004, 0.06, M.noir(), 'z'), 0.08, 0.39, z + 0.04));
-    bougies.add(placer(cylindre(0.008, 0.07, M.cuivre()), -0.1, 0.33, z));
+  groupes[S].position.set(1.86, 0.62, 0.08);
+  const positions = new Map();
+  for (const p of catalogueMoteur?.planches ?? [])
+    for (const x of p.positions) positions.set(`${p.code}/${x.cle}`, { ...x, planche: `${p.code} ${p.titre}` });
+  for (const { code, cle, eclat, objet } of piecesMoteur(SELECTION_MOTEUR, matiereMoteur)) {
+    const info = positions.get(`${code}/${cle}`);
+    const tourne = new THREE.Group();
+    tourne.matrixAutoUpdate = false;
+    tourne.matrix.copy(VERS_CAMION);
+    tourne.add(objet);
+    const [ex, ey, ez] = eclat;
+    piece(S, cle, info?.nom ?? cle, info?.organe ?? null, grouper(tourne), [ez * 0.85, ey * 0.85, ex * 0.85]);
   }
-  piece(S, 'injecteurs', 'Injecteurs et retours', 'injecteurs', injecteurs, [0.1, 0.5, 0]);
-  piece(S, 'bougies', 'Bougies de préchauffage', 'bougies-prechauffage', bougies, [-0.15, 0.45, 0]);
-  piece(S, 'debitmetre', 'Débitmètre d\'air (G70)', 'debitmetre', placer(cylindre(0.045, 0.16, M.noir(), 'x'), -0.12, 0.42, -0.36), [-0.15, 0.45, -0.25]);
-  piece(S, 'n75', 'Électrovanne de turbo N75', 'electrovanne-n75', placer(boite(0.05, 0.05, 0.04, M.noir(), 0.01), -0.05, 0.3, -0.42), [-0.1, 0.35, -0.35]);
-  piece(S, 'egr', 'Vanne EGR', 'egr', placer(cylindre(0.04, 0.05, M.alu()), -0.18, 0.3, 0.05), [-0.3, 0.35, 0.1]);
-  piece(S, 'sonde-g62', 'Sonde de température G62', 'sonde-temperature', placer(cylindre(0.012, 0.05, M.noir(), 'x'), 0.21, 0.24, 0.3), [0.3, 0.2, 0.25]);
-  piece(S, 'thermostat', 'Thermostat', 'thermostat', placer(cylindre(0.04, 0.05, M.noir(), 'x'), 0.23, -0.02, -0.3), [0.35, 0, -0.2]);
-  piece(S, 'supports', 'Supports moteur', 'support-moteur', grouper(
-    placer(boite(0.1, 0.08, 0.1, M.gomme(), 0.02), 0, -0.32, 0.25),
-    placer(boite(0.1, 0.08, 0.1, M.gomme(), 0.02), 0, -0.32, -0.25),
-  ), [0, -0.55, 0]);}
-
+}
 function construireRefroidissement() {
   const S = 'refroidissement';
   const g = groupes[S];
@@ -576,8 +575,9 @@ function construire() {
 
 // ---------- Rendu et interaction ----------
 
-export function demarrer(element, refDotnet) {
+export async function demarrer(element, refDotnet) {
   arreter();
+  catalogueMoteur ??= await chargerCatalogueMoteur();
   hote = element;
   dotnet = refDotnet;
   rendu = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -703,26 +703,39 @@ export function observerPanneau(panneau) {
     else marger(Math.max(0, h.right - p.left + 10), 0);
   };
   new ResizeObserver(maj).observe(panneau);
-  new MutationObserver(maj).observe(panneau, { attributes: true, attributeFilter: ['class'] });
+  // Le panneau arrive en glissant : on mesure aussi une fois l'animation finie.
+  new MutationObserver(() => { maj(); setTimeout(maj, 380); }).observe(panneau, { attributes: true, attributeFilter: ['class'] });
+  panneau.addEventListener('transitionend', maj);
   maj();
 }
 
-/** Demi-angles de vue de la partie de l'image que le panneau ne couvre pas. */
-function champLibre() {
+/**
+ * Partie de l'image laissée libre : sous la barre d'outils (t), au-dessus du panneau en bas (b),
+ * à gauche du panneau de droite (d). H = hauteur de l'image virtuelle dont le centre tombe au milieu de cette partie.
+ */
+function zoneLibre() {
   const l = hote.clientWidth, h = hote.clientHeight;
+  const barre = hote.parentElement?.querySelector('.barre-3d');
+  const t = barre ? Math.min(Math.max(0, barre.getBoundingClientRect().bottom - hote.getBoundingClientRect().top + 6), h * 0.35) : 0;
   const d = Math.min(marges.droite, l * 0.6), b = Math.min(marges.bas, h * 0.6);
-  const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * (h - b) / (h + b);
-  const tanH = tanV * (l - d) / Math.max(h - b, 1);
+  return { l, h, t, d, b, H: h + Math.abs(b - t), decalageY: Math.max(0, b - t) };
+}
+
+/** Demi-angles de vue de la partie de l'image que ni la barre ni le panneau ne couvrent. */
+function champLibre() {
+  const { l, h, t, d, b, H } = zoneLibre();
+  const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const tanV = tan * Math.max(h - t - b, 1) / H;
+  const tanH = tan * Math.max(l - d, 1) / H;
   return { demiV: Math.atan(tanV), demiH: Math.atan(tanH) };
 }
 
 function appliquerMarges() {
   if (!camera || !hote) return;
-  const l = hote.clientWidth, h = hote.clientHeight;
-  const d = Math.min(marges.droite, l * 0.6), b = Math.min(marges.bas, h * 0.6);
-  if (d > 0 || b > 0) camera.setViewOffset(l + d, h + b, d, b, l, h);
+  const { l, h, d, H, decalageY } = zoneLibre();
+  if (d > 0 || H !== h) camera.setViewOffset(l + d, H, d, decalageY, l, h);
   else camera.clearViewOffset();
-  camera.aspect = (l + d) / (h + b);
+  camera.aspect = (l + d) / H;
   camera.updateProjectionMatrix();
 }
 
@@ -775,8 +788,8 @@ function majTraitsDeRappel() {
     const g = groupes[p.systeme];
     const montre = !focus || p.systeme === focus;
     // Place d'origine (groupe et pièce en position montée) et place actuelle.
-    _a.copy(p.base).add(g.userData.base);
-    p.objet.getWorldPosition(_b);
+    _a.copy(p.base).add(g.userData.base).add(p.centre);
+    p.objet.getWorldPosition(_b).add(p.centre);
     if (!montre || p.systeme === 'carrosserie' && !focus) _b.copy(_a);
     pos.set([_a.x, _a.y, _a.z, _b.x, _b.y, _b.z], i * 6);
   });
@@ -865,6 +878,17 @@ function cadrer(objets, distance = 1.0) {
   cible.copy(centre);
   camCible.copy(cible).addScaledVector(direction, recul * (distance > 2 ? 1 : distance));
   animationCamera = true;
+}
+
+/** Zones du camion, pour les ouvrir directement (le moteur est caché sous la carrosserie). */
+export function zones() {
+  return Object.entries(SYSTEMES).map(([id, s]) => ({ id, nom: s.nom, pieces: pieces.filter(p => p.systeme === id).length }));
+}
+
+/** Relevé pour le débogage du cadrage (console du navigateur). */
+export function releveCamera() {
+  const b = focus ? new THREE.Box3().setFromObject(groupes[focus]) : null;
+  return { focus, marges, champ: champLibre(), boite: b && [b.min.toArray(), b.max.toArray()], camera: camera.position.toArray(), cible: controles.target.toArray(), camCible: camCible.toArray(), distance: camera.position.distanceTo(controles.target) };
 }
 
 export function focaliser(systeme) {

@@ -17,7 +17,11 @@ const TEINTES_ETAT = { ok: 0xcdebd5, att: 0xfbe2b4, mal: 0xf6c9c4, neutre: null 
 const TRAIT = 0x1b1b1a, TRAIT_CHOISI = 0x1f5fd1;
 const REMPLI_CHOISI = 0xbcd3fa, REMPLI_SURVOL = 0xe0ebfd;
 
+// Quand la Vue 3D du camion emprunte ces pièces, elle fournit ses propres matières (métal, caoutchouc…).
+let fabrique = null;
+
 function mat(teinte = 'clair') {
+  if (fabrique) return fabrique(teinte);
   // Carters et caches : translucides, pour laisser voir ce qu'ils couvrent.
   if (teinte === 'verre') return new THREE.MeshStandardMaterial({ color: TEINTES.clair, roughness: 0.9, transparent: true, opacity: 0.28, depthWrite: false });
   return new THREE.MeshStandardMaterial({
@@ -338,6 +342,23 @@ const PIECES = {
 
 // Pièces dessinées dans un autre groupe : réutilisées sans être dessinées deux fois en vue complète.
 PIECES['121']['pompe-eau'] = { doublon: true, eclat: [0.18, 0, 0.10], faire: () => PIECES['109']['pompe-eau'].faire() };
+
+/**
+ * Fabrique les pièces du moteur pour une autre scène (la Vue 3D du camion).
+ * selection : { code: null (tout le groupe) | [clés] } ; fabriqueMat(teinte) donne la matière.
+ * Renvoie [{ code, cle, eclat, objet }] dessinés dans le repère moteur.
+ */
+export function piecesMoteur(selection, fabriqueMat) {
+  fabrique = fabriqueMat;
+  try {
+    return Object.entries(selection).flatMap(([code, cles]) =>
+      Object.entries(PIECES[code] ?? {})
+        .filter(([cle, d]) => !d.doublon && (!cles || cles.includes(cle)))
+        .map(([cle, d]) => ({ code, cle, eclat: d.eclat, objet: d.faire() })));
+  } finally {
+    fabrique = null;
+  }
+}
 
 // Angle de vue et décalage du groupe dans la vue « Moteur complet ».
 const MISE_EN_PAGE = {
