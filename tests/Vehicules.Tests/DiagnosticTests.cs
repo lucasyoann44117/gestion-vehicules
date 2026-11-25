@@ -17,6 +17,7 @@ public class DiagnosticTests
     [InlineData("la clim souffle tiède", "clim")]
     [InlineData("il y a une goutte de gasoil sous l'injecteur", "fuite-gazole")]
     [InlineData("le voyant d'huile rouge clignote et ça bipe", "voyant-huile")]
+    [InlineData("la direction est floue et le camion louvoie", "direction")]
     public void Trouve_la_bonne_panne(string description, string attendue) =>
         Assert.Equal(attendue, MoteurDiagnostic.Chercher(description, Base)[0].Panne.Id);
 

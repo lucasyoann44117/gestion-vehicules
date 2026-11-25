@@ -333,12 +333,19 @@
           "frequence": 5,
           "verifications": [
             "Mesurer la batterie (12,6 V au repos)",
-            "Nettoyer et serrer les cosses et la tresse de masse"
+            "Nettoyer et serrer les cosses et la tresse de masse",
+            "Une masse sectionnée donne les mêmes symptômes (voyants qui s'allument, préchauffage bref)"
           ],
           "organes": [
             "batterie"
           ],
-          "difficulte": "facile"
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Ne démarre plus : masse sectionnée",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=12925"
+            }
+          ]
         },
         {
           "id": "antidemarrage",
@@ -394,7 +401,8 @@
           "frequence": 3,
           "verifications": [
             "Desserrer le raccord d'arrivée à la pompe : le gazole doit couler",
-            "Remplacer le filtre si ancien"
+            "Remplacer le filtre si ancien",
+            "Réamorcer : desserrer les tuyaux d'injecteurs, aspirer par le retour jusqu'à ce que le gazole coule sans bulles, puis lancer au démarreur par séquences de 10 s"
           ],
           "organes": [
             "filtre-gasoil"
@@ -408,6 +416,10 @@
             {
               "titre": "Démarrage impossible : réamorçage du circuit gazole",
               "url": "https://t4zone.info/forum/viewtopic.php?t=92446"
+            },
+            {
+              "titre": "Réamorçage de la pompe après démontage",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=52969"
             }
           ]
         },
@@ -578,14 +590,26 @@
           "frequence": 5,
           "verifications": [
             "Suivre les durites du turbo à l'échangeur et à l'admission : traces d'huile, fissures, colliers",
-            "Écouter un souffle en accélération"
+            "Écouter un souffle en accélération",
+            "Manchon entre débitmètre et turbo qui prend du jeu : le turbo aspire de l'air non filtré (un collier suffit)",
+            "Vis de fixation du turbo desserrées ou perdues"
           ],
           "organes": [
             "turbo"
           ],
           "difficulte": "facile",
           "cout": "20 à 80 €",
-          "image": "T4 2.5 TDI durite turbo échangeur"
+          "image": "T4 2.5 TDI durite turbo échangeur",
+          "sources": [
+            {
+              "titre": "Manchon débitmètre-turbo avec du jeu",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=52969"
+            },
+            {
+              "titre": "Perte de puissance : deux vis du turbo perdues",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=19949"
+            }
+          ]
         },
         {
           "id": "n75",
@@ -605,6 +629,10 @@
             {
               "titre": "Cascade de soucis : électrovanne de turbo fatiguée",
               "url": "https://t4zone.info/forum/viewtopic.php?t=103450"
+            },
+            {
+              "titre": "N75 grippée et durites à dépression pourries",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=52969"
             }
           ]
         },
@@ -647,7 +675,13 @@
             "filtre-air",
             "filtre-gasoil"
           ],
-          "difficulte": "facile"
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Filtres à air et à gazole encrassés",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=52969"
+            }
+          ]
         },
         {
           "id": "turbo-hs",
@@ -677,6 +711,27 @@
             {
               "titre": "Cascade de soucis : calage de pompe et électrovanne de turbo",
               "url": "https://t4zone.info/forum/viewtopic.php?t=103450"
+            }
+          ]
+        },
+        {
+          "id": "n108",
+          "libelle": "Électrovanne de début d'injection N108 coupée",
+          "frequence": 2,
+          "verifications": [
+            "Code 17660 ou 00550 persistant",
+            "Mesurer la bobine de l'électrovanne à l'ohmmètre (coupée = infini)",
+            "Après démontage, la pompe se vide : réamorcer (voir la fiche « Ne démarre pas du tout »)"
+          ],
+          "codes": [
+            "17660",
+            "00550"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "ACV sans puissance, code 17660 : N75 grippée, manchon de turbo, N108 coupée",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=52969"
             }
           ]
         }
@@ -978,9 +1033,20 @@
           "frequence": 4,
           "verifications": [
             "À l'arrêt moteur chaud, le ventilateur doit se mettre en route",
-            "Ponter le thermocontact pour tester le moto-ventilateur"
+            "Ponter le thermocontact pour tester le moto-ventilateur",
+            "Relais 98 de temporisation des ventilateurs, fusibles 50 A au-dessus du phare gauche"
           ],
-          "difficulte": "moyen"
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Coupure des ventilateurs : relais 98",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=13981"
+            },
+            {
+              "titre": "Relais et fusibles des ventilateurs de refroidissement",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=14578"
+            }
+          ]
         },
         {
           "id": "pompe-eau",
@@ -1017,6 +1083,25 @@
             "00522"
           ],
           "difficulte": "facile"
+        },
+        {
+          "id": "radiateur-ar",
+          "libelle": "Radiateur de chauffage arrière qui fuit (sous la banquette du Multivan)",
+          "frequence": 2,
+          "verifications": [
+            "Le niveau baisse sans trace au moteur",
+            "Ouvrir la trappe sous la banquette arrière : traces de liquide autour du chauffage arrière"
+          ],
+          "organes": [
+            "liquide-refroidissement"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Fuite de liquide à l'arrière : radiateur de chauffage arrière",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=21040"
+            }
+          ]
         }
       ],
       "questions": [
@@ -1348,13 +1433,20 @@
           "libelle": "Disques voilés ou usés (vibrations dans la pédale)",
           "frequence": 4,
           "verifications": [
-            "Rebord sur le disque, vibrations en freinant à vitesse élevée"
+            "Rebord sur le disque, vibrations en freinant à vitesse élevée",
+            "Pistons d'étriers qui reviennent mal : vibrations dans la direction et la pédale vers 70-80 km/h"
           ],
           "organes": [
             "freins-av",
             "freins-ar"
           ],
-          "difficulte": "moyen"
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Vibrations inexpliquées : pistons d'étriers grippés",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=88701"
+            }
+          ]
         },
         {
           "id": "etrier",
@@ -1375,12 +1467,19 @@
           "libelle": "Assistance de freinage (master vac ou pompe à vide)",
           "frequence": 2,
           "verifications": [
-            "Moteur arrêté, pomper la pédale puis démarrer : la pédale doit s'enfoncer"
+            "Moteur arrêté, pomper la pédale puis démarrer : la pédale doit s'enfoncer",
+            "Pédale dure surtout au démarrage : tuyau entre pompe à vide et master vac fendu"
           ],
           "organes": [
             "pompe-vide"
           ],
-          "difficulte": "garage"
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "2.5 TDI ACV : pédale dure, tuyau de dépression du master vac",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=93536"
+            }
+          ]
         },
         {
           "id": "liquide",
@@ -1463,12 +1562,19 @@
           "libelle": "Courroie d'accessoires qui patine ou galet",
           "frequence": 3,
           "verifications": [
-            "Tension de la courroie, bruit de couinement à froid"
+            "Tension de la courroie, bruit de couinement à froid",
+            "Voyant batterie et moteur qui chauffe en même temps : la courroie entraîne aussi la pompe à eau"
           ],
           "organes": [
             "courroie-accessoires"
           ],
-          "difficulte": "moyen"
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Voyant batterie et moteur qui chauffe : courroie détendue",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=30666"
+            }
+          ]
         },
         {
           "id": "batterie",
@@ -1488,21 +1594,44 @@
           "frequence": 3,
           "verifications": [
             "Ampèremètre en série sur la batterie, véhicule fermé : moins de 50 mA",
-            "Retirer les fusibles un à un"
+            "Retirer les fusibles un à un",
+            "Relais de préchauffage défaillant qui reste alimenté",
+            "Ventilateurs qui tournent moteur coupé : relais 98 (ressort cassé) ou thermocontacteur"
           ],
           "organes": [
             "chauffage-stationnaire"
           ],
-          "difficulte": "moyen"
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Batterie qui se vide : relais de préchauffage",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=94156"
+            },
+            {
+              "titre": "Ventilateurs qui ne s'arrêtent pas : relais 98",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=13981"
+            },
+            {
+              "titre": "Batteries à plat à répétition : thermocontacteur du ventilateur",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=94240"
+            }
+          ]
         },
         {
           "id": "masse",
           "libelle": "Câbles ou masse oxydés",
           "frequence": 2,
           "verifications": [
-            "Tresse de masse moteur-caisse, cosses de batterie"
+            "Tresse de masse moteur-caisse, cosses de batterie",
+            "Cosse du câble de charge qui chauffe : la ressouder"
           ],
-          "difficulte": "facile"
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Câble d'alternateur qui chauffe : cosse défectueuse",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=26596"
+            }
+          ]
         },
         {
           "id": "pont-diodes",
@@ -1539,6 +1668,22 @@
             {
               "titre": "Batterie qui se décharge : sonde neuve défectueuse sur la pompe additionnelle",
               "url": "https://t4zone.info/forum/viewtopic.php?t=103095"
+            }
+          ]
+        },
+        {
+          "id": "combine",
+          "libelle": "Soudure du combiné d'instruments (l'alternateur ne s'excite qu'à chaud)",
+          "frequence": 1,
+          "verifications": [
+            "La charge ne fonctionne qu'une fois le moteur chaud",
+            "Composant à ressouder sous le compte-tours"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "L'alternateur ne charge qu'à chaud : soudure du tableau de bord",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=90404"
             }
           ]
         }
@@ -1608,7 +1753,13 @@
           "organes": [
             "clim"
           ],
-          "difficulte": "garage"
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Pressostat changé, pas de fuite",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=102656"
+            }
+          ]
         },
         {
           "id": "compresseur",
@@ -1624,12 +1775,28 @@
         },
         {
           "id": "fusible",
-          "libelle": "Fusible ou relais de clim",
+          "libelle": "Fusible (n°30) ou relais de clim (relais 140)",
           "frequence": 2,
           "verifications": [
-            "Voir la boîte à fusibles sous le tableau de bord"
+            "Voir la boîte à fusibles sous le tableau de bord",
+            "Le fusible 30 alimente le relais 140 qui commande l'embrayage du compresseur : le tester sous charge, un voltmètre peut tromper",
+            "Retirer et remettre le relais 140 (faux contact)"
           ],
-          "difficulte": "facile"
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Clim HS : fusible 30 du relais 140",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=83410"
+            },
+            {
+              "titre": "Clim qui ne s'enclenche plus : panne en amont du compresseur",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=95230"
+            },
+            {
+              "titre": "Clim relancée : pressostat changé, relais reposé",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=102656"
+            }
+          ]
         }
       ],
       "questions": [
@@ -1682,7 +1849,13 @@
             "commande-boite"
           ],
           "difficulte": "moyen",
-          "cout": "kit 30 à 80 €"
+          "cout": "kit 30 à 80 €",
+          "sources": [
+            {
+              "titre": "Levier de vitesses flottant : timonerie",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=88229"
+            }
+          ]
         },
         {
           "id": "embrayage",
@@ -1704,6 +1877,47 @@
             "huile-boite"
           ],
           "difficulte": "moyen"
+        },
+        {
+          "id": "hydraulique",
+          "libelle": "Commande hydraulique d'embrayage (émetteur, flexible, purge)",
+          "frequence": 3,
+          "verifications": [
+            "La pédale reste enfoncée ou le niveau de liquide baisse",
+            "Flexible dont l'agrafe a sauté",
+            "Purge impossible : émetteur bouché"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Pédale d'embrayage enfoncée : flexible débranché",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=93433"
+            },
+            {
+              "titre": "Purge d'embrayage impossible : émetteur",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=82464"
+            }
+          ]
+        },
+        {
+          "id": "pignons-5",
+          "libelle": "Pignons et synchro de 5e usés (la 5e craque puis saute)",
+          "frequence": 2,
+          "verifications": [
+            "Sifflement sur autoroute, la 5e craque puis tourne au point mort",
+            "Accès par le carter du pignon de 5e"
+          ],
+          "organes": [
+            "huile-boite"
+          ],
+          "difficulte": "garage",
+          "cout": "environ 500 €",
+          "sources": [
+            {
+              "titre": "Plus de 5e : pignons et synchro remplacés",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=21549"
+            }
+          ]
         }
       ],
       "questions": [
@@ -1715,6 +1929,15 @@
           },
           "siNon": {
             "commande": 30
+          }
+        },
+        {
+          "texte": "La pédale d'embrayage reste-t-elle enfoncée ou le liquide baisse-t-il ?",
+          "siOui": {
+            "hydraulique": 45
+          },
+          "siNon": {
+            "hydraulique": -15
           }
         }
       ],
@@ -2181,12 +2404,19 @@
           "libelle": "Bulle d'air dans le circuit de chauffage",
           "frequence": 3,
           "verifications": [
-            "Purger le circuit après un remplissage"
+            "Purger le circuit après un remplissage",
+            "Après une vidange : laisser le vase se mettre en pression puis ouvrir la valve de purge sur la durite de chauffage"
           ],
           "organes": [
             "liquide-refroidissement"
           ],
-          "difficulte": "facile"
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Plus de chauffage après vidange du liquide : purge",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=73431"
+            }
+          ]
         },
         {
           "id": "eber-bougie",
@@ -2194,12 +2424,19 @@
           "frequence": 4,
           "verifications": [
             "Lire le code clignotant de la minuterie",
-            "Faire tourner 20 min à fond une fois par mois pour éviter l'encrassement"
+            "Faire tourner 20 min à fond une fois par mois pour éviter l'encrassement",
+            "Fusible du boîtier de la chaudière grillé, ventilateur de combustion bloqué par la suie"
           ],
           "organes": [
             "chauffage-stationnaire"
           ],
-          "difficulte": "moyen"
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Chauffage stationnaire réparé : fusible du boîtier, bougie, ventilateur nettoyé",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=67708"
+            }
+          ]
         },
         {
           "id": "eber-pompe",
@@ -2212,6 +2449,25 @@
             "chauffage-stationnaire"
           ],
           "difficulte": "moyen"
+        },
+        {
+          "id": "pulseur-ar",
+          "libelle": "Pulseur de chauffage arrière : fusible 30 A",
+          "frequence": 2,
+          "verifications": [
+            "Code 01027 (ventilateur d'air chaud arrière V47) dans le Climatronic",
+            "Fusible 30 A de la rangée du bas (n°13 sur certains modèles)"
+          ],
+          "codes": [
+            "01027"
+          ],
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Pulseur de chauffage arrière : fusible 30 A grillé",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=27309"
+            }
+          ]
         }
       ],
       "questions": [
@@ -2445,11 +2701,49 @@
             {
               "titre": "Voyant d'huile qui clignote : cause alternateur",
               "url": "https://t4zone.info/forum/viewtopic.php?t=47588"
+            },
+            {
+              "titre": "Alternateur qui ne charge qu'à chaud et voyant d'huile qui clignote",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=90404"
+            }
+          ]
+        },
+        {
+          "id": "sonde-niveau",
+          "libelle": "Sonde de niveau d'huile (voyant orange « burette », pas le rouge)",
+          "frequence": 4,
+          "verifications": [
+            "Le voyant orange clignote quelques fois au démarrage",
+            "Sonde sous le carter, devant le bouchon de vidange : nettoyer et resserrer la fiche, sinon la changer",
+            "Le contacteur de capot sert aussi au contrôle de niveau : fiche oxydée ou cassée"
+          ],
+          "organes": [
+            "huile-moteur"
+          ],
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Voyant d'huile orange qui clignote au démarrage : sonde de niveau",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=27304"
+            },
+            {
+              "titre": "Témoin d'huile allumé : fiche du contacteur de capot oxydée",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=8393"
             }
           ]
         }
       ],
       "questions": [
+        {
+          "texte": "Le voyant est-il orange (burette) plutôt que rouge ?",
+          "siOui": {
+            "sonde-niveau": 45,
+            "pression": -20
+          },
+          "siNon": {
+            "sonde-niveau": -25
+          }
+        },
         {
           "texte": "Le niveau d'huile est-il correct sur la jauge ?",
           "siOui": {
@@ -2472,6 +2766,145 @@
       ],
       "recherches": [
         "voyant pression huile clignote ACV"
+      ]
+    },
+    {
+      "id": "direction",
+      "titre": "Direction floue, le camion louvoie ou tire d'un côté",
+      "systeme": "Train avant",
+      "descriptions": [
+        "Le camion ne suit pas la trajectoire",
+        "Il tire à droite malgré le parallélisme",
+        "Usure anormale des pneus"
+      ],
+      "motsCles": [
+        "direction",
+        "flou",
+        "louvoie",
+        "tire",
+        "trajectoire",
+        "parallelisme",
+        "usure",
+        "pneus",
+        "volant"
+      ],
+      "causes": [
+        {
+          "id": "geometrie",
+          "libelle": "Géométrie (parallélisme, carrossage)",
+          "frequence": 4,
+          "verifications": [
+            "Ripage mesuré au contrôle technique",
+            "Usure en biseau des pneus"
+          ],
+          "organes": [
+            "parallelisme",
+            "pneus-av"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "cremaillere",
+          "libelle": "Crémaillère de direction usée",
+          "frequence": 3,
+          "verifications": [
+            "Jeu au volant, sensation de flou"
+          ],
+          "organes": [
+            "direction"
+          ],
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Direction floue et camion qui louvoie : crémaillère changée",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=96248"
+            }
+          ]
+        },
+        {
+          "id": "triangles",
+          "libelle": "Triangles inférieurs ou leur réglage (garde)",
+          "frequence": 3,
+          "verifications": [
+            "Le parallélisme est bon mais le camion tire toujours"
+          ],
+          "organes": [
+            "triangle-inf-avd"
+          ],
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Tire à droite malgré le parallélisme : triangles et réglage de la garde",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=8809"
+            }
+          ]
+        },
+        {
+          "id": "rotules",
+          "libelle": "Rotules de suspension ou de direction",
+          "frequence": 3,
+          "organes": [
+            "rotule-inf-avg",
+            "rotule-inf-avd",
+            "rotules-sup-av",
+            "direction"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "frein",
+          "libelle": "Frein qui frotte d'un côté (étrier)",
+          "frequence": 2,
+          "verifications": [
+            "Une jante plus chaude que l'autre après un trajet"
+          ],
+          "organes": [
+            "freins-av"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "ressorts",
+          "libelle": "Ressorts ou amortisseurs arrière fatigués (arrière qui s'affaisse)",
+          "frequence": 2,
+          "organes": [
+            "amortisseurs"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Ressorts arrière renforcés en complément",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=96248"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "texte": "Le camion tire-t-il seulement au freinage ?",
+          "siOui": {
+            "frein": 40,
+            "geometrie": -10
+          },
+          "siNon": {
+            "frein": -15
+          }
+        },
+        {
+          "texte": "Y a-t-il du jeu ou du flou au volant ?",
+          "siOui": {
+            "cremaillere": 30,
+            "rotules": 20
+          },
+          "siNon": {
+            "geometrie": 15,
+            "triangles": 15
+          }
+        }
+      ],
+      "recherches": [
+        "direction floue louvoie",
+        "tire droite parallelisme"
       ]
     }
   ],
@@ -2720,6 +3153,40 @@
       "pistes": [
         "Circuit ouvert : connecteur, faisceau ou moteur du ventilateur",
         "Relevé sur ton T4 le 21/12/2024"
+      ],
+      "pannes": [
+        "chauffage"
+      ]
+    },
+    {
+      "code": "17660",
+      "libelle": "Relevé sur un 2.5 TDI ACV sans puissance : réglé par l'électrovanne de début d'injection N108",
+      "pistes": [
+        "Mesurer N108 à l'ohmmètre",
+        "Contrôler le début d'injection"
+      ],
+      "pannes": [
+        "perte-puissance"
+      ]
+    },
+    {
+      "code": "17664",
+      "libelle": "Sonde de température du liquide G62 : circuit ouvert ou court-circuit (P1256)",
+      "composant": "G62",
+      "pistes": [
+        "Connecteur et câble de la sonde G62"
+      ],
+      "pannes": [
+        "demarrage-froid",
+        "surchauffe"
+      ]
+    },
+    {
+      "code": "01027",
+      "libelle": "Ventilateur d'air chaud arrière (V47)",
+      "composant": "V47",
+      "pistes": [
+        "Fusible 30 A du pulseur arrière"
       ],
       "pannes": [
         "chauffage"

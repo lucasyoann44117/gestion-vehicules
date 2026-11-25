@@ -16,7 +16,8 @@ public sealed class ServiceDiagnostic(HttpClient http)
     public static string LienForum(string recherche) =>
         "https://t4zone.info/forum/search.php?terms=all&sr=topics&keywords=" + Uri.EscapeDataString(
             string.Join(' ', recherche.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Where(m => m.Length > 2 && !m.Equals("T4", StringComparison.OrdinalIgnoreCase) && !m.Equals("TDI", StringComparison.OrdinalIgnoreCase))
+                // Le forum ignore les mots de moins de 4 lettres.
+                .Where(m => m.Length >= 4 && !m.Equals("2.5", StringComparison.OrdinalIgnoreCase))
                 .Take(4)));
 
     public static string LienImages(string recherche) =>
