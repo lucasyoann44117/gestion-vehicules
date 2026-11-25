@@ -189,12 +189,22 @@ else
                             @foreach (var v in c.Verifications) { <li>@v</li> }
                         </ol>
                     }
+                    @if (c.Sources.Count > 0)
+                    {
+                        <div class="sources-cause">
+                            <span>Résolu sur T4Zone :</span>
+                            @foreach (var s in c.Sources)
+                            {
+                                <a href="@s.Url" target="_blank" rel="noopener">@s.Titre</a>
+                            }
+                        </div>
+                    }
                     <div class="liens-cause">
                         @foreach (var o in c.Organes.Select(Etat.Organe).Where(o => o is not null))
                         {
                             <a class="btn petit" href="pieces/@o!.Id">@o.Nom</a>
                         }
-                        <a class="btn petit" href="@ServiceDiagnostic.LienForum($"T4 2.5 TDI {c.Libelle}")" target="_blank" rel="noopener">T4Zone</a>
+                        <a class="btn petit" href="@ServiceDiagnostic.LienForum(c.Libelle)" target="_blank" rel="noopener">Chercher sur T4Zone</a>
                         <a class="btn petit" href="@ServiceDiagnostic.LienImages(c.Image ?? $"VW T4 2.5 TDI {c.Libelle}")" target="_blank" rel="noopener">Images</a>
                         <a class="btn petit" href="@ServiceDiagnostic.LienTutos($"VW T4 {c.Libelle}")" target="_blank" rel="noopener">Tutos vidéo</a>
                         @if (c.Codes.Count > 0) { <small>Codes : @string.Join(", ", c.Codes)</small> }

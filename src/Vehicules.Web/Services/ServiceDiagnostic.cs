@@ -12,9 +12,12 @@ public sealed class ServiceDiagnostic(HttpClient http)
     public async Task<BasePannes> BaseAsync() =>
         basePannes ??= await http.GetFromJsonAsync<BasePannes>("diagnostic/t4-acv.json", Json.Options) ?? new BasePannes();
 
-    /// <summary>Recherche sur le forum T4Zone (via un moteur de recherche, le forum demande un compte).</summary>
+    /// <summary>Recherche directe dans le forum T4Zone (il faut y être connecté pour certains sous-forums).</summary>
     public static string LienForum(string recherche) =>
-        "https://www.google.com/search?q=" + Uri.EscapeDataString($"site:t4zone.info {recherche}");
+        "https://t4zone.info/forum/search.php?terms=all&sr=topics&keywords=" + Uri.EscapeDataString(
+            string.Join(' ', recherche.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(m => m.Length > 2 && !m.Equals("T4", StringComparison.OrdinalIgnoreCase) && !m.Equals("TDI", StringComparison.OrdinalIgnoreCase))
+                .Take(4)));
 
     public static string LienImages(string recherche) =>
         "https://www.google.com/search?tbm=isch&q=" + Uri.EscapeDataString(recherche);

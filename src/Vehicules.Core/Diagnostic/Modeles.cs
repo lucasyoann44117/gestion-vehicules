@@ -43,6 +43,15 @@ public sealed class Cause
     public string? Cout { get; set; }
     /// <summary>Recherche d'images ou de tutos (texte de la recherche).</summary>
     public string? Image { get; set; }
+    /// <summary>Discussions de forum où cette cause a été trouvée et résolue.</summary>
+    public List<Source> Sources { get; set; } = [];
+}
+
+/// <summary>Une discussion de forum ou une page de tuto, résumée dans la base.</summary>
+public sealed class Source
+{
+    public string Titre { get; set; } = "";
+    public string Url { get; set; } = "";
 }
 
 public sealed class Question

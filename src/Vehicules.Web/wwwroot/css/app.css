@@ -685,6 +685,8 @@ details > summary { cursor: pointer; }
 .histo-cause { margin: 0; padding: 10px 14px; list-style: none; border-radius: 12px; background: color-mix(in srgb, var(--atlantis) 8%, var(--surface-2)); font-size: 14px; color: var(--doux); }
 .verifs { margin: 0; padding-left: 22px; font-size: 14.5px; display: flex; flex-direction: column; gap: 4px; }
 .liens-cause { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.sources-cause { display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--ambre); background: color-mix(in srgb, var(--ambre) 9%, var(--surface-2)); font-size: 14px; }
+.sources-cause span { font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--doux); }
 
 /* ---------- Vue 3D ---------- */
 

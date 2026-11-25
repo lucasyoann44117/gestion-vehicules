@@ -2,402 +2,2728 @@
   "vehicule": "VW T4 Multivan (1996-2003)",
   "moteur": "2.5 TDI ACV 102 ch, pompe d'injection VP37",
   "synonymes": [
-    ["demarrage", "demarre pas", "demarre plus", "veut pas demarrer", "ne part pas", "part pas", "dur a demarrer", "demarre mal", "difficile a demarrer"],
-    ["fumee", "fume", "fumees", "nuage"],
-    ["claquement", "claque", "clac", "toc", "tape", "cogne", "cognement"],
-    ["grincement", "grince", "couine", "couinement"],
-    ["sifflement", "siffle", "sifflant"],
-    ["vibration", "vibre", "tremble", "tremblement", "secoue", "shimmy"],
-    ["surchauffe", "chauffe", "temperature monte", "aiguille monte", "bouillir", "bout"],
-    ["puissance", "pousse plus", "manque de patate", "mou", "n avance pas", "avance plus", "perte de puissance", "pas de reprise"],
-    ["voyant", "temoin", "lampe", "allume"],
-    ["prechauffage", "spirale", "tire bouchon", "bougies"],
-    ["virage", "tourne", "braque", "braquage"],
-    ["freinage", "freine", "frein", "freins"],
-    ["clim", "climatisation", "air conditionne", "froid"],
-    ["vitesse", "vitesses", "passer", "craque", "accroche"],
-    ["fuite", "goutte", "perd", "tache"],
-    ["batterie", "charge", "decharge"],
-    ["ralenti", "au ralenti", "a l arret"],
-    ["cale", "calage", "s arrete", "coupe"]
+    [
+      "demarrage",
+      "demarre pas",
+      "demarre plus",
+      "veut pas demarrer",
+      "ne part pas",
+      "part pas",
+      "dur a demarrer",
+      "demarre mal",
+      "difficile a demarrer"
+    ],
+    [
+      "fumee",
+      "fume",
+      "fumees",
+      "nuage"
+    ],
+    [
+      "claquement",
+      "claque",
+      "clac",
+      "toc",
+      "tape",
+      "cogne",
+      "cognement"
+    ],
+    [
+      "grincement",
+      "grince",
+      "couine",
+      "couinement"
+    ],
+    [
+      "sifflement",
+      "siffle",
+      "sifflant"
+    ],
+    [
+      "vibration",
+      "vibre",
+      "tremble",
+      "tremblement",
+      "secoue",
+      "shimmy"
+    ],
+    [
+      "surchauffe",
+      "chauffe",
+      "temperature monte",
+      "aiguille monte",
+      "bouillir",
+      "bout"
+    ],
+    [
+      "puissance",
+      "pousse plus",
+      "manque de patate",
+      "mou",
+      "n avance pas",
+      "avance plus",
+      "perte de puissance",
+      "pas de reprise"
+    ],
+    [
+      "voyant",
+      "temoin",
+      "lampe",
+      "allume"
+    ],
+    [
+      "prechauffage",
+      "spirale",
+      "tire bouchon",
+      "bougies"
+    ],
+    [
+      "virage",
+      "tourne",
+      "braque",
+      "braquage"
+    ],
+    [
+      "freinage",
+      "freine",
+      "frein",
+      "freins"
+    ],
+    [
+      "clim",
+      "climatisation",
+      "air conditionne",
+      "froid"
+    ],
+    [
+      "vitesse",
+      "vitesses",
+      "passer",
+      "craque",
+      "accroche"
+    ],
+    [
+      "fuite",
+      "goutte",
+      "perd",
+      "tache"
+    ],
+    [
+      "batterie",
+      "charge",
+      "decharge"
+    ],
+    [
+      "ralenti",
+      "au ralenti",
+      "a l arret"
+    ],
+    [
+      "cale",
+      "calage",
+      "s arrete",
+      "coupe"
+    ]
   ],
   "pannes": [
     {
       "id": "demarrage-froid",
       "titre": "Démarre mal à froid",
       "systeme": "Moteur",
-      "descriptions": ["Il faut insister longtemps le matin", "Démarre difficilement quand il fait froid, puis tourne bien", "Fumée blanche au démarrage à froid"],
-      "motsCles": ["demarrage", "froid", "matin", "prechauffage", "insister", "fumee blanche"],
+      "descriptions": [
+        "Il faut insister longtemps le matin",
+        "Démarre difficilement quand il fait froid, puis tourne bien",
+        "Fumée blanche au démarrage à froid"
+      ],
+      "motsCles": [
+        "demarrage",
+        "froid",
+        "matin",
+        "prechauffage",
+        "insister",
+        "fumee blanche"
+      ],
       "causes": [
-        { "id": "bougies", "libelle": "Bougies de préchauffage HS (une ou plusieurs)", "frequence": 5, "verifications": ["Contacteur coupé, débrancher le bus des bougies et mesurer chaque bougie à l'ohmmètre (environ 1 ohm, infini = HS)", "Lire les codes : défaut circuit de préchauffage"], "codes": ["00626", "P0380"], "difficulte": "moyen", "cout": "60 à 120 € les 5 bougies", "image": "T4 2.5 TDI bougies de préchauffage emplacement" },
-        { "id": "relais", "libelle": "Relais de préchauffage (relais 103) défaillant", "frequence": 4, "verifications": ["Au contact, écouter le relais (clic) et vérifier que le voyant s'allume puis s'éteint", "Tester la tension au bus des bougies pendant le préchauffage (12 V attendus)"], "difficulte": "facile", "cout": "30 à 60 €", "image": "T4 relais préchauffage 103 boîte à fusibles" },
-        { "id": "prise-air", "libelle": "Prise d'air sur le circuit gazole (le moteur se désamorce la nuit)", "frequence": 4, "verifications": ["Poser un bout de durite transparente avant la pompe : bulles = prise d'air", "Contrôler les durites et colliers du filtre à gazole et des retours injecteurs"], "organes": ["filtre-gasoil"], "difficulte": "moyen", "cout": "10 à 40 €", "image": "T4 2.5 TDI filtre gazole durite transparente prise d'air" },
-        { "id": "temperature", "libelle": "Sonde de température de liquide (G62) qui donne une mauvaise valeur", "frequence": 3, "verifications": ["Avec VCDS, comparer la température lue moteur froid à la température ambiante"], "codes": ["00522", "P0115"], "difficulte": "facile", "cout": "20 à 40 €" },
-        { "id": "batterie-froid", "libelle": "Batterie faible : le démarreur tourne trop lentement", "frequence": 3, "verifications": ["Mesurer la batterie au repos (12,6 V) et pendant le démarrage (au-dessus de 10 V)"], "organes": ["batterie"], "difficulte": "facile" },
-        { "id": "pompe-usee", "libelle": "Pompe d'injection VP37 usée (débit au démarrage insuffisant)", "frequence": 2, "verifications": ["À n'envisager qu'après le reste : faire contrôler le calage et le débit de démarrage"], "difficulte": "garage", "cout": "réfection 400 à 900 €" }
+        {
+          "id": "bougies",
+          "libelle": "Bougies de préchauffage HS (une ou plusieurs)",
+          "frequence": 5,
+          "verifications": [
+            "Contacteur coupé, débrancher le bus des bougies et mesurer chaque bougie à l'ohmmètre (environ 1 ohm, infini = HS)",
+            "Lire les codes : défaut circuit de préchauffage",
+            "Une seule bougie HS suffit à rendre le démarrage pénible : les tester une par une au connecteur"
+          ],
+          "codes": [
+            "00626",
+            "P0380"
+          ],
+          "difficulte": "moyen",
+          "cout": "60 à 120 € les 5 bougies",
+          "image": "T4 2.5 TDI bougies de préchauffage emplacement",
+          "sources": [
+            {
+              "titre": "2.5 TDI ACV qui peine à démarrer : une bougie morte au milieu",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=49323"
+            }
+          ]
+        },
+        {
+          "id": "relais",
+          "libelle": "Relais de préchauffage (relais 103) défaillant",
+          "frequence": 4,
+          "verifications": [
+            "Au contact, écouter le relais (clic) et vérifier que le voyant s'allume puis s'éteint",
+            "Tester la tension au bus des bougies pendant le préchauffage (12 V attendus)"
+          ],
+          "difficulte": "facile",
+          "cout": "30 à 60 €",
+          "image": "T4 relais préchauffage 103 boîte à fusibles"
+        },
+        {
+          "id": "prise-air",
+          "libelle": "Prise d'air sur le circuit gazole (le moteur se désamorce la nuit)",
+          "frequence": 4,
+          "verifications": [
+            "Poser un bout de durite transparente avant la pompe : bulles = prise d'air",
+            "Contrôler les durites et colliers du filtre à gazole et des retours injecteurs"
+          ],
+          "organes": [
+            "filtre-gasoil"
+          ],
+          "difficulte": "moyen",
+          "cout": "10 à 40 €",
+          "image": "T4 2.5 TDI filtre gazole durite transparente prise d'air"
+        },
+        {
+          "id": "temperature",
+          "libelle": "Sonde de température de liquide (G62) qui donne une mauvaise valeur",
+          "frequence": 3,
+          "verifications": [
+            "Avec VCDS, comparer la température lue moteur froid à la température ambiante"
+          ],
+          "codes": [
+            "00522",
+            "P0115"
+          ],
+          "difficulte": "facile",
+          "cout": "20 à 40 €"
+        },
+        {
+          "id": "batterie-froid",
+          "libelle": "Batterie faible : le démarreur tourne trop lentement",
+          "frequence": 3,
+          "verifications": [
+            "Mesurer la batterie au repos (12,6 V) et pendant le démarrage (au-dessus de 10 V)"
+          ],
+          "organes": [
+            "batterie"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "pompe-usee",
+          "libelle": "Pompe d'injection VP37 usée (débit au démarrage insuffisant)",
+          "frequence": 2,
+          "verifications": [
+            "À n'envisager qu'après le reste : faire contrôler le calage et le débit de démarrage"
+          ],
+          "difficulte": "garage",
+          "cout": "réfection 400 à 900 €",
+          "sources": [
+            {
+              "titre": "2.5 TDI qui démarre mal à froid : piste du début d'injection",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=98293"
+            }
+          ]
+        },
+        {
+          "id": "faisceau-g62",
+          "libelle": "Câble de la sonde G62 en court-circuit (le relais ne préchauffe plus)",
+          "frequence": 2,
+          "verifications": [
+            "Pas de voyant ni de tension aux bougies, mais ça démarre en alimentant les bougies directement",
+            "Contrôler le câble entre la sonde G62 et le relais de préchauffage"
+          ],
+          "codes": [
+            "00522"
+          ],
+          "organes": [
+            "sonde-temperature"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Pas de préchauffage : court-circuit sur le câble de la sonde G62",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=95785"
+            }
+          ]
+        }
       ],
       "questions": [
-        { "texte": "Le voyant de préchauffage (spirale) s'allume-t-il normalement au contact ?", "siOui": { "relais": -10 }, "siNon": { "relais": 25, "bougies": -5 } },
-        { "texte": "Le moteur démarre-t-il bien une fois chaud ?", "siOui": { "bougies": 15, "relais": 10, "temperature": 5 }, "siNon": { "pompe-usee": 15, "prise-air": 10, "batterie-froid": 10 } },
-        { "texte": "Le démarreur tourne-t-il moins vite que d'habitude ?", "siOui": { "batterie-froid": 30 }, "siNon": { "batterie-froid": -15 } },
-        { "texte": "Le problème est-il pire après plusieurs jours sans rouler ?", "siOui": { "prise-air": 25 }, "siNon": { "prise-air": -10 } }
+        {
+          "texte": "Le voyant de préchauffage (spirale) s'allume-t-il normalement au contact ?",
+          "siOui": {
+            "relais": -10
+          },
+          "siNon": {
+            "relais": 25,
+            "bougies": -5
+          }
+        },
+        {
+          "texte": "Le moteur démarre-t-il bien une fois chaud ?",
+          "siOui": {
+            "bougies": 15,
+            "relais": 10,
+            "temperature": 5
+          },
+          "siNon": {
+            "pompe-usee": 15,
+            "prise-air": 10,
+            "batterie-froid": 10
+          }
+        },
+        {
+          "texte": "Le démarreur tourne-t-il moins vite que d'habitude ?",
+          "siOui": {
+            "batterie-froid": 30
+          },
+          "siNon": {
+            "batterie-froid": -15
+          }
+        },
+        {
+          "texte": "Le problème est-il pire après plusieurs jours sans rouler ?",
+          "siOui": {
+            "prise-air": 25
+          },
+          "siNon": {
+            "prise-air": -10
+          }
+        }
       ],
-      "recherches": ["T4 2.5 TDI démarrage difficile à froid", "T4 ACV bougies préchauffage test"]
+      "recherches": [
+        "T4 2.5 TDI démarrage difficile à froid",
+        "T4 ACV bougies préchauffage test"
+      ]
     },
     {
       "id": "ne-demarre-pas",
       "titre": "Ne démarre pas du tout",
       "systeme": "Moteur",
-      "descriptions": ["Le démarreur tourne mais le moteur ne part pas", "Il ne se passe rien quand je tourne la clé", "Le démarreur fait clic"],
-      "motsCles": ["demarrage", "rien", "clic", "demarreur", "tourne", "antidemarrage", "cle"],
+      "descriptions": [
+        "Le démarreur tourne mais le moteur ne part pas",
+        "Il ne se passe rien quand je tourne la clé",
+        "Le démarreur fait clic"
+      ],
+      "motsCles": [
+        "demarrage",
+        "rien",
+        "clic",
+        "demarreur",
+        "tourne",
+        "antidemarrage",
+        "cle"
+      ],
       "urgence": "Immobilisé",
       "causes": [
-        { "id": "batterie", "libelle": "Batterie à plat ou cosses oxydées", "frequence": 5, "verifications": ["Mesurer la batterie (12,6 V au repos)", "Nettoyer et serrer les cosses et la tresse de masse"], "organes": ["batterie"], "difficulte": "facile" },
-        { "id": "antidemarrage", "libelle": "Antidémarrage : la clé n'est pas reconnue (voyant clignote)", "frequence": 4, "verifications": ["Le voyant de préchauffage clignote-t-il après quelques secondes ?", "Essayer le double de la clé", "Lire le calculateur d'antidémarrage (codes 01176, 01128)"], "codes": ["01176", "01128", "17978"], "difficulte": "garage" },
-        { "id": "electrovanne-arret", "libelle": "Électrovanne d'arrêt de la pompe (N109) qui ne s'ouvre pas", "frequence": 4, "verifications": ["Au contact, toucher l'électrovanne sur la pompe : elle doit claquer", "Vérifier l'alimentation 12 V au contact"], "difficulte": "moyen", "cout": "40 à 80 €", "image": "VP37 électrovanne d'arrêt N109 T4" },
-        { "id": "demarreur", "libelle": "Démarreur ou solénoïde HS", "frequence": 3, "verifications": ["Un seul clic sans rotation avec une batterie bonne = démarreur", "Taper légèrement sur le démarreur en actionnant la clé"], "organes": ["demarreur"], "difficulte": "moyen", "cout": "150 à 300 € la pièce" },
-        { "id": "gazole", "libelle": "Plus de gazole à la pompe (panne sèche, filtre colmaté, prise d'air)", "frequence": 3, "verifications": ["Desserrer le raccord d'arrivée à la pompe : le gazole doit couler", "Remplacer le filtre si ancien"], "organes": ["filtre-gasoil"], "difficulte": "moyen" },
-        { "id": "distribution-cassee", "libelle": "Courroie de distribution cassée", "frequence": 1, "verifications": ["Le démarreur tourne plus vite que d'habitude, sans compression", "Regarder la courroie par le haut du carter"], "organes": ["distribution"], "difficulte": "garage", "cout": "variable, risque moteur" }
+        {
+          "id": "batterie",
+          "libelle": "Batterie à plat ou cosses oxydées",
+          "frequence": 5,
+          "verifications": [
+            "Mesurer la batterie (12,6 V au repos)",
+            "Nettoyer et serrer les cosses et la tresse de masse"
+          ],
+          "organes": [
+            "batterie"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "antidemarrage",
+          "libelle": "Antidémarrage : la clé n'est pas reconnue (voyant clignote)",
+          "frequence": 4,
+          "verifications": [
+            "Le voyant de préchauffage clignote-t-il après quelques secondes ?",
+            "Essayer le double de la clé",
+            "Lire le calculateur d'antidémarrage (codes 01176, 01128)"
+          ],
+          "codes": [
+            "01176",
+            "01128",
+            "17978"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "electrovanne-arret",
+          "libelle": "Électrovanne d'arrêt de la pompe (N109) qui ne s'ouvre pas",
+          "frequence": 4,
+          "verifications": [
+            "Au contact, toucher l'électrovanne sur la pompe : elle doit claquer",
+            "Vérifier l'alimentation 12 V au contact"
+          ],
+          "difficulte": "moyen",
+          "cout": "40 à 80 €",
+          "image": "VP37 électrovanne d'arrêt N109 T4"
+        },
+        {
+          "id": "demarreur",
+          "libelle": "Démarreur ou solénoïde HS",
+          "frequence": 3,
+          "verifications": [
+            "Un seul clic sans rotation avec une batterie bonne = démarreur",
+            "Taper légèrement sur le démarreur en actionnant la clé"
+          ],
+          "organes": [
+            "demarreur"
+          ],
+          "difficulte": "moyen",
+          "cout": "150 à 300 € la pièce",
+          "sources": [
+            {
+              "titre": "Démarrage aléatoire : démarreur remplacé",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=85604"
+            }
+          ]
+        },
+        {
+          "id": "gazole",
+          "libelle": "Plus de gazole à la pompe (panne sèche, filtre colmaté, prise d'air)",
+          "frequence": 3,
+          "verifications": [
+            "Desserrer le raccord d'arrivée à la pompe : le gazole doit couler",
+            "Remplacer le filtre si ancien"
+          ],
+          "organes": [
+            "filtre-gasoil"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Ne repart plus : désamorcé garé en pente avec peu de gazole",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=84424"
+            },
+            {
+              "titre": "Démarrage impossible : réamorçage du circuit gazole",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=92446"
+            }
+          ]
+        },
+        {
+          "id": "distribution-cassee",
+          "libelle": "Courroie de distribution cassée",
+          "frequence": 1,
+          "verifications": [
+            "Le démarreur tourne plus vite que d'habitude, sans compression",
+            "Regarder la courroie par le haut du carter"
+          ],
+          "organes": [
+            "distribution"
+          ],
+          "difficulte": "garage",
+          "cout": "variable, risque moteur"
+        },
+        {
+          "id": "contacteur",
+          "libelle": "Contacteur électrique de démarrage usé (derrière le Neiman)",
+          "frequence": 3,
+          "verifications": [
+            "Démarrage aléatoire, ou le moteur démarre puis coupe aussitôt",
+            "Le contacteur électrique se change seul, sans toucher aux serrures ni à la clé"
+          ],
+          "difficulte": "moyen",
+          "cout": "20 à 50 €",
+          "sources": [
+            {
+              "titre": "Démarrage aléatoire : réglé par le changement du contacteur",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=99199"
+            },
+            {
+              "titre": "Démarrage aléatoire après réparation de l'antidémarrage",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=85604"
+            }
+          ]
+        },
+        {
+          "id": "alarme",
+          "libelle": "Alarme antivol (même ancienne et inutilisée) passée en sécurité",
+          "frequence": 2,
+          "verifications": [
+            "Aucune réaction du tout à la clé, batterie bonne",
+            "Vérifier le module d'alarme et ses relais"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Zéro réaction au démarrage : c'était la vieille alarme",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=101611"
+            }
+          ]
+        },
+        {
+          "id": "fusible-s102",
+          "libelle": "Fusible du calculateur moteur (S102) en faux contact dans son support",
+          "frequence": 2,
+          "verifications": [
+            "Pas de voyant de préchauffage, redémarrage impossible juste après l'arrêt",
+            "Le fusible paraît bon au test : nettoyer et resserrer son support (fusibles cachés au-dessus de la boîte)"
+          ],
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "2.5 TDI ACV qui refuse de démarrer : fusible S102 en faux contact",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=102891"
+            }
+          ]
+        },
+        {
+          "id": "galet-pompe",
+          "libelle": "Galet tendeur de la courroie de pompe d'injection cassé",
+          "frequence": 2,
+          "verifications": [
+            "Le démarreur tourne normalement mais le moteur « tousse » sans se lancer",
+            "Regarder la courroie de pompe d'injection et son galet (côté distribution)"
+          ],
+          "organes": [
+            "distribution"
+          ],
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Ça tousse mais ça ne part pas : galet de courroie de pompe cassé",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=91604"
+            }
+          ]
+        }
       ],
       "questions": [
-        { "texte": "Le démarreur fait-il tourner le moteur ?", "siOui": { "batterie": -25, "demarreur": -30, "antidemarrage": 10, "electrovanne-arret": 15, "gazole": 15, "distribution-cassee": 10 }, "siNon": { "batterie": 25, "demarreur": 25, "antidemarrage": -10, "electrovanne-arret": -30, "gazole": -30, "distribution-cassee": -10 } },
-        { "texte": "Le voyant de préchauffage clignote-t-il au contact ?", "siOui": { "antidemarrage": 45 }, "siNon": { "antidemarrage": -20 } },
-        { "texte": "Les feux et le tableau de bord faiblissent-ils fortement quand tu tournes la clé ?", "siOui": { "batterie": 35 }, "siNon": { "batterie": -10 } }
+        {
+          "texte": "Le démarreur fait-il tourner le moteur ?",
+          "siOui": {
+            "batterie": -25,
+            "demarreur": -30,
+            "antidemarrage": 10,
+            "electrovanne-arret": 15,
+            "gazole": 15,
+            "distribution-cassee": 10,
+            "galet-pompe": 15,
+            "contacteur": 5
+          },
+          "siNon": {
+            "batterie": 25,
+            "demarreur": 25,
+            "antidemarrage": -10,
+            "electrovanne-arret": -30,
+            "gazole": -30,
+            "distribution-cassee": -10,
+            "alarme": 15,
+            "galet-pompe": -15
+          }
+        },
+        {
+          "texte": "Le voyant de préchauffage clignote-t-il au contact ?",
+          "siOui": {
+            "antidemarrage": 45
+          },
+          "siNon": {
+            "antidemarrage": -20
+          }
+        },
+        {
+          "texte": "Les feux et le tableau de bord faiblissent-ils fortement quand tu tournes la clé ?",
+          "siOui": {
+            "batterie": 35
+          },
+          "siNon": {
+            "batterie": -10
+          }
+        },
+        {
+          "texte": "Es-tu garé en pente avec peu de gazole (même avant la réserve) ?",
+          "siOui": {
+            "gazole": 40
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 2.5 TDI ne démarre plus", "T4 antidémarrage voyant clignote"]
+      "recherches": [
+        "T4 2.5 TDI ne démarre plus",
+        "T4 antidémarrage voyant clignote"
+      ]
     },
     {
       "id": "perte-puissance",
       "titre": "Perte de puissance, mode dégradé",
       "systeme": "Moteur",
-      "descriptions": ["Il ne pousse plus en côte", "Le moteur se bride, plus de turbo", "Ça repart après avoir coupé le contact"],
-      "motsCles": ["puissance", "turbo", "degrade", "bride", "cote", "reprise", "accelere"],
+      "descriptions": [
+        "Il ne pousse plus en côte",
+        "Le moteur se bride, plus de turbo",
+        "Ça repart après avoir coupé le contact"
+      ],
+      "motsCles": [
+        "puissance",
+        "turbo",
+        "degrade",
+        "bride",
+        "cote",
+        "reprise",
+        "accelere"
+      ],
       "causes": [
-        { "id": "durite-turbo", "libelle": "Durite de suralimentation percée ou déboîtée", "frequence": 5, "verifications": ["Suivre les durites du turbo à l'échangeur et à l'admission : traces d'huile, fissures, colliers", "Écouter un souffle en accélération"], "organes": ["turbo"], "difficulte": "facile", "cout": "20 à 80 €", "image": "T4 2.5 TDI durite turbo échangeur" },
-        { "id": "n75", "libelle": "Électrovanne de suralimentation N75 ou ses durites à dépression", "frequence": 4, "verifications": ["Contrôler les petites durites à dépression (pompe à vide, N75, wastegate)", "Avec VCDS : pression de suralimentation demandée et réelle (groupe 011)"], "codes": ["01247", "00575"], "difficulte": "moyen", "cout": "40 à 90 €" },
-        { "id": "debitmetre", "libelle": "Débitmètre d'air (G70) fatigué", "frequence": 4, "verifications": ["Débrancher le débitmètre : si ça va mieux, il est en cause", "VCDS : débit d'air au ralenti et en charge (groupe 003)"], "codes": ["00553", "P0100"], "organes": ["filtre-air"], "difficulte": "facile", "cout": "50 à 150 €" },
-        { "id": "egr", "libelle": "Vanne EGR encrassée ou bloquée ouverte", "frequence": 3, "verifications": ["Démonter et nettoyer la vanne et l'admission", "Contrôler la durite de commande à dépression"], "difficulte": "moyen" },
-        { "id": "filtres", "libelle": "Filtre à air ou à gazole colmaté", "frequence": 3, "verifications": ["Regarder la date de dernier changement dans l'appli"], "organes": ["filtre-air", "filtre-gasoil"], "difficulte": "facile" },
-        { "id": "turbo-hs", "libelle": "Turbo fatigué (jeu dans l'axe, wastegate grippée)", "frequence": 2, "verifications": ["Jeu axial de l'axe du turbo à la main, traces d'huile côté admission"], "organes": ["turbo"], "difficulte": "garage", "cout": "500 à 1 000 €" }
+        {
+          "id": "durite-turbo",
+          "libelle": "Durite de suralimentation percée ou déboîtée",
+          "frequence": 5,
+          "verifications": [
+            "Suivre les durites du turbo à l'échangeur et à l'admission : traces d'huile, fissures, colliers",
+            "Écouter un souffle en accélération"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "facile",
+          "cout": "20 à 80 €",
+          "image": "T4 2.5 TDI durite turbo échangeur"
+        },
+        {
+          "id": "n75",
+          "libelle": "Électrovanne de suralimentation N75 ou ses durites à dépression",
+          "frequence": 4,
+          "verifications": [
+            "Contrôler les petites durites à dépression (pompe à vide, N75, wastegate)",
+            "Avec VCDS : pression de suralimentation demandée et réelle (groupe 011)"
+          ],
+          "codes": [
+            "01247",
+            "00575"
+          ],
+          "difficulte": "moyen",
+          "cout": "40 à 90 €",
+          "sources": [
+            {
+              "titre": "Cascade de soucis : électrovanne de turbo fatiguée",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=103450"
+            }
+          ]
+        },
+        {
+          "id": "debitmetre",
+          "libelle": "Débitmètre d'air (G70) fatigué",
+          "frequence": 4,
+          "verifications": [
+            "Débrancher le débitmètre : si ça va mieux, il est en cause",
+            "VCDS : débit d'air au ralenti et en charge (groupe 003)"
+          ],
+          "codes": [
+            "00553",
+            "P0100"
+          ],
+          "organes": [
+            "filtre-air"
+          ],
+          "difficulte": "facile",
+          "cout": "50 à 150 €"
+        },
+        {
+          "id": "egr",
+          "libelle": "Vanne EGR encrassée ou bloquée ouverte",
+          "frequence": 3,
+          "verifications": [
+            "Démonter et nettoyer la vanne et l'admission",
+            "Contrôler la durite de commande à dépression"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "filtres",
+          "libelle": "Filtre à air ou à gazole colmaté",
+          "frequence": 3,
+          "verifications": [
+            "Regarder la date de dernier changement dans l'appli"
+          ],
+          "organes": [
+            "filtre-air",
+            "filtre-gasoil"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "turbo-hs",
+          "libelle": "Turbo fatigué (jeu dans l'axe, wastegate grippée)",
+          "frequence": 2,
+          "verifications": [
+            "Jeu axial de l'axe du turbo à la main, traces d'huile côté admission"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "garage",
+          "cout": "500 à 1 000 €"
+        },
+        {
+          "id": "calage-pompe",
+          "libelle": "Calage de la pompe d'injection légèrement décalé",
+          "frequence": 2,
+          "verifications": [
+            "VCDS : début d'injection (groupe 004) moteur chaud"
+          ],
+          "codes": [
+            "00550"
+          ],
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Cascade de soucis : calage de pompe et électrovanne de turbo",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=103450"
+            }
+          ]
+        }
       ],
       "questions": [
-        { "texte": "La puissance revient-elle après avoir coupé et remis le contact ?", "siOui": { "n75": 20, "durite-turbo": 15, "debitmetre": 10 }, "siNon": { "filtres": 10, "turbo-hs": 10 } },
-        { "texte": "Entends-tu un souffle ou un sifflement anormal en accélérant ?", "siOui": { "durite-turbo": 30 }, "siNon": { "durite-turbo": -10 } },
-        { "texte": "Y a-t-il de la fumée noire en accélérant ?", "siOui": { "debitmetre": 15, "egr": 15, "durite-turbo": 10 }, "siNon": {} }
+        {
+          "texte": "La puissance revient-elle après avoir coupé et remis le contact ?",
+          "siOui": {
+            "n75": 20,
+            "durite-turbo": 15,
+            "debitmetre": 10
+          },
+          "siNon": {
+            "filtres": 10,
+            "turbo-hs": 10
+          }
+        },
+        {
+          "texte": "Entends-tu un souffle ou un sifflement anormal en accélérant ?",
+          "siOui": {
+            "durite-turbo": 30
+          },
+          "siNon": {
+            "durite-turbo": -10
+          }
+        },
+        {
+          "texte": "Y a-t-il de la fumée noire en accélérant ?",
+          "siOui": {
+            "debitmetre": 15,
+            "egr": 15,
+            "durite-turbo": 10
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 2.5 TDI mode dégradé perte de puissance", "T4 ACV N75 durite turbo"]
+      "recherches": [
+        "T4 2.5 TDI mode dégradé perte de puissance",
+        "T4 ACV N75 durite turbo"
+      ]
     },
     {
       "id": "fumee-noire",
       "titre": "Fumée noire",
       "systeme": "Moteur",
-      "descriptions": ["Fume noir en accélérant", "Nuage noir à l'échappement"],
-      "motsCles": ["fumee", "noire", "noir", "echappement", "accelere"],
+      "descriptions": [
+        "Fume noir en accélérant",
+        "Nuage noir à l'échappement"
+      ],
+      "motsCles": [
+        "fumee",
+        "noire",
+        "noir",
+        "echappement",
+        "accelere"
+      ],
       "causes": [
-        { "id": "debitmetre", "libelle": "Débitmètre d'air (G70) qui sous-estime l'air", "frequence": 4, "verifications": ["VCDS groupe 003 : débit mesuré au ralenti autour de 250 à 450 mg/cycle"], "codes": ["00553"], "difficulte": "facile" },
-        { "id": "filtre-air", "libelle": "Filtre à air colmaté", "frequence": 4, "verifications": ["Regarder le filtre, le changer s'il est gris"], "organes": ["filtre-air"], "difficulte": "facile" },
-        { "id": "injecteurs", "libelle": "Injecteurs qui pissent ou tarage faible", "frequence": 3, "verifications": ["Faire tester le tarage et la pulvérisation des injecteurs"], "difficulte": "garage", "cout": "tarage 20 à 40 € par injecteur" },
-        { "id": "egr", "libelle": "Vanne EGR bloquée ouverte", "frequence": 3, "verifications": ["Contrôler qu'elle se ferme en accélération"], "difficulte": "moyen" },
-        { "id": "suralimentation", "libelle": "Manque de suralimentation (durite, turbo)", "frequence": 3, "verifications": ["Voir la panne « Perte de puissance »"], "organes": ["turbo"], "difficulte": "moyen" }
+        {
+          "id": "debitmetre",
+          "libelle": "Débitmètre d'air (G70) qui sous-estime l'air",
+          "frequence": 4,
+          "verifications": [
+            "VCDS groupe 003 : débit mesuré au ralenti autour de 250 à 450 mg/cycle"
+          ],
+          "codes": [
+            "00553"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "filtre-air",
+          "libelle": "Filtre à air colmaté",
+          "frequence": 4,
+          "verifications": [
+            "Regarder le filtre, le changer s'il est gris"
+          ],
+          "organes": [
+            "filtre-air"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "injecteurs",
+          "libelle": "Injecteurs qui pissent ou tarage faible",
+          "frequence": 3,
+          "verifications": [
+            "Faire tester le tarage et la pulvérisation des injecteurs"
+          ],
+          "difficulte": "garage",
+          "cout": "tarage 20 à 40 € par injecteur"
+        },
+        {
+          "id": "egr",
+          "libelle": "Vanne EGR bloquée ouverte",
+          "frequence": 3,
+          "verifications": [
+            "Contrôler qu'elle se ferme en accélération"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "suralimentation",
+          "libelle": "Manque de suralimentation (durite, turbo)",
+          "frequence": 3,
+          "verifications": [
+            "Voir la panne « Perte de puissance »"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "La fumée noire apparaît-elle seulement en accélération franche ?", "siOui": { "debitmetre": 10, "suralimentation": 10 }, "siNon": { "injecteurs": 15 } },
-        { "texte": "Le moteur a-t-il perdu de la puissance en même temps ?", "siOui": { "suralimentation": 25, "debitmetre": 10 }, "siNon": { "injecteurs": 10 } }
+        {
+          "texte": "La fumée noire apparaît-elle seulement en accélération franche ?",
+          "siOui": {
+            "debitmetre": 10,
+            "suralimentation": 10
+          },
+          "siNon": {
+            "injecteurs": 15
+          }
+        },
+        {
+          "texte": "Le moteur a-t-il perdu de la puissance en même temps ?",
+          "siOui": {
+            "suralimentation": 25,
+            "debitmetre": 10
+          },
+          "siNon": {
+            "injecteurs": 10
+          }
+        }
       ],
-      "recherches": ["T4 2.5 TDI fumée noire"]
+      "recherches": [
+        "T4 2.5 TDI fumée noire"
+      ]
     },
     {
       "id": "fumee-bleue-blanche",
       "titre": "Fumée bleue ou blanche moteur chaud",
       "systeme": "Moteur",
-      "descriptions": ["Fumée bleue qui sent l'huile", "Fumée blanche qui sent le liquide de refroidissement", "Il consomme de l'huile"],
-      "motsCles": ["fumee", "bleue", "blanche", "huile", "consomme", "liquide", "odeur"],
+      "descriptions": [
+        "Fumée bleue qui sent l'huile",
+        "Fumée blanche qui sent le liquide de refroidissement",
+        "Il consomme de l'huile"
+      ],
+      "motsCles": [
+        "fumee",
+        "bleue",
+        "blanche",
+        "huile",
+        "consomme",
+        "liquide",
+        "odeur"
+      ],
       "urgence": "À traiter vite",
       "causes": [
-        { "id": "turbo-huile", "libelle": "Turbo qui laisse passer de l'huile (joints d'axe)", "frequence": 4, "verifications": ["Huile dans les durites côté admission", "Jeu dans l'axe du turbo"], "organes": ["turbo"], "difficulte": "garage" },
-        { "id": "joint-culasse", "libelle": "Joint de culasse (liquide qui baisse, fumée blanche persistante)", "frequence": 3, "verifications": ["Niveau du vase d'expansion qui baisse sans fuite visible", "Bulles dans le vase moteur tournant, test CO2"], "organes": ["culasse", "liquide-refroidissement"], "difficulte": "garage", "cout": "800 à 1 500 €" },
-        { "id": "segmentation", "libelle": "Usure moteur (segmentation, guides de soupapes)", "frequence": 2, "verifications": ["Test de compression", "Consommation d'huile supérieure à 1 L pour 1 000 km"], "difficulte": "garage" },
-        { "id": "calage", "libelle": "Calage de la pompe d'injection décalé (fumée blanche, odeur de gazole)", "frequence": 2, "verifications": ["VCDS : début d'injection (groupe 004)"], "codes": ["00550"], "difficulte": "garage" }
+        {
+          "id": "turbo-huile",
+          "libelle": "Turbo qui laisse passer de l'huile (joints d'axe)",
+          "frequence": 4,
+          "verifications": [
+            "Huile dans les durites côté admission",
+            "Jeu dans l'axe du turbo"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "joint-culasse",
+          "libelle": "Joint de culasse (liquide qui baisse, fumée blanche persistante)",
+          "frequence": 3,
+          "verifications": [
+            "Niveau du vase d'expansion qui baisse sans fuite visible",
+            "Bulles dans le vase moteur tournant, test CO2"
+          ],
+          "organes": [
+            "culasse",
+            "liquide-refroidissement"
+          ],
+          "difficulte": "garage",
+          "cout": "800 à 1 500 €"
+        },
+        {
+          "id": "segmentation",
+          "libelle": "Usure moteur (segmentation, guides de soupapes)",
+          "frequence": 2,
+          "verifications": [
+            "Test de compression",
+            "Consommation d'huile supérieure à 1 L pour 1 000 km"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "calage",
+          "libelle": "Calage de la pompe d'injection décalé (fumée blanche, odeur de gazole)",
+          "frequence": 2,
+          "verifications": [
+            "VCDS : début d'injection (groupe 004)"
+          ],
+          "codes": [
+            "00550"
+          ],
+          "difficulte": "garage"
+        }
       ],
       "questions": [
-        { "texte": "La fumée sent-elle l'huile brûlée ?", "siOui": { "turbo-huile": 20, "segmentation": 15 }, "siNon": { "joint-culasse": 10, "calage": 10 } },
-        { "texte": "Le niveau de liquide de refroidissement baisse-t-il ?", "siOui": { "joint-culasse": 40 }, "siNon": { "joint-culasse": -20 } },
-        { "texte": "Le niveau d'huile baisse-t-il entre deux vidanges ?", "siOui": { "turbo-huile": 15, "segmentation": 15 }, "siNon": { "turbo-huile": -10, "segmentation": -10 } }
+        {
+          "texte": "La fumée sent-elle l'huile brûlée ?",
+          "siOui": {
+            "turbo-huile": 20,
+            "segmentation": 15
+          },
+          "siNon": {
+            "joint-culasse": 10,
+            "calage": 10
+          }
+        },
+        {
+          "texte": "Le niveau de liquide de refroidissement baisse-t-il ?",
+          "siOui": {
+            "joint-culasse": 40
+          },
+          "siNon": {
+            "joint-culasse": -20
+          }
+        },
+        {
+          "texte": "Le niveau d'huile baisse-t-il entre deux vidanges ?",
+          "siOui": {
+            "turbo-huile": 15,
+            "segmentation": 15
+          },
+          "siNon": {
+            "turbo-huile": -10,
+            "segmentation": -10
+          }
+        }
       ],
-      "recherches": ["T4 2.5 TDI fumée bleue turbo", "T4 joint de culasse symptômes"]
+      "recherches": [
+        "T4 2.5 TDI fumée bleue turbo",
+        "T4 joint de culasse symptômes"
+      ]
     },
     {
       "id": "surchauffe",
       "titre": "Le moteur chauffe",
       "systeme": "Refroidissement",
-      "descriptions": ["L'aiguille de température monte", "Le voyant de température clignote", "Le liquide bout dans le vase"],
-      "motsCles": ["surchauffe", "temperature", "liquide", "vase", "ventilateur", "radiateur", "thermostat"],
+      "descriptions": [
+        "L'aiguille de température monte",
+        "Le voyant de température clignote",
+        "Le liquide bout dans le vase"
+      ],
+      "motsCles": [
+        "surchauffe",
+        "temperature",
+        "liquide",
+        "vase",
+        "ventilateur",
+        "radiateur",
+        "thermostat"
+      ],
       "urgence": "Arrêter le moteur",
       "causes": [
-        { "id": "niveau", "libelle": "Manque de liquide (fuite sur durite, radiateur, pompe à eau)", "frequence": 5, "verifications": ["Moteur froid : niveau du vase", "Chercher des traces roses (G12) sous le moteur et sur les durites"], "organes": ["liquide-refroidissement", "pompe-eau"], "difficulte": "facile" },
-        { "id": "thermostat", "libelle": "Thermostat bloqué fermé", "frequence": 4, "verifications": ["Moteur chaud, la durite inférieure du radiateur reste froide"], "organes": ["liquide-refroidissement"], "difficulte": "moyen", "cout": "30 à 60 €" },
-        { "id": "ventilateur", "libelle": "Ventilateur ou thermocontact HS", "frequence": 4, "verifications": ["À l'arrêt moteur chaud, le ventilateur doit se mettre en route", "Ponter le thermocontact pour tester le moto-ventilateur"], "difficulte": "moyen" },
-        { "id": "pompe-eau", "libelle": "Pompe à eau (turbine abîmée, fuite)", "frequence": 3, "verifications": ["Traces de fuite au niveau de la pompe"], "organes": ["pompe-eau"], "difficulte": "garage" },
-        { "id": "joint-culasse", "libelle": "Joint de culasse (gaz dans le circuit)", "frequence": 2, "verifications": ["Bulles dans le vase, durites dures moteur froid"], "organes": ["culasse"], "difficulte": "garage" },
-        { "id": "sonde", "libelle": "Sonde de température qui affiche faux", "frequence": 2, "verifications": ["Comparer avec la température lue par VCDS"], "codes": ["00522"], "difficulte": "facile" }
+        {
+          "id": "niveau",
+          "libelle": "Manque de liquide (fuite sur durite, radiateur, pompe à eau)",
+          "frequence": 5,
+          "verifications": [
+            "Moteur froid : niveau du vase",
+            "Chercher des traces roses (G12) sous le moteur et sur les durites"
+          ],
+          "organes": [
+            "liquide-refroidissement",
+            "pompe-eau"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "thermostat",
+          "libelle": "Thermostat bloqué fermé",
+          "frequence": 4,
+          "verifications": [
+            "Moteur chaud, la durite inférieure du radiateur reste froide"
+          ],
+          "organes": [
+            "liquide-refroidissement"
+          ],
+          "difficulte": "moyen",
+          "cout": "30 à 60 €"
+        },
+        {
+          "id": "ventilateur",
+          "libelle": "Ventilateur ou thermocontact HS",
+          "frequence": 4,
+          "verifications": [
+            "À l'arrêt moteur chaud, le ventilateur doit se mettre en route",
+            "Ponter le thermocontact pour tester le moto-ventilateur"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "pompe-eau",
+          "libelle": "Pompe à eau (turbine abîmée, fuite)",
+          "frequence": 3,
+          "verifications": [
+            "Traces de fuite au niveau de la pompe"
+          ],
+          "organes": [
+            "pompe-eau"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "joint-culasse",
+          "libelle": "Joint de culasse (gaz dans le circuit)",
+          "frequence": 2,
+          "verifications": [
+            "Bulles dans le vase, durites dures moteur froid"
+          ],
+          "organes": [
+            "culasse"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "sonde",
+          "libelle": "Sonde de température qui affiche faux",
+          "frequence": 2,
+          "verifications": [
+            "Comparer avec la température lue par VCDS"
+          ],
+          "codes": [
+            "00522"
+          ],
+          "difficulte": "facile"
+        }
       ],
       "questions": [
-        { "texte": "Le niveau de liquide est-il bas ?", "siOui": { "niveau": 30, "joint-culasse": 10 }, "siNon": { "niveau": -20, "thermostat": 10, "ventilateur": 10 } },
-        { "texte": "Ça chauffe surtout à l'arrêt ou dans les bouchons ?", "siOui": { "ventilateur": 35 }, "siNon": { "ventilateur": -10, "thermostat": 10 } },
-        { "texte": "Le chauffage souffle-t-il froid alors que le moteur chauffe ?", "siOui": { "niveau": 20, "pompe-eau": 15 }, "siNon": {} }
+        {
+          "texte": "Le niveau de liquide est-il bas ?",
+          "siOui": {
+            "niveau": 30,
+            "joint-culasse": 10
+          },
+          "siNon": {
+            "niveau": -20,
+            "thermostat": 10,
+            "ventilateur": 10
+          }
+        },
+        {
+          "texte": "Ça chauffe surtout à l'arrêt ou dans les bouchons ?",
+          "siOui": {
+            "ventilateur": 35
+          },
+          "siNon": {
+            "ventilateur": -10,
+            "thermostat": 10
+          }
+        },
+        {
+          "texte": "Le chauffage souffle-t-il froid alors que le moteur chauffe ?",
+          "siOui": {
+            "niveau": 20,
+            "pompe-eau": 15
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 2.5 TDI surchauffe", "T4 ventilateur thermocontact"]
+      "recherches": [
+        "T4 2.5 TDI surchauffe",
+        "T4 ventilateur thermocontact"
+      ]
     },
     {
       "id": "claquement-virage",
       "titre": "Claquement en braquant",
       "systeme": "Transmission",
-      "descriptions": ["Clac clac quand je tourne à fond en accélérant", "Bruit de crécelle en virage serré"],
-      "motsCles": ["claquement", "virage", "braquer", "cardan", "soufflet", "accelere"],
+      "descriptions": [
+        "Clac clac quand je tourne à fond en accélérant",
+        "Bruit de crécelle en virage serré"
+      ],
+      "motsCles": [
+        "claquement",
+        "virage",
+        "braquer",
+        "cardan",
+        "soufflet",
+        "accelere"
+      ],
       "causes": [
-        { "id": "cardan", "libelle": "Cardan usé côté roue (soufflet percé)", "frequence": 5, "verifications": ["Regarder les soufflets : graisse projetée = soufflet percé", "Braquer à fond et accélérer doucement : le claquement vient du côté extérieur"], "organes": ["cardan-avd", "soufflets-cardan"], "difficulte": "garage", "cout": "250 à 450 €" },
-        { "id": "rotule", "libelle": "Rotule de suspension ou de direction", "frequence": 2, "verifications": ["Contrôler le jeu roue levée"], "organes": ["rotule-inf-avg", "rotule-inf-avd", "rotules-sup-av", "direction"], "difficulte": "moyen" }
+        {
+          "id": "cardan",
+          "libelle": "Cardan usé côté roue (soufflet percé)",
+          "frequence": 5,
+          "verifications": [
+            "Regarder les soufflets : graisse projetée = soufflet percé",
+            "Braquer à fond et accélérer doucement : le claquement vient du côté extérieur"
+          ],
+          "organes": [
+            "cardan-avd",
+            "soufflets-cardan"
+          ],
+          "difficulte": "garage",
+          "cout": "250 à 450 €"
+        },
+        {
+          "id": "rotule",
+          "libelle": "Rotule de suspension ou de direction",
+          "frequence": 2,
+          "verifications": [
+            "Contrôler le jeu roue levée"
+          ],
+          "organes": [
+            "rotule-inf-avg",
+            "rotule-inf-avd",
+            "rotules-sup-av",
+            "direction"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "Le bruit n'apparaît-il qu'en accélérant roues braquées ?", "siOui": { "cardan": 25 }, "siNon": { "rotule": 20 } },
-        { "texte": "Vois-tu de la graisse projetée près de la roue ?", "siOui": { "cardan": 25 }, "siNon": {} }
+        {
+          "texte": "Le bruit n'apparaît-il qu'en accélérant roues braquées ?",
+          "siOui": {
+            "cardan": 25
+          },
+          "siNon": {
+            "rotule": 20
+          }
+        },
+        {
+          "texte": "Vois-tu de la graisse projetée près de la roue ?",
+          "siOui": {
+            "cardan": 25
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 claquement cardan virage"]
+      "recherches": [
+        "T4 claquement cardan virage"
+      ]
     },
     {
       "id": "bruit-train-avant",
       "titre": "Bruits de train avant sur les bosses",
       "systeme": "Train avant",
-      "descriptions": ["Toc toc sur les dos d'âne", "Claquement à l'avant sur route abîmée", "Grincement de suspension"],
-      "motsCles": ["claquement", "bosse", "dos", "ane", "train", "avant", "suspension", "grincement", "route"],
+      "descriptions": [
+        "Toc toc sur les dos d'âne",
+        "Claquement à l'avant sur route abîmée",
+        "Grincement de suspension"
+      ],
+      "motsCles": [
+        "claquement",
+        "bosse",
+        "dos",
+        "ane",
+        "train",
+        "avant",
+        "suspension",
+        "grincement",
+        "route"
+      ],
       "causes": [
-        { "id": "biellettes", "libelle": "Biellettes de barre stabilisatrice", "frequence": 5, "verifications": ["Roues au sol, secouer la barre stabilisatrice : du jeu = biellettes"], "organes": ["biellettes-stab"], "difficulte": "facile", "cout": "40 à 100 € la paire" },
-        { "id": "rotules-inf", "libelle": "Rotules inférieures de suspension", "frequence": 4, "verifications": ["Roue levée, levier sous la roue : jeu vertical"], "organes": ["rotule-inf-avg", "rotule-inf-avd"], "difficulte": "moyen" },
-        { "id": "rotules-sup", "libelle": "Rotules supérieures", "frequence": 3, "verifications": ["Roue levée, jeu en haut de la roue"], "organes": ["rotules-sup-av"], "difficulte": "moyen" },
-        { "id": "silentblocs", "libelle": "Silentblocs de triangles", "frequence": 3, "verifications": ["Caoutchoucs fendus, triangle qui bouge au levier"], "organes": ["triangle-inf-avd"], "difficulte": "garage" },
-        { "id": "amortisseurs", "libelle": "Amortisseurs ou leurs fixations", "frequence": 3, "verifications": ["Fuite d'huile sur le corps, rebond en appuyant sur l'aile"], "organes": ["amortisseurs"], "difficulte": "moyen" },
-        { "id": "direction", "libelle": "Rotules ou biellettes de direction", "frequence": 2, "verifications": ["Jeu en tournant la roue de gauche à droite, roue levée"], "organes": ["direction"], "difficulte": "moyen" }
+        {
+          "id": "biellettes",
+          "libelle": "Biellettes de barre stabilisatrice",
+          "frequence": 5,
+          "verifications": [
+            "Roues au sol, secouer la barre stabilisatrice : du jeu = biellettes"
+          ],
+          "organes": [
+            "biellettes-stab"
+          ],
+          "difficulte": "facile",
+          "cout": "40 à 100 € la paire"
+        },
+        {
+          "id": "rotules-inf",
+          "libelle": "Rotules inférieures de suspension",
+          "frequence": 4,
+          "verifications": [
+            "Roue levée, levier sous la roue : jeu vertical"
+          ],
+          "organes": [
+            "rotule-inf-avg",
+            "rotule-inf-avd"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "rotules-sup",
+          "libelle": "Rotules supérieures",
+          "frequence": 3,
+          "verifications": [
+            "Roue levée, jeu en haut de la roue"
+          ],
+          "organes": [
+            "rotules-sup-av"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "silentblocs",
+          "libelle": "Silentblocs de triangles",
+          "frequence": 3,
+          "verifications": [
+            "Caoutchoucs fendus, triangle qui bouge au levier"
+          ],
+          "organes": [
+            "triangle-inf-avd"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "amortisseurs",
+          "libelle": "Amortisseurs ou leurs fixations",
+          "frequence": 3,
+          "verifications": [
+            "Fuite d'huile sur le corps, rebond en appuyant sur l'aile"
+          ],
+          "organes": [
+            "amortisseurs"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "direction",
+          "libelle": "Rotules ou biellettes de direction",
+          "frequence": 2,
+          "verifications": [
+            "Jeu en tournant la roue de gauche à droite, roue levée"
+          ],
+          "organes": [
+            "direction"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "Le bruit est-il un petit claquement sec sur les petites bosses ?", "siOui": { "biellettes": 20 }, "siNon": { "amortisseurs": 10, "silentblocs": 10 } },
-        { "texte": "La direction a-t-elle du jeu ou le véhicule tire-t-il d'un côté ?", "siOui": { "direction": 20, "rotules-inf": 10, "silentblocs": 10 }, "siNon": {} }
+        {
+          "texte": "Le bruit est-il un petit claquement sec sur les petites bosses ?",
+          "siOui": {
+            "biellettes": 20
+          },
+          "siNon": {
+            "amortisseurs": 10,
+            "silentblocs": 10
+          }
+        },
+        {
+          "texte": "La direction a-t-elle du jeu ou le véhicule tire-t-il d'un côté ?",
+          "siOui": {
+            "direction": 20,
+            "rotules-inf": 10,
+            "silentblocs": 10
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 bruit train avant", "T4 biellettes barre stabilisatrice"]
+      "recherches": [
+        "T4 bruit train avant",
+        "T4 biellettes barre stabilisatrice"
+      ]
     },
     {
       "id": "grondement-roulement",
       "titre": "Grondement qui augmente avec la vitesse",
       "systeme": "Train avant",
-      "descriptions": ["Bruit d'avion qui monte avec la vitesse", "Ronflement qui change dans les courbes"],
-      "motsCles": ["grondement", "ronflement", "avion", "vitesse", "roulement", "bruit"],
+      "descriptions": [
+        "Bruit d'avion qui monte avec la vitesse",
+        "Ronflement qui change dans les courbes"
+      ],
+      "motsCles": [
+        "grondement",
+        "ronflement",
+        "avion",
+        "vitesse",
+        "roulement",
+        "bruit"
+      ],
       "causes": [
-        { "id": "roulement", "libelle": "Roulement de roue", "frequence": 5, "verifications": ["Le bruit change en courbe : il augmente quand on charge le roulement abîmé", "Roue levée, tourner la roue à la main : grattement, jeu"], "organes": ["roulement-avd"], "difficulte": "garage", "cout": "100 à 250 € par côté" },
-        { "id": "pneus", "libelle": "Pneus usés en dents de scie", "frequence": 4, "verifications": ["Passer la main sur la bande de roulement : marches entre les pains de gomme"], "organes": ["pneus-av", "pneus-ar"], "difficulte": "facile" }
+        {
+          "id": "roulement",
+          "libelle": "Roulement de roue",
+          "frequence": 5,
+          "verifications": [
+            "Le bruit change en courbe : il augmente quand on charge le roulement abîmé",
+            "Roue levée, tourner la roue à la main : grattement, jeu"
+          ],
+          "organes": [
+            "roulement-avd"
+          ],
+          "difficulte": "garage",
+          "cout": "100 à 250 € par côté"
+        },
+        {
+          "id": "pneus",
+          "libelle": "Pneus usés en dents de scie",
+          "frequence": 4,
+          "verifications": [
+            "Passer la main sur la bande de roulement : marches entre les pains de gomme"
+          ],
+          "organes": [
+            "pneus-av",
+            "pneus-ar"
+          ],
+          "difficulte": "facile"
+        }
       ],
       "questions": [
-        { "texte": "Le bruit change-t-il quand tu tournes à gauche ou à droite ?", "siOui": { "roulement": 30 }, "siNon": { "pneus": 15 } }
+        {
+          "texte": "Le bruit change-t-il quand tu tournes à gauche ou à droite ?",
+          "siOui": {
+            "roulement": 30
+          },
+          "siNon": {
+            "pneus": 15
+          }
+        }
       ],
-      "recherches": ["T4 roulement de roue avant bruit"]
+      "recherches": [
+        "T4 roulement de roue avant bruit"
+      ]
     },
     {
       "id": "freinage",
       "titre": "Freinage anormal",
       "systeme": "Freinage",
-      "descriptions": ["Le camion tire d'un côté au freinage", "La pédale vibre", "La pédale est dure", "Ça grince en freinant"],
-      "motsCles": ["freinage", "tire", "pedale", "vibre", "dure", "grince", "disque", "plaquette"],
+      "descriptions": [
+        "Le camion tire d'un côté au freinage",
+        "La pédale vibre",
+        "La pédale est dure",
+        "Ça grince en freinant"
+      ],
+      "motsCles": [
+        "freinage",
+        "tire",
+        "pedale",
+        "vibre",
+        "dure",
+        "grince",
+        "disque",
+        "plaquette"
+      ],
       "urgence": "Sécurité",
       "causes": [
-        { "id": "plaquettes", "libelle": "Plaquettes en fin de vie (grincement métallique)", "frequence": 5, "verifications": ["Épaisseur des garnitures (au moins 3 mm)"], "organes": ["freins-av", "freins-ar"], "difficulte": "facile" },
-        { "id": "disques", "libelle": "Disques voilés ou usés (vibrations dans la pédale)", "frequence": 4, "verifications": ["Rebord sur le disque, vibrations en freinant à vitesse élevée"], "organes": ["freins-av", "freins-ar"], "difficulte": "moyen" },
-        { "id": "etrier", "libelle": "Étrier grippé ou flexible gonflé (tire d'un côté)", "frequence": 4, "verifications": ["Après un trajet, une jante beaucoup plus chaude que l'autre", "Le CT a mesuré un déséquilibre (voir l'écran Contrôles)"], "organes": ["flexibles-frein", "freins-ar"], "difficulte": "moyen" },
-        { "id": "assistance", "libelle": "Assistance de freinage (master vac ou pompe à vide)", "frequence": 2, "verifications": ["Moteur arrêté, pomper la pédale puis démarrer : la pédale doit s'enfoncer"], "organes": ["pompe-vide"], "difficulte": "garage" },
-        { "id": "liquide", "libelle": "Liquide de frein trop vieux (pédale molle)", "frequence": 3, "verifications": ["Le changer tous les 2 ans"], "organes": ["liquide-frein"], "difficulte": "moyen" }
+        {
+          "id": "plaquettes",
+          "libelle": "Plaquettes en fin de vie (grincement métallique)",
+          "frequence": 5,
+          "verifications": [
+            "Épaisseur des garnitures (au moins 3 mm)"
+          ],
+          "organes": [
+            "freins-av",
+            "freins-ar"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "disques",
+          "libelle": "Disques voilés ou usés (vibrations dans la pédale)",
+          "frequence": 4,
+          "verifications": [
+            "Rebord sur le disque, vibrations en freinant à vitesse élevée"
+          ],
+          "organes": [
+            "freins-av",
+            "freins-ar"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "etrier",
+          "libelle": "Étrier grippé ou flexible gonflé (tire d'un côté)",
+          "frequence": 4,
+          "verifications": [
+            "Après un trajet, une jante beaucoup plus chaude que l'autre",
+            "Le CT a mesuré un déséquilibre (voir l'écran Contrôles)"
+          ],
+          "organes": [
+            "flexibles-frein",
+            "freins-ar"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "assistance",
+          "libelle": "Assistance de freinage (master vac ou pompe à vide)",
+          "frequence": 2,
+          "verifications": [
+            "Moteur arrêté, pomper la pédale puis démarrer : la pédale doit s'enfoncer"
+          ],
+          "organes": [
+            "pompe-vide"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "liquide",
+          "libelle": "Liquide de frein trop vieux (pédale molle)",
+          "frequence": 3,
+          "verifications": [
+            "Le changer tous les 2 ans"
+          ],
+          "organes": [
+            "liquide-frein"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "Le camion tire-t-il d'un côté ?", "siOui": { "etrier": 35 }, "siNon": { "etrier": -10 } },
-        { "texte": "La pédale vibre-t-elle ?", "siOui": { "disques": 35 }, "siNon": { "disques": -10 } },
-        { "texte": "La pédale est-elle dure, surtout au démarrage ?", "siOui": { "assistance": 40 }, "siNon": { "assistance": -10 } }
+        {
+          "texte": "Le camion tire-t-il d'un côté ?",
+          "siOui": {
+            "etrier": 35
+          },
+          "siNon": {
+            "etrier": -10
+          }
+        },
+        {
+          "texte": "La pédale vibre-t-elle ?",
+          "siOui": {
+            "disques": 35
+          },
+          "siNon": {
+            "disques": -10
+          }
+        },
+        {
+          "texte": "La pédale est-elle dure, surtout au démarrage ?",
+          "siOui": {
+            "assistance": 40
+          },
+          "siNon": {
+            "assistance": -10
+          }
+        }
       ],
-      "recherches": ["T4 freins tire d'un côté étrier"]
+      "recherches": [
+        "T4 freins tire d'un côté étrier"
+      ]
     },
     {
       "id": "voyant-batterie",
       "titre": "Voyant de batterie ou problème de charge",
       "systeme": "Électricité",
-      "descriptions": ["Le voyant batterie reste allumé", "La batterie se vide", "Les phares baissent"],
-      "motsCles": ["batterie", "voyant", "charge", "alternateur", "vide", "decharge"],
+      "descriptions": [
+        "Le voyant batterie reste allumé",
+        "La batterie se vide",
+        "Les phares baissent"
+      ],
+      "motsCles": [
+        "batterie",
+        "voyant",
+        "charge",
+        "alternateur",
+        "vide",
+        "decharge"
+      ],
       "causes": [
-        { "id": "alternateur", "libelle": "Alternateur ou régulateur", "frequence": 4, "verifications": ["Moteur tournant à 2 000 tr/min, la tension doit être entre 13,8 et 14,5 V"], "organes": ["alternateur"], "difficulte": "moyen" },
-        { "id": "courroie", "libelle": "Courroie d'accessoires qui patine ou galet", "frequence": 3, "verifications": ["Tension de la courroie, bruit de couinement à froid"], "organes": ["courroie-accessoires"], "difficulte": "moyen" },
-        { "id": "batterie", "libelle": "Batterie usée", "frequence": 3, "verifications": ["Test de la batterie en magasin"], "organes": ["batterie"], "difficulte": "facile" },
-        { "id": "consommateur", "libelle": "Consommateur qui reste branché (chauffage stationnaire, plafonnier, accessoire)", "frequence": 3, "verifications": ["Ampèremètre en série sur la batterie, véhicule fermé : moins de 50 mA", "Retirer les fusibles un à un"], "organes": ["chauffage-stationnaire"], "difficulte": "moyen" },
-        { "id": "masse", "libelle": "Câbles ou masse oxydés", "frequence": 2, "verifications": ["Tresse de masse moteur-caisse, cosses de batterie"], "difficulte": "facile" }
+        {
+          "id": "alternateur",
+          "libelle": "Alternateur ou régulateur",
+          "frequence": 4,
+          "verifications": [
+            "Moteur tournant à 2 000 tr/min, la tension doit être entre 13,8 et 14,5 V"
+          ],
+          "organes": [
+            "alternateur"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "courroie",
+          "libelle": "Courroie d'accessoires qui patine ou galet",
+          "frequence": 3,
+          "verifications": [
+            "Tension de la courroie, bruit de couinement à froid"
+          ],
+          "organes": [
+            "courroie-accessoires"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "batterie",
+          "libelle": "Batterie usée",
+          "frequence": 3,
+          "verifications": [
+            "Test de la batterie en magasin"
+          ],
+          "organes": [
+            "batterie"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "consommateur",
+          "libelle": "Consommateur qui reste branché (chauffage stationnaire, plafonnier, accessoire)",
+          "frequence": 3,
+          "verifications": [
+            "Ampèremètre en série sur la batterie, véhicule fermé : moins de 50 mA",
+            "Retirer les fusibles un à un"
+          ],
+          "organes": [
+            "chauffage-stationnaire"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "masse",
+          "libelle": "Câbles ou masse oxydés",
+          "frequence": 2,
+          "verifications": [
+            "Tresse de masse moteur-caisse, cosses de batterie"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "pont-diodes",
+          "libelle": "Pont de diodes ou charbons du régulateur de l'alternateur (odeur de chaud électrique)",
+          "frequence": 2,
+          "verifications": [
+            "Fumée ou odeur de chaud côté alternateur",
+            "L'alternateur se répare : pont de diodes, charbons, bague collectrice"
+          ],
+          "organes": [
+            "alternateur"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Odeur de chaud et fumée : pont de diodes de l'alternateur",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=103537"
+            }
+          ]
+        },
+        {
+          "id": "pompe-additionnelle",
+          "libelle": "Pompe d'eau additionnelle qui tourne moteur coupé (sonde défectueuse) et vide la batterie",
+          "frequence": 2,
+          "verifications": [
+            "La batterie est à plat seulement après un trajet moteur chaud",
+            "On entend une pompe tourner après l'arrêt"
+          ],
+          "organes": [
+            "pompe-eau-auxiliaire"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Batterie qui se décharge : sonde neuve défectueuse sur la pompe additionnelle",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=103095"
+            }
+          ]
+        }
       ],
       "questions": [
-        { "texte": "La tension moteur tournant est-elle sous 13,5 V ?", "siOui": { "alternateur": 30, "courroie": 15 }, "siNon": { "alternateur": -20, "consommateur": 20, "batterie": 15 } },
-        { "texte": "La batterie se vide-t-elle quand le camion reste immobile plusieurs jours ?", "siOui": { "consommateur": 30, "batterie": 15 }, "siNon": {} }
+        {
+          "texte": "La tension moteur tournant est-elle sous 13,5 V ?",
+          "siOui": {
+            "alternateur": 30,
+            "courroie": 15
+          },
+          "siNon": {
+            "alternateur": -20,
+            "consommateur": 20,
+            "batterie": 15
+          }
+        },
+        {
+          "texte": "La batterie se vide-t-elle quand le camion reste immobile plusieurs jours ?",
+          "siOui": {
+            "consommateur": 30,
+            "batterie": 15
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 voyant batterie alternateur", "T4 batterie se décharge"]
+      "recherches": [
+        "T4 voyant batterie alternateur",
+        "T4 batterie se décharge"
+      ]
     },
     {
       "id": "clim",
       "titre": "La clim ne refroidit pas",
       "systeme": "Climatisation",
-      "descriptions": ["L'air reste tiède avec la clim", "Le compresseur ne s'enclenche pas"],
-      "motsCles": ["clim", "froid", "tiede", "compresseur", "gaz"],
+      "descriptions": [
+        "L'air reste tiède avec la clim",
+        "Le compresseur ne s'enclenche pas"
+      ],
+      "motsCles": [
+        "clim",
+        "froid",
+        "tiede",
+        "compresseur",
+        "gaz"
+      ],
       "causes": [
-        { "id": "gaz", "libelle": "Manque de gaz (fuite lente)", "frequence": 5, "verifications": ["Recharge avec traceur pour trouver la fuite"], "organes": ["clim"], "difficulte": "garage" },
-        { "id": "pressostat", "libelle": "Pressostat qui coupe le compresseur", "frequence": 3, "verifications": ["Contrôler l'alimentation de l'embrayage du compresseur"], "organes": ["clim"], "difficulte": "garage" },
-        { "id": "compresseur", "libelle": "Compresseur ou son embrayage", "frequence": 3, "verifications": ["Le moyeu avant du compresseur doit tourner clim en marche"], "organes": ["compresseur-clim"], "difficulte": "garage" },
-        { "id": "fusible", "libelle": "Fusible ou relais de clim", "frequence": 2, "verifications": ["Voir la boîte à fusibles sous le tableau de bord"], "difficulte": "facile" }
+        {
+          "id": "gaz",
+          "libelle": "Manque de gaz (fuite lente)",
+          "frequence": 5,
+          "verifications": [
+            "Recharge avec traceur pour trouver la fuite"
+          ],
+          "organes": [
+            "clim"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "pressostat",
+          "libelle": "Pressostat qui coupe le compresseur",
+          "frequence": 3,
+          "verifications": [
+            "Contrôler l'alimentation de l'embrayage du compresseur"
+          ],
+          "organes": [
+            "clim"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "compresseur",
+          "libelle": "Compresseur ou son embrayage",
+          "frequence": 3,
+          "verifications": [
+            "Le moyeu avant du compresseur doit tourner clim en marche"
+          ],
+          "organes": [
+            "compresseur-clim"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "fusible",
+          "libelle": "Fusible ou relais de clim",
+          "frequence": 2,
+          "verifications": [
+            "Voir la boîte à fusibles sous le tableau de bord"
+          ],
+          "difficulte": "facile"
+        }
       ],
       "questions": [
-        { "texte": "Le moyeu du compresseur tourne-t-il quand on allume la clim ?", "siOui": { "gaz": 25, "compresseur": -10 }, "siNon": { "pressostat": 20, "compresseur": 15, "fusible": 15 } }
+        {
+          "texte": "Le moyeu du compresseur tourne-t-il quand on allume la clim ?",
+          "siOui": {
+            "gaz": 25,
+            "compresseur": -10
+          },
+          "siNon": {
+            "pressostat": 20,
+            "compresseur": 15,
+            "fusible": 15
+          }
+        }
       ],
-      "recherches": ["T4 clim ne refroidit plus"]
+      "recherches": [
+        "T4 clim ne refroidit plus"
+      ]
     },
     {
       "id": "vitesses",
       "titre": "Vitesses difficiles à passer",
       "systeme": "Transmission",
-      "descriptions": ["Le levier est flou", "La marche arrière accroche", "Ça craque en passant les vitesses"],
-      "motsCles": ["vitesse", "levier", "flou", "craque", "marche", "arriere", "boite", "embrayage"],
+      "descriptions": [
+        "Le levier est flou",
+        "La marche arrière accroche",
+        "Ça craque en passant les vitesses"
+      ],
+      "motsCles": [
+        "vitesse",
+        "levier",
+        "flou",
+        "craque",
+        "marche",
+        "arriere",
+        "boite",
+        "embrayage"
+      ],
       "causes": [
-        { "id": "commande", "libelle": "Timonerie de commande de boîte usée (bagues, rotules)", "frequence": 5, "verifications": ["Jeu dans le levier et les rotules de la tringlerie", "Réglage de la commande"], "organes": ["commande-boite"], "difficulte": "moyen", "cout": "kit 30 à 80 €" },
-        { "id": "embrayage", "libelle": "Embrayage qui ne débraye plus complètement", "frequence": 3, "verifications": ["Les vitesses craquent moteur tournant mais passent moteur arrêté"], "difficulte": "garage" },
-        { "id": "huile-boite", "libelle": "Huile de boîte usée ou niveau bas", "frequence": 2, "verifications": ["Contrôle de niveau par le bouchon de remplissage"], "organes": ["huile-boite"], "difficulte": "moyen" }
+        {
+          "id": "commande",
+          "libelle": "Timonerie de commande de boîte usée (bagues, rotules)",
+          "frequence": 5,
+          "verifications": [
+            "Jeu dans le levier et les rotules de la tringlerie",
+            "Réglage de la commande"
+          ],
+          "organes": [
+            "commande-boite"
+          ],
+          "difficulte": "moyen",
+          "cout": "kit 30 à 80 €"
+        },
+        {
+          "id": "embrayage",
+          "libelle": "Embrayage qui ne débraye plus complètement",
+          "frequence": 3,
+          "verifications": [
+            "Les vitesses craquent moteur tournant mais passent moteur arrêté"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "huile-boite",
+          "libelle": "Huile de boîte usée ou niveau bas",
+          "frequence": 2,
+          "verifications": [
+            "Contrôle de niveau par le bouchon de remplissage"
+          ],
+          "organes": [
+            "huile-boite"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "Les vitesses passent-elles bien moteur arrêté ?", "siOui": { "embrayage": 30, "commande": -10 }, "siNon": { "commande": 30 } }
+        {
+          "texte": "Les vitesses passent-elles bien moteur arrêté ?",
+          "siOui": {
+            "embrayage": 30,
+            "commande": -10
+          },
+          "siNon": {
+            "commande": 30
+          }
+        }
       ],
-      "recherches": ["T4 commande de boîte flou", "T4 kit timonerie boîte"]
+      "recherches": [
+        "T4 commande de boîte flou",
+        "T4 kit timonerie boîte"
+      ]
     },
     {
       "id": "ralenti-calage",
       "titre": "Ralenti instable ou le moteur cale",
       "systeme": "Moteur",
-      "descriptions": ["Le moteur galope au ralenti", "Il cale à l'arrêt", "Il coupe en roulant"],
-      "motsCles": ["ralenti", "cale", "galope", "instable", "coupe"],
+      "descriptions": [
+        "Le moteur galope au ralenti",
+        "Il cale à l'arrêt",
+        "Il coupe en roulant"
+      ],
+      "motsCles": [
+        "ralenti",
+        "cale",
+        "galope",
+        "instable",
+        "coupe"
+      ],
       "causes": [
-        { "id": "prise-air", "libelle": "Prise d'air sur le circuit gazole", "frequence": 5, "verifications": ["Durite transparente avant la pompe"], "organes": ["filtre-gasoil"], "difficulte": "moyen" },
-        { "id": "filtre", "libelle": "Filtre à gazole colmaté ou eau dans le gazole", "frequence": 4, "verifications": ["Purger l'eau du filtre, le remplacer"], "organes": ["filtre-gasoil"], "difficulte": "facile" },
-        { "id": "g28", "libelle": "Capteur de régime (G28)", "frequence": 3, "verifications": ["Le compte-tours tombe à zéro quand le moteur coupe", "Lire les codes"], "codes": ["00513", "P0335"], "difficulte": "moyen" },
-        { "id": "doseur", "libelle": "Doseur de la pompe (N146 / G149)", "frequence": 2, "verifications": ["Lire les codes, valeurs du doseur"], "codes": ["01268", "01269"], "difficulte": "garage" }
+        {
+          "id": "prise-air",
+          "libelle": "Prise d'air sur le circuit gazole",
+          "frequence": 5,
+          "verifications": [
+            "Durite transparente avant la pompe"
+          ],
+          "organes": [
+            "filtre-gasoil"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "filtre",
+          "libelle": "Filtre à gazole colmaté ou eau dans le gazole",
+          "frequence": 4,
+          "verifications": [
+            "Purger l'eau du filtre, le remplacer"
+          ],
+          "organes": [
+            "filtre-gasoil"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "g28",
+          "libelle": "Capteur de régime (G28)",
+          "frequence": 3,
+          "verifications": [
+            "Le compte-tours tombe à zéro quand le moteur coupe",
+            "Lire les codes"
+          ],
+          "codes": [
+            "00513",
+            "P0335"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "doseur",
+          "libelle": "Doseur de la pompe (N146 / G149)",
+          "frequence": 2,
+          "verifications": [
+            "Lire les codes, valeurs du doseur"
+          ],
+          "codes": [
+            "01268",
+            "01269"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "compresseur-bloque",
+          "libelle": "Compresseur de clim qui bloque et freine le moteur jusqu'au calage",
+          "frequence": 2,
+          "verifications": [
+            "Le moteur coupe en touchant la clim ou la ventilation",
+            "Débrancher l'embrayage du compresseur : si le moteur repart, c'est lui"
+          ],
+          "organes": [
+            "compresseur-clim"
+          ],
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Coupure moteur en roulant : compresseur de clim",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=89572"
+            }
+          ]
+        }
       ],
       "questions": [
-        { "texte": "Le compte-tours tombe-t-il à zéro avant que le moteur cale ?", "siOui": { "g28": 40 }, "siNon": { "g28": -10 } },
-        { "texte": "Le problème est-il apparu après un plein ou un changement de filtre ?", "siOui": { "filtre": 20, "prise-air": 20 }, "siNon": {} }
+        {
+          "texte": "Le compte-tours tombe-t-il à zéro avant que le moteur cale ?",
+          "siOui": {
+            "g28": 40
+          },
+          "siNon": {
+            "g28": -10
+          }
+        },
+        {
+          "texte": "Le problème est-il apparu après un plein ou un changement de filtre ?",
+          "siOui": {
+            "filtre": 20,
+            "prise-air": 20
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 2.5 TDI cale au ralenti", "T4 capteur G28"]
+      "recherches": [
+        "T4 2.5 TDI cale au ralenti",
+        "T4 capteur G28"
+      ]
     },
     {
       "id": "fuite-huile",
       "titre": "Fuite d'huile",
       "systeme": "Moteur",
-      "descriptions": ["Tache d'huile sous le moteur", "Odeur d'huile chaude"],
-      "motsCles": ["fuite", "huile", "tache", "goutte", "odeur"],
+      "descriptions": [
+        "Tache d'huile sous le moteur",
+        "Odeur d'huile chaude"
+      ],
+      "motsCles": [
+        "fuite",
+        "huile",
+        "tache",
+        "goutte",
+        "odeur"
+      ],
       "causes": [
-        { "id": "couvre-culasse", "libelle": "Joint de couvre-culasse", "frequence": 4, "verifications": ["Huile autour du couvre-culasse et sur le collecteur"], "organes": ["joints-moteur"], "difficulte": "facile", "cout": "20 à 50 €" },
-        { "id": "spi", "libelle": "Joints spi (vilebrequin, arbre à cames)", "frequence": 3, "verifications": ["Huile côté distribution ou entre moteur et boîte"], "organes": ["distribution", "joints-moteur"], "difficulte": "garage" },
-        { "id": "carter", "libelle": "Bouchon de vidange ou joint de carter", "frequence": 3, "verifications": ["Goutte au bouchon de vidange"], "organes": ["huile-moteur"], "difficulte": "facile" },
-        { "id": "turbo", "libelle": "Retour d'huile du turbo", "frequence": 2, "verifications": ["Huile sous le turbo"], "organes": ["turbo"], "difficulte": "moyen" },
-        { "id": "filtre", "libelle": "Joint du filtre à huile", "frequence": 2, "verifications": ["Filtre mal serré après une vidange"], "organes": ["filtre-huile"], "difficulte": "facile" }
+        {
+          "id": "couvre-culasse",
+          "libelle": "Joint de couvre-culasse",
+          "frequence": 4,
+          "verifications": [
+            "Huile autour du couvre-culasse et sur le collecteur"
+          ],
+          "organes": [
+            "joints-moteur"
+          ],
+          "difficulte": "facile",
+          "cout": "20 à 50 €"
+        },
+        {
+          "id": "spi",
+          "libelle": "Joints spi (vilebrequin, arbre à cames)",
+          "frequence": 3,
+          "verifications": [
+            "Huile côté distribution ou entre moteur et boîte"
+          ],
+          "organes": [
+            "distribution",
+            "joints-moteur"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "carter",
+          "libelle": "Bouchon de vidange ou joint de carter",
+          "frequence": 3,
+          "verifications": [
+            "Goutte au bouchon de vidange"
+          ],
+          "organes": [
+            "huile-moteur"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "turbo",
+          "libelle": "Retour d'huile du turbo",
+          "frequence": 2,
+          "verifications": [
+            "Huile sous le turbo"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "filtre",
+          "libelle": "Joint du filtre à huile",
+          "frequence": 2,
+          "verifications": [
+            "Filtre mal serré après une vidange"
+          ],
+          "organes": [
+            "filtre-huile"
+          ],
+          "difficulte": "facile"
+        }
       ],
       "questions": [
-        { "texte": "La fuite est-elle apparue juste après une vidange ou une intervention ?", "siOui": { "carter": 20, "filtre": 25 }, "siNon": {} }
+        {
+          "texte": "La fuite est-elle apparue juste après une vidange ou une intervention ?",
+          "siOui": {
+            "carter": 20,
+            "filtre": 25
+          },
+          "siNon": {}
+        }
       ],
-      "recherches": ["T4 2.5 TDI fuite d'huile"]
+      "recherches": [
+        "T4 2.5 TDI fuite d'huile"
+      ]
     },
     {
       "id": "voyant-prechauffage",
       "titre": "Voyant de préchauffage qui clignote en roulant",
       "systeme": "Moteur",
-      "descriptions": ["La spirale clignote en roulant", "Voyant moteur"],
-      "motsCles": ["voyant", "prechauffage", "clignote", "roulant", "defaut"],
+      "descriptions": [
+        "La spirale clignote en roulant",
+        "Voyant moteur"
+      ],
+      "motsCles": [
+        "voyant",
+        "prechauffage",
+        "clignote",
+        "roulant",
+        "defaut"
+      ],
       "causes": [
-        { "id": "lire-codes", "libelle": "Un défaut est enregistré : lire les codes avec le câble", "frequence": 5, "verifications": ["Brancher VCDS sur la prise de diagnostic, calculateur 01 (moteur)", "Coller le rapport dans le diagnostic de l'appli"], "difficulte": "facile" },
-        { "id": "debitmetre", "libelle": "Débitmètre d'air (G70)", "frequence": 3, "codes": ["00553"], "difficulte": "facile" },
-        { "id": "n75", "libelle": "Électrovanne de suralimentation (N75)", "frequence": 3, "codes": ["01247", "00575"], "difficulte": "moyen" },
-        { "id": "g28", "libelle": "Capteur de régime (G28)", "frequence": 2, "codes": ["00513"], "difficulte": "moyen" }
+        {
+          "id": "lire-codes",
+          "libelle": "Un défaut est enregistré : lire les codes avec le câble",
+          "frequence": 5,
+          "verifications": [
+            "Brancher VCDS sur la prise de diagnostic, calculateur 01 (moteur)",
+            "Coller le rapport dans le diagnostic de l'appli"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "debitmetre",
+          "libelle": "Débitmètre d'air (G70)",
+          "frequence": 3,
+          "codes": [
+            "00553"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "n75",
+          "libelle": "Électrovanne de suralimentation (N75)",
+          "frequence": 3,
+          "codes": [
+            "01247",
+            "00575"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "g28",
+          "libelle": "Capteur de régime (G28)",
+          "frequence": 2,
+          "codes": [
+            "00513"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [],
-      "recherches": ["T4 voyant préchauffage clignote en roulant"]
+      "recherches": [
+        "T4 voyant préchauffage clignote en roulant"
+      ]
     },
     {
       "id": "sifflement",
       "titre": "Sifflement ou couinement moteur",
       "systeme": "Moteur",
-      "descriptions": ["Ça couine au démarrage", "Sifflement en accélération"],
-      "motsCles": ["sifflement", "couine", "grincement", "courroie", "galet", "turbo"],
+      "descriptions": [
+        "Ça couine au démarrage",
+        "Sifflement en accélération"
+      ],
+      "motsCles": [
+        "sifflement",
+        "couine",
+        "grincement",
+        "courroie",
+        "galet",
+        "turbo"
+      ],
       "causes": [
-        { "id": "courroie", "libelle": "Courroie d'accessoires ou galets", "frequence": 5, "verifications": ["Couinement à froid ou en braquant", "Galets qui grattent à la main, courroie craquelée"], "organes": ["courroie-accessoires"], "difficulte": "moyen" },
-        { "id": "durite", "libelle": "Fuite d'air de suralimentation", "frequence": 3, "verifications": ["Sifflement en charge, pas au ralenti"], "organes": ["turbo"], "difficulte": "facile" },
-        { "id": "turbo", "libelle": "Turbo (roulement)", "frequence": 2, "verifications": ["Sifflement aigu qui suit le régime"], "organes": ["turbo"], "difficulte": "garage" }
+        {
+          "id": "courroie",
+          "libelle": "Courroie d'accessoires ou galets",
+          "frequence": 5,
+          "verifications": [
+            "Couinement à froid ou en braquant",
+            "Galets qui grattent à la main, courroie craquelée"
+          ],
+          "organes": [
+            "courroie-accessoires"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "durite",
+          "libelle": "Fuite d'air de suralimentation",
+          "frequence": 3,
+          "verifications": [
+            "Sifflement en charge, pas au ralenti"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "turbo",
+          "libelle": "Turbo (roulement)",
+          "frequence": 2,
+          "verifications": [
+            "Sifflement aigu qui suit le régime"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "difficulte": "garage"
+        }
       ],
       "questions": [
-        { "texte": "Le bruit est-il présent au ralenti, moteur à l'arrêt du véhicule ?", "siOui": { "courroie": 25 }, "siNon": { "durite": 20, "turbo": 10 } }
+        {
+          "texte": "Le bruit est-il présent au ralenti, moteur à l'arrêt du véhicule ?",
+          "siOui": {
+            "courroie": 25
+          },
+          "siNon": {
+            "durite": 20,
+            "turbo": 10
+          }
+        }
       ],
-      "recherches": ["T4 courroie accessoires couine galet"]
+      "recherches": [
+        "T4 courroie accessoires couine galet"
+      ]
     },
     {
       "id": "vibrations",
       "titre": "Vibrations dans le volant ou la caisse",
       "systeme": "Roues",
-      "descriptions": ["Le volant tremble à 90 km/h", "Vibrations en accélérant"],
-      "motsCles": ["vibration", "volant", "tremble", "vitesse", "accelere"],
+      "descriptions": [
+        "Le volant tremble à 90 km/h",
+        "Vibrations en accélérant"
+      ],
+      "motsCles": [
+        "vibration",
+        "volant",
+        "tremble",
+        "vitesse",
+        "accelere"
+      ],
       "causes": [
-        { "id": "equilibrage", "libelle": "Équilibrage des roues", "frequence": 5, "verifications": ["Vibrations à une vitesse précise (80-110 km/h)"], "organes": ["pneus-av", "pneus-ar"], "difficulte": "garage", "cout": "10 à 15 € par roue" },
-        { "id": "cardan", "libelle": "Cardan (vibrations en accélération)", "frequence": 3, "verifications": ["Vibrations qui disparaissent au lever de pied"], "organes": ["cardan-avd", "soufflets-cardan"], "difficulte": "garage" },
-        { "id": "disques", "libelle": "Disques voilés (vibrations au freinage)", "frequence": 3, "organes": ["freins-av"], "difficulte": "moyen" },
-        { "id": "train", "libelle": "Jeu dans le train avant", "frequence": 2, "organes": ["rotule-inf-avg", "rotule-inf-avd", "direction"], "difficulte": "moyen" }
+        {
+          "id": "equilibrage",
+          "libelle": "Équilibrage des roues",
+          "frequence": 5,
+          "verifications": [
+            "Vibrations à une vitesse précise (80-110 km/h)"
+          ],
+          "organes": [
+            "pneus-av",
+            "pneus-ar"
+          ],
+          "difficulte": "garage",
+          "cout": "10 à 15 € par roue"
+        },
+        {
+          "id": "cardan",
+          "libelle": "Cardan (vibrations en accélération)",
+          "frequence": 3,
+          "verifications": [
+            "Vibrations qui disparaissent au lever de pied"
+          ],
+          "organes": [
+            "cardan-avd",
+            "soufflets-cardan"
+          ],
+          "difficulte": "garage"
+        },
+        {
+          "id": "disques",
+          "libelle": "Disques voilés (vibrations au freinage)",
+          "frequence": 3,
+          "organes": [
+            "freins-av"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "train",
+          "libelle": "Jeu dans le train avant",
+          "frequence": 2,
+          "organes": [
+            "rotule-inf-avg",
+            "rotule-inf-avd",
+            "direction"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "Les vibrations apparaissent-elles seulement en freinant ?", "siOui": { "disques": 45 }, "siNon": { "disques": -20 } },
-        { "texte": "Disparaissent-elles quand tu lèves le pied ?", "siOui": { "cardan": 30 }, "siNon": { "equilibrage": 15 } }
+        {
+          "texte": "Les vibrations apparaissent-elles seulement en freinant ?",
+          "siOui": {
+            "disques": 45
+          },
+          "siNon": {
+            "disques": -20
+          }
+        },
+        {
+          "texte": "Disparaissent-elles quand tu lèves le pied ?",
+          "siOui": {
+            "cardan": 30
+          },
+          "siNon": {
+            "equilibrage": 15
+          }
+        }
       ],
-      "recherches": ["T4 vibrations volant"]
+      "recherches": [
+        "T4 vibrations volant"
+      ]
     },
     {
       "id": "chauffage",
       "titre": "Chauffage ou chauffage stationnaire en panne",
       "systeme": "Équipement",
-      "descriptions": ["Le chauffage souffle froid", "L'Eberspächer ne démarre pas", "Le chauffage stationnaire fume"],
-      "motsCles": ["chauffage", "eberspacher", "stationnaire", "froid", "souffle"],
+      "descriptions": [
+        "Le chauffage souffle froid",
+        "L'Eberspächer ne démarre pas",
+        "Le chauffage stationnaire fume"
+      ],
+      "motsCles": [
+        "chauffage",
+        "eberspacher",
+        "stationnaire",
+        "froid",
+        "souffle"
+      ],
       "causes": [
-        { "id": "thermostat", "libelle": "Thermostat bloqué ouvert (le moteur peine à chauffer)", "frequence": 4, "verifications": ["L'aiguille de température reste basse en roulant"], "organes": ["liquide-refroidissement"], "difficulte": "moyen" },
-        { "id": "air", "libelle": "Bulle d'air dans le circuit de chauffage", "frequence": 3, "verifications": ["Purger le circuit après un remplissage"], "organes": ["liquide-refroidissement"], "difficulte": "facile" },
-        { "id": "eber-bougie", "libelle": "Eberspächer : bougie (glow pin) ou crépine encrassée", "frequence": 4, "verifications": ["Lire le code clignotant de la minuterie", "Faire tourner 20 min à fond une fois par mois pour éviter l'encrassement"], "organes": ["chauffage-stationnaire"], "difficulte": "moyen" },
-        { "id": "eber-pompe", "libelle": "Eberspächer : pompe doseuse ou alimentation gazole", "frequence": 3, "verifications": ["On doit entendre le tic-tic de la pompe doseuse"], "organes": ["chauffage-stationnaire"], "difficulte": "moyen" }
+        {
+          "id": "thermostat",
+          "libelle": "Thermostat bloqué ouvert (le moteur peine à chauffer)",
+          "frequence": 4,
+          "verifications": [
+            "L'aiguille de température reste basse en roulant"
+          ],
+          "organes": [
+            "liquide-refroidissement"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "air",
+          "libelle": "Bulle d'air dans le circuit de chauffage",
+          "frequence": 3,
+          "verifications": [
+            "Purger le circuit après un remplissage"
+          ],
+          "organes": [
+            "liquide-refroidissement"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "eber-bougie",
+          "libelle": "Eberspächer : bougie (glow pin) ou crépine encrassée",
+          "frequence": 4,
+          "verifications": [
+            "Lire le code clignotant de la minuterie",
+            "Faire tourner 20 min à fond une fois par mois pour éviter l'encrassement"
+          ],
+          "organes": [
+            "chauffage-stationnaire"
+          ],
+          "difficulte": "moyen"
+        },
+        {
+          "id": "eber-pompe",
+          "libelle": "Eberspächer : pompe doseuse ou alimentation gazole",
+          "frequence": 3,
+          "verifications": [
+            "On doit entendre le tic-tic de la pompe doseuse"
+          ],
+          "organes": [
+            "chauffage-stationnaire"
+          ],
+          "difficulte": "moyen"
+        }
       ],
       "questions": [
-        { "texte": "Le souci concerne-t-il le chauffage stationnaire (moteur arrêté) ?", "siOui": { "eber-bougie": 30, "eber-pompe": 25, "thermostat": -30, "air": -20 }, "siNon": { "eber-bougie": -30, "eber-pompe": -30 } },
-        { "texte": "Entends-tu le tic-tic de la pompe doseuse au démarrage du chauffage ?", "siOui": { "eber-bougie": 20, "eber-pompe": -15 }, "siNon": { "eber-pompe": 30 } }
+        {
+          "texte": "Le souci concerne-t-il le chauffage stationnaire (moteur arrêté) ?",
+          "siOui": {
+            "eber-bougie": 30,
+            "eber-pompe": 25,
+            "thermostat": -30,
+            "air": -20
+          },
+          "siNon": {
+            "eber-bougie": -30,
+            "eber-pompe": -30
+          }
+        },
+        {
+          "texte": "Entends-tu le tic-tic de la pompe doseuse au démarrage du chauffage ?",
+          "siOui": {
+            "eber-bougie": 20,
+            "eber-pompe": -15
+          },
+          "siNon": {
+            "eber-pompe": 30
+          }
+        }
       ],
-      "recherches": ["Eberspächer D4WS T4 panne", "T4 chauffage souffle froid"]
+      "recherches": [
+        "Eberspächer D4WS T4 panne",
+        "T4 chauffage souffle froid"
+      ]
+    },
+    {
+      "id": "fuite-gazole",
+      "titre": "Fuite ou odeur de gazole",
+      "systeme": "Moteur",
+      "descriptions": [
+        "Goutte-à-goutte de gazole sous le moteur",
+        "Odeur de gazole dans l'habitacle",
+        "La pompe d'injection suinte"
+      ],
+      "motsCles": [
+        "gazole",
+        "gasoil",
+        "fuite",
+        "odeur",
+        "goutte",
+        "injecteur",
+        "pompe",
+        "suinte"
+      ],
+      "causes": [
+        {
+          "id": "bouchon-retour",
+          "libelle": "Bouchon de retour d'injecteur fêlé ou manquant",
+          "frequence": 4,
+          "verifications": [
+            "Se garer en pente et inspecter les injecteurs à la lampe frontale",
+            "Le bouchon est minuscule et souvent couvert de gras"
+          ],
+          "organes": [
+            "injecteurs"
+          ],
+          "difficulte": "facile",
+          "sources": [
+            {
+              "titre": "Ton T4 : fuite sur l'injecteur n°1 (juin 2026)",
+              "url": "https://t4zone.info/forum/viewtopic.php?f=12&t=20227"
+            }
+          ]
+        },
+        {
+          "id": "durites-retour",
+          "libelle": "Durites de retour des injecteurs poreuses",
+          "frequence": 4,
+          "verifications": [
+            "Durites fendillées ou molles entre les injecteurs"
+          ],
+          "organes": [
+            "injecteurs"
+          ],
+          "difficulte": "facile",
+          "cout": "10 à 20 €"
+        },
+        {
+          "id": "couvercle-pompe",
+          "libelle": "Joint du couvercle de la pompe d'injection fatigué",
+          "frequence": 3,
+          "verifications": [
+            "Suintement en haut de la pompe",
+            "Repérer la position avant de déposer le couvercle (l'ergot doit retomber dans son logement)",
+            "Purger le circuit après remontage"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Pompe à injection : fuite au couvercle, joint changé",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=99959"
+            }
+          ]
+        },
+        {
+          "id": "filtre",
+          "libelle": "Filtre à gazole ou ses raccords",
+          "frequence": 2,
+          "verifications": [
+            "Joint du filtre, purgeur d'eau mal serré"
+          ],
+          "organes": [
+            "filtre-gasoil"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "banjo",
+          "libelle": "Raccords banjo d'arrivée et de retour inversés après une intervention",
+          "frequence": 1,
+          "verifications": [
+            "Même pas de vis mais orifices différents : vérifier le sens après un remontage de la pompe"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Perte de puissance : raccords banjo inversés sur la pompe",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=100367"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "texte": "La fuite vient-elle du haut du moteur, près des injecteurs ?",
+          "siOui": {
+            "bouchon-retour": 25,
+            "durites-retour": 20
+          },
+          "siNon": {
+            "couvercle-pompe": 15,
+            "filtre": 15
+          }
+        },
+        {
+          "texte": "Le problème est apparu juste après une intervention sur la pompe ?",
+          "siOui": {
+            "banjo": 40,
+            "couvercle-pompe": 15
+          },
+          "siNon": {}
+        }
+      ],
+      "recherches": [
+        "fuite gazole injecteur ACV",
+        "fuite couvercle pompe injection"
+      ]
+    },
+    {
+      "id": "voyant-huile",
+      "titre": "Voyant de pression d'huile qui clignote ou bipe",
+      "systeme": "Moteur",
+      "descriptions": [
+        "Le voyant d'huile rouge clignote avec un bip",
+        "Ça bipe vers 1800 tours"
+      ],
+      "motsCles": [
+        "huile",
+        "pression",
+        "voyant",
+        "clignote",
+        "bip",
+        "bipe",
+        "rouge"
+      ],
+      "urgence": "Arrêter si la pression est vraiment basse",
+      "causes": [
+        {
+          "id": "niveau",
+          "libelle": "Niveau d'huile bas",
+          "frequence": 4,
+          "verifications": [
+            "Contrôler la jauge moteur à plat"
+          ],
+          "organes": [
+            "huile-moteur"
+          ],
+          "difficulte": "facile"
+        },
+        {
+          "id": "capteur",
+          "libelle": "Capteur de pression d'huile ou son connecteur",
+          "frequence": 4,
+          "verifications": [
+            "Le 2.5 TDI ACV n'a qu'un capteur de pression",
+            "Remplacer le capteur, vérifier le fil"
+          ],
+          "difficulte": "facile",
+          "cout": "15 à 40 €",
+          "sources": [
+            {
+              "titre": "Pression d'huile qui clignote sur un 2.5 TDI ACV",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=100685"
+            }
+          ]
+        },
+        {
+          "id": "pression",
+          "libelle": "Pression réellement faible (huile trop fluide, pompe, crépine)",
+          "frequence": 2,
+          "verifications": [
+            "Mesurer au manomètre à chaud : environ 2 bar à 2 000 tr/min au minimum"
+          ],
+          "difficulte": "garage",
+          "sources": [
+            {
+              "titre": "Mesure au manomètre : pression faible au ralenti",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=100685"
+            }
+          ]
+        },
+        {
+          "id": "alternateur",
+          "libelle": "Signal de l'alternateur (le contrôle d'huile s'en sert pour savoir si le moteur tourne)",
+          "frequence": 2,
+          "verifications": [
+            "Le défaut apparaît aussi avec un problème de charge"
+          ],
+          "organes": [
+            "alternateur"
+          ],
+          "difficulte": "moyen",
+          "sources": [
+            {
+              "titre": "Voyant d'huile qui clignote : cause alternateur",
+              "url": "https://t4zone.info/forum/viewtopic.php?t=47588"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "texte": "Le niveau d'huile est-il correct sur la jauge ?",
+          "siOui": {
+            "niveau": -30,
+            "capteur": 10
+          },
+          "siNon": {
+            "niveau": 40
+          }
+        },
+        {
+          "texte": "Le voyant de batterie ou la charge pose-t-il aussi problème ?",
+          "siOui": {
+            "alternateur": 35
+          },
+          "siNon": {
+            "alternateur": -10
+          }
+        }
+      ],
+      "recherches": [
+        "voyant pression huile clignote ACV"
+      ]
     }
   ],
   "codes": [
-    { "code": "00513", "libelle": "Capteur de régime moteur (G28)", "composant": "G28", "pistes": ["Connecteur et câblage du capteur", "Capteur encrassé ou HS"], "pannes": ["ralenti-calage", "ne-demarre-pas"] },
-    { "code": "00522", "libelle": "Capteur de température du liquide (G62)", "composant": "G62", "pistes": ["Sonde à 4 broches sur la sortie d'eau de culasse", "Connecteur oxydé"], "pannes": ["demarrage-froid", "surchauffe"] },
-    { "code": "00523", "libelle": "Capteur de température d'air d'admission (G72)", "composant": "G72", "pistes": ["Capteur et connecteur"], "pannes": [] },
-    { "code": "00532", "libelle": "Tension d'alimentation trop faible ou trop forte", "pistes": ["Batterie, alternateur, masses"], "pannes": ["voyant-batterie"] },
-    { "code": "00550", "libelle": "Régulation du début d'injection", "pistes": ["Calage de la pompe", "Capteur de levée d'aiguille", "Électrovanne de début d'injection N108"], "pannes": ["fumee-bleue-blanche"] },
-    { "code": "00553", "libelle": "Débitmètre d'air massique (G70)", "composant": "G70", "pistes": ["Débitmètre fatigué", "Prise d'air entre débitmètre et turbo"], "pannes": ["perte-puissance", "fumee-noire"] },
-    { "code": "00575", "libelle": "Pression de suralimentation (écart de régulation)", "pistes": ["Durites de suralimentation", "N75 et durites à dépression", "Wastegate du turbo"], "pannes": ["perte-puissance"] },
-    { "code": "00625", "libelle": "Signal de vitesse du véhicule", "pistes": ["Capteur de vitesse sur la boîte", "Compteur"], "pannes": [] },
-    { "code": "00626", "libelle": "Voyant de préchauffage (K29) ou circuit de préchauffage", "pistes": ["Ampoule du voyant", "Relais de préchauffage"], "pannes": ["demarrage-froid"] },
-    { "code": "00668", "libelle": "Alimentation borne 30", "pistes": ["Batterie, fusibles, câbles d'alimentation du calculateur"], "pannes": ["voyant-batterie"] },
-    { "code": "01044", "libelle": "Calculateur mal codé", "pistes": ["Codage du calculateur après remplacement"], "pannes": [] },
-    { "code": "01128", "libelle": "Antidémarrage : bobine de lecture (D2)", "pistes": ["Bobine autour du barillet", "Connecteur"], "pannes": ["ne-demarre-pas"] },
-    { "code": "01176", "libelle": "Antidémarrage : signal de la clé trop faible", "pistes": ["Transpondeur de la clé", "Essayer le double"], "pannes": ["ne-demarre-pas"] },
-    { "code": "01242", "libelle": "Étages de sortie du calculateur", "pistes": ["Court-circuit sur une sortie (électrovannes)", "Calculateur"], "pannes": [] },
-    { "code": "01247", "libelle": "Électrovanne de limitation de pression de suralimentation (N75)", "composant": "N75", "pistes": ["Électrovanne et connecteur", "Durites à dépression"], "pannes": ["perte-puissance", "voyant-prechauffage"] },
-    { "code": "01268", "libelle": "Doseur de quantité injectée (N146)", "composant": "N146", "pistes": ["Pompe d'injection, connecteur de la pompe"], "pannes": ["ralenti-calage"] },
-    { "code": "01269", "libelle": "Capteur de position du doseur (G149)", "composant": "G149", "pistes": ["Connecteur de la pompe (fuite de gazole dans le connecteur)"], "pannes": ["ralenti-calage"] },
-    { "code": "17978", "libelle": "Démarrage bloqué par l'antidémarrage", "pistes": ["Clé non reconnue, adaptation des clés"], "pannes": ["ne-demarre-pas"] },
-    { "code": "P0100", "libelle": "Débitmètre d'air (code OBD générique)", "pistes": ["Voir 00553"], "pannes": ["perte-puissance", "fumee-noire"] },
-    { "code": "P0115", "libelle": "Capteur de température du liquide (code OBD générique)", "pistes": ["Voir 00522"], "pannes": ["demarrage-froid"] },
-    { "code": "P0335", "libelle": "Capteur de régime (code OBD générique)", "pistes": ["Voir 00513"], "pannes": ["ralenti-calage"] },
-    { "code": "P0380", "libelle": "Circuit de préchauffage (code OBD générique)", "pistes": ["Bougies, relais de préchauffage"], "pannes": ["demarrage-froid"] }
+    {
+      "code": "00513",
+      "libelle": "Capteur de régime moteur (G28)",
+      "composant": "G28",
+      "pistes": [
+        "Connecteur et câblage du capteur",
+        "Capteur encrassé ou HS"
+      ],
+      "pannes": [
+        "ralenti-calage",
+        "ne-demarre-pas"
+      ]
+    },
+    {
+      "code": "00522",
+      "libelle": "Capteur de température du liquide (G62)",
+      "composant": "G62",
+      "pistes": [
+        "Sonde à 4 broches sur la sortie d'eau de culasse",
+        "Connecteur oxydé"
+      ],
+      "pannes": [
+        "demarrage-froid",
+        "surchauffe"
+      ]
+    },
+    {
+      "code": "00523",
+      "libelle": "Capteur de température d'air d'admission (G72)",
+      "composant": "G72",
+      "pistes": [
+        "Capteur et connecteur"
+      ],
+      "pannes": []
+    },
+    {
+      "code": "00532",
+      "libelle": "Tension d'alimentation trop faible ou trop forte",
+      "pistes": [
+        "Batterie, alternateur, masses"
+      ],
+      "pannes": [
+        "voyant-batterie"
+      ]
+    },
+    {
+      "code": "00550",
+      "libelle": "Régulation du début d'injection",
+      "pistes": [
+        "Calage de la pompe",
+        "Capteur de levée d'aiguille",
+        "Électrovanne de début d'injection N108"
+      ],
+      "pannes": [
+        "fumee-bleue-blanche"
+      ]
+    },
+    {
+      "code": "00553",
+      "libelle": "Débitmètre d'air massique (G70)",
+      "composant": "G70",
+      "pistes": [
+        "Débitmètre fatigué",
+        "Prise d'air entre débitmètre et turbo"
+      ],
+      "pannes": [
+        "perte-puissance",
+        "fumee-noire"
+      ]
+    },
+    {
+      "code": "00575",
+      "libelle": "Pression de suralimentation (écart de régulation)",
+      "pistes": [
+        "Durites de suralimentation",
+        "N75 et durites à dépression",
+        "Wastegate du turbo"
+      ],
+      "pannes": [
+        "perte-puissance"
+      ]
+    },
+    {
+      "code": "00625",
+      "libelle": "Signal de vitesse du véhicule",
+      "pistes": [
+        "Capteur de vitesse sur la boîte",
+        "Compteur"
+      ],
+      "pannes": []
+    },
+    {
+      "code": "00626",
+      "libelle": "Voyant de préchauffage (K29) ou circuit de préchauffage",
+      "pistes": [
+        "Ampoule du voyant",
+        "Relais de préchauffage"
+      ],
+      "pannes": [
+        "demarrage-froid"
+      ]
+    },
+    {
+      "code": "00668",
+      "libelle": "Alimentation borne 30",
+      "pistes": [
+        "Batterie, fusibles, câbles d'alimentation du calculateur"
+      ],
+      "pannes": [
+        "voyant-batterie"
+      ]
+    },
+    {
+      "code": "01044",
+      "libelle": "Calculateur mal codé",
+      "pistes": [
+        "Codage du calculateur après remplacement"
+      ],
+      "pannes": []
+    },
+    {
+      "code": "01128",
+      "libelle": "Antidémarrage : bobine de lecture (D2)",
+      "pistes": [
+        "Bobine autour du barillet",
+        "Connecteur"
+      ],
+      "pannes": [
+        "ne-demarre-pas"
+      ]
+    },
+    {
+      "code": "01176",
+      "libelle": "Antidémarrage : signal de la clé trop faible",
+      "pistes": [
+        "Transpondeur de la clé",
+        "Essayer le double"
+      ],
+      "pannes": [
+        "ne-demarre-pas"
+      ]
+    },
+    {
+      "code": "01242",
+      "libelle": "Étages de sortie du calculateur",
+      "pistes": [
+        "Court-circuit sur une sortie (électrovannes)",
+        "Calculateur"
+      ],
+      "pannes": []
+    },
+    {
+      "code": "01247",
+      "libelle": "Électrovanne de limitation de pression de suralimentation (N75)",
+      "composant": "N75",
+      "pistes": [
+        "Électrovanne et connecteur",
+        "Durites à dépression"
+      ],
+      "pannes": [
+        "perte-puissance",
+        "voyant-prechauffage"
+      ]
+    },
+    {
+      "code": "01268",
+      "libelle": "Doseur de quantité injectée (N146)",
+      "composant": "N146",
+      "pistes": [
+        "Pompe d'injection, connecteur de la pompe"
+      ],
+      "pannes": [
+        "ralenti-calage"
+      ]
+    },
+    {
+      "code": "01269",
+      "libelle": "Capteur de position du doseur (G149)",
+      "composant": "G149",
+      "pistes": [
+        "Connecteur de la pompe (fuite de gazole dans le connecteur)"
+      ],
+      "pannes": [
+        "ralenti-calage"
+      ]
+    },
+    {
+      "code": "17978",
+      "libelle": "Démarrage bloqué par l'antidémarrage",
+      "pistes": [
+        "Clé non reconnue, adaptation des clés"
+      ],
+      "pannes": [
+        "ne-demarre-pas"
+      ]
+    },
+    {
+      "code": "P0100",
+      "libelle": "Débitmètre d'air (code OBD générique)",
+      "pistes": [
+        "Voir 00553"
+      ],
+      "pannes": [
+        "perte-puissance",
+        "fumee-noire"
+      ]
+    },
+    {
+      "code": "P0115",
+      "libelle": "Capteur de température du liquide (code OBD générique)",
+      "pistes": [
+        "Voir 00522"
+      ],
+      "pannes": [
+        "demarrage-froid"
+      ]
+    },
+    {
+      "code": "P0335",
+      "libelle": "Capteur de régime (code OBD générique)",
+      "pistes": [
+        "Voir 00513"
+      ],
+      "pannes": [
+        "ralenti-calage"
+      ]
+    },
+    {
+      "code": "P0380",
+      "libelle": "Circuit de préchauffage (code OBD générique)",
+      "pistes": [
+        "Bougies, relais de préchauffage"
+      ],
+      "pannes": [
+        "demarrage-froid"
+      ]
+    },
+    {
+      "code": "01414",
+      "libelle": "Chauffage stationnaire D4W : ventilateur d'air de combustion (V6)",
+      "composant": "V6",
+      "pistes": [
+        "Circuit ouvert : connecteur, faisceau ou moteur du ventilateur",
+        "Relevé sur ton T4 le 21/12/2024"
+      ],
+      "pannes": [
+        "chauffage"
+      ]
+    }
   ]
 }
