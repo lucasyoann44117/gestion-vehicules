@@ -23,7 +23,9 @@ const M = {
   peinture: () => new THREE.MeshPhysicalMaterial({ color: 0x0f55e0, metalness: 0.35, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }),
   chrome: () => new THREE.MeshStandardMaterial({ color: 0xe6e9ee, metalness: 1, roughness: 0.12 }),
   antibrouillard: () => new THREE.MeshStandardMaterial({ color: 0xffe2a0, emissive: 0xffb347, emissiveIntensity: 0.9, roughness: 0.2 }),
-  vitre: () => new THREE.MeshPhysicalMaterial({ color: 0x0a1220, metalness: 0.1, roughness: 0.04, transparent: true, opacity: 0.72 }),
+  // Vitres latérales et arrière teintées noires, comme sur le camion ; pare-brise seulement légèrement teinté.
+  vitre: () => new THREE.MeshPhysicalMaterial({ color: 0x05070b, metalness: 0.2, roughness: 0.03, clearcoat: 1, transparent: true, opacity: 0.93 }),
+  pareBrise: () => new THREE.MeshPhysicalMaterial({ color: 0x0e141b, metalness: 0.3, roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.8, envMapIntensity: 0.6 }),
   fonte: () => new THREE.MeshStandardMaterial({ color: 0x51575e, metalness: 0.55, roughness: 0.55 }),
   alu: () => new THREE.MeshStandardMaterial({ color: 0xc4c9cf, metalness: 0.85, roughness: 0.28 }),
   acier: () => new THREE.MeshStandardMaterial({ color: 0x8e979f, metalness: 0.8, roughness: 0.35 }),
@@ -32,7 +34,7 @@ const M = {
   rouille: () => new THREE.MeshStandardMaterial({ color: 0x6b4a36, metalness: 0.5, roughness: 0.7 }),
   rouge: () => new THREE.MeshStandardMaterial({ color: 0xb3261e, metalness: 0.3, roughness: 0.45 }),
   orange: () => new THREE.MeshStandardMaterial({ color: 0xe08a1e, metalness: 0.2, roughness: 0.5 }),
-  phare: () => new THREE.MeshPhysicalMaterial({ color: 0xe9eef5, metalness: 0.2, roughness: 0.05, transmission: 0.4, emissive: 0x2a2f36 }),
+  phare: () => new THREE.MeshPhysicalMaterial({ color: 0xe9eef5, metalness: 0.2, roughness: 0.05, transmission: 0.4, emissive: 0x5a6270 }),
   orangeTr: () => new THREE.MeshStandardMaterial({ color: 0xf08c00, emissive: 0x4a2600, roughness: 0.4 }),
   liquide: () => new THREE.MeshPhysicalMaterial({ color: 0xe9e2c8, roughness: 0.2, transparent: true, opacity: 0.75 }),
   cuivre: () => new THREE.MeshStandardMaterial({ color: 0xb87333, metalness: 0.8, roughness: 0.35 }),
@@ -127,8 +129,18 @@ function construireCarrosserie() {
   f.lineTo(-2.28, 0.32);
   f.quadraticCurveTo(-2.40, 0.32, -2.40, 0.44);
   const largeur = 1.76;
-  const geo = new THREE.ExtrudeGeometry(f, { depth: largeur, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 4, curveSegments: 24 });
-  geo.translate(0, 0, -largeur / 2);
+  // Arêtes bien arrondies : le T4 n'a pas d'angle vif, ni sur le toit ni sur les flancs.
+  const geo = new THREE.ExtrudeGeometry(f, { depth: largeur - 0.08, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.04, bevelSegments: 8, curveSegments: 32 });
+  geo.translate(0, 0, -(largeur - 0.08) / 2);
+  // Le nez se resserre vers l'avant et vers le haut (vu de face, l'avant du T4 forme un trapèze).
+  const pos = geo.attributes.position;
+  const borne = v => Math.min(1, Math.max(0, v));
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i);
+    const k = 0.05 * borne((x - 1.4) / 1.0) + 0.05 * borne((y - 0.8) / 0.45) * borne((x - 1.5) / 0.9);
+    pos.setZ(i, pos.getZ(i) * (1 - k));
+  }
+  geo.computeVertexNormals();
   piece(S, 'caisse', 'Caisse bleu Atlantis', null, new THREE.Mesh(geo, M.peinture()), [0, 0.25, 0]);
 
   // ----- Détails relevés sur les photos du camion -----
@@ -158,30 +170,32 @@ function construireCarrosserie() {
     vitres.add(vitre([[-1.05, 1.27], [-2.12, 1.27], [-2.12, 1.79], [-1.05, 1.79]], z)); // custode
   }
   vitres.add(placer(boite(0.012, 0.6, 1.46, M.vitre(), 0.05), -2.445, 1.5, 0));
-  const pare = boite(0.012, 0.76, 1.62, M.vitre(), 0.05);
+  const pare = boite(0.012, 0.76, 1.62, M.pareBrise(), 0.05);
   pare.position.set(1.36, 1.59, 0);
   pare.rotation.z = Math.atan2(1.84 - 1.31, 1.62 - 1.08);
   vitres.add(pare);
   piece(S, 'vitrages', 'Vitrages', null, vitres, [0, 0.35, 0]);
 
   // Pare-chocs couleur caisse, avec la grille basse noire.
+  // Gros pare-chocs enveloppant, grille basse noire à fentes entre les antibrouillards.
   const avant = grouper(
-    placer(boite(0.2, 0.42, 1.9, M.peinture(), 0.1), 2.36, 0.54, 0),
-    placer(boite(0.02, 0.05, 0.9, M.noir(), 0.02), 2.465, 0.66, 0),
-    placer(boite(0.02, 0.05, 0.9, M.noir(), 0.02), 2.465, 0.59, 0),
+    placer(boite(0.24, 0.42, 1.9, M.peinture(), 0.14), 2.36, 0.54, 0),
+    placer(boite(0.02, 0.13, 0.96, M.noir(), 0.02), 2.478, 0.65, 0),
   );
+  for (let i = 0; i < 4; i++) avant.add(placer(boite(0.025, 0.012, 0.94, M.peinture(), 0.004), 2.485, 0.6 + i * 0.032, 0));
   const arriere = placer(boite(0.18, 0.34, 1.9, M.peinture(), 0.1), -2.42, 0.5, 0);
   piece(S, 'pare-chocs', 'Pare-chocs couleur caisse', null, grouper(avant, arriere), [0.15, 0.1, 0]);
 
   // Calandre couleur caisse à lamelles, sigle VW et monogramme TDI.
+  // Calandre couleur caisse : trois lames peintes sur fond noir, entre les deux phares.
   const calandre = new THREE.Group();
-  for (let i = 0; i < 4; i++) calandre.add(placer(boite(0.025, 0.022, 0.7, M.noir(), 0.008), 2.4, 0.84 + i * 0.045, 0));
-  calandre.add(placer(boite(0.03, 0.2, 0.74, M.peinture(), 0.02), 2.385, 0.91, 0));
+  calandre.add(placer(boite(0.03, 0.17, 0.72, M.noir(), 0.02), 2.44, 0.86, 0));
+  for (let i = 0; i < 3; i++) calandre.add(placer(boite(0.035, 0.026, 0.72, M.peinture(), 0.008), 2.455, 0.8 + i * 0.055, 0));
   const sigle = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.009, 12, 40), M.chrome());
   sigle.rotation.y = Math.PI / 2;
-  sigle.position.set(2.425, 0.92, 0);
-  calandre.add(sigle, placer(cylindre(0.05, 0.01, M.peinture(), 'x'), 2.42, 0.92, 0));
-  calandre.add(placer(boite(0.008, 0.02, 0.09, M.chrome(), 0.004), 2.42, 0.87, 0.18));
+  sigle.position.set(2.475, 0.86, 0);
+  calandre.add(sigle, placer(cylindre(0.05, 0.01, M.peinture(), 'x'), 2.47, 0.86, 0));
+  calandre.add(placer(boite(0.008, 0.02, 0.09, M.chrome(), 0.004), 2.475, 0.81, 0.2));
   piece(S, 'calandre', 'Calandre', null, calandre, [0.3, 0.15, 0]);
 
   // Prise d'air sur le capot.
@@ -191,10 +205,19 @@ function construireCarrosserie() {
   // Phares (blocs clairs avec clignotant intégré), antibrouillards, feux arrière.
   const feux = new THREE.Group();
   for (const s of [-1, 1]) {
-    feux.add(placer(boite(0.05, 0.17, 0.32, M.phare(), 0.03), 2.4, 0.93, s * 0.56));
-    feux.add(placer(boite(0.05, 0.15, 0.12, M.phare(), 0.03), 2.37, 0.93, s * 0.79));
-    feux.add(placer(boite(0.04, 0.07, 0.14, M.antibrouillard(), 0.02), 2.465, 0.46, s * 0.66));
-    feux.add(placer(boite(0.05, 0.26, 0.1, M.rouge(), 0.02), -2.44, 0.74, s * 0.84));
+    // Grand phare à verre clair avec son réflecteur chromé, puis le feu de position/clignotant blanc d'angle.
+    feux.add(placer(boite(0.05, 0.17, 0.36, M.phare(), 0.035), 2.445, 0.85, s * 0.57));
+    feux.add(placer(cylindre(0.07, 0.01, M.chrome(), 'x', 32), 2.468, 0.85, s * 0.53));
+    feux.add(placer(boite(0.05, 0.15, 0.13, M.phare(), 0.03), 2.42, 0.85, s * 0.81));
+    // Antibrouillards ambrés dans le pare-chocs, avec leur entourage noir.
+    feux.add(placer(boite(0.03, 0.08, 0.17, M.noir(), 0.02), 2.47, 0.45, s * 0.64));
+    feux.add(placer(boite(0.04, 0.06, 0.14, M.antibrouillard(), 0.02), 2.475, 0.45, s * 0.64));
+    // Feux arrière hauts : rouge, clignotant orange, rouge, recul blanc.
+    const fx = -2.44, fz = s * 0.84;
+    feux.add(placer(boite(0.05, 0.1, 0.11, M.rouge(), 0.015), fx, 0.97, fz));
+    feux.add(placer(boite(0.05, 0.08, 0.11, M.orangeTr(), 0.015), fx, 0.88, fz));
+    feux.add(placer(boite(0.05, 0.08, 0.11, M.rouge(), 0.015), fx, 0.8, fz));
+    feux.add(placer(boite(0.05, 0.06, 0.11, M.phare(), 0.015), fx, 0.73, fz));
   }
   piece(S, 'feux', 'Phares, antibrouillards et feux', 'eclairage', feux, [0.3, 0.2, 0]);
 
@@ -263,6 +286,8 @@ function construireCarrosserie() {
     decors.add(placer(boite(1.5, 0.008, 0.006, joint(), 0.002), -0.25, 0.42, z));
   }
   decors.add(placer(boite(0.13, 0.17, 0.006, joint(), 0.01), 0.38, 0.64, -(Z + 0.003)));
+  // Côté porte coulissante (droite) : cache noir du rail, sous les vitres arrière.
+  decors.add(placer(boite(0.9, 0.035, 0.012, M.noir(), 0.006), -1.62, 1.22, Z + 0.006));
   piece(S, 'decors', 'Monogrammes, baguettes et joints', null, decors, [0, 0.3, 0]);
 
   // Rétroviseurs couleur caisse sur leur bras, poignées de porte noires.
@@ -463,18 +488,23 @@ function construireRoues() {
   for (const [x, nomEssieu, organePneu, organeFrein] of [[AV, 'AV', 'pneus-av', 'freins-av'], [AR, 'AR', 'pneus-ar', 'freins-ar']]) {
     for (const s of [-1, 1]) {
       const cote = s > 0 ? 'D' : 'G';
+      // Pneu 205/65 R15 et jante alu à 7 branches en étoile, comme sur les photos du camion.
+      const pneu = new THREE.Mesh(new THREE.TorusGeometry(R_ROUE - 0.075, 0.078, 20, 48), M.gomme());
+      pneu.scale.z = 1.3;
       const roue = grouper(
-        new THREE.Mesh(new THREE.TorusGeometry(R_ROUE - 0.075, 0.078, 20, 48), M.gomme()),
-        placer(cylindre(0.2, 0.17, M.alu(), 'z'), 0, 0, s * -0.005),
+        pneu,
+        placer(cylindre(0.19, 0.17, M.noir(), 'z'), 0, 0, 0),                       // fond de jante sombre
+        placer(new THREE.Mesh(new THREE.TorusGeometry(0.185, 0.014, 10, 48), M.alu()), 0, 0, s * 0.085), // rebord
+        placer(cylindre(0.05, 0.03, M.alu(), 'z', 24), 0, 0, s * 0.095),          // moyeu et cache central
       );
-      roue.children[0].scale.z = 1.3;
-      // Rayons de jante
-      for (let i = 0; i < 5; i++) {
-        const r = boite(0.035, 0.17, 0.02, M.alu(), 0.008);
-        r.position.set(Math.cos(i * 1.2566) * 0.1, Math.sin(i * 1.2566) * 0.1, s * 0.09);
-        r.rotation.z = i * 1.2566 + Math.PI / 2;
-        roue.add(r);
+      for (let i = 0; i < 7; i++) {
+        const a = i * (Math.PI * 2 / 7);
+        const branche = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.03, 0.15, 8), M.alu());
+        branche.position.set(Math.cos(a) * 0.11, Math.sin(a) * 0.11, s * 0.088);
+        branche.rotation.z = a - Math.PI / 2;
+        roue.add(branche);
       }
+      roue.add(placer(new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.006, 8, 24), M.chrome()), 0, 0, s * 0.112));
       piece(S, `pneu-${nomEssieu}${cote}`, `Pneu ${nomEssieu} ${cote === 'D' ? 'droit' : 'gauche'}`, organePneu,
         placer(roue, x, R_ROUE, s * VOIE), [0, 0, s * 0.75]);
       piece(S, `frein-${nomEssieu}${cote}`, `Disque et plaquettes ${nomEssieu} ${cote === 'D' ? 'droit' : 'gauche'}`, organeFrein, grouper(
