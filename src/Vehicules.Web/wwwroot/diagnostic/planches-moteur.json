@@ -1,0 +1,143 @@
+{
+  "avertissement": "Planches dessinées pour l'application, à la manière du catalogue ETKA de Volkswagen. Elles montrent l'agencement des pièces du 2.5 TDI ACV ; les formes sont simplifiées et les longueurs d'échappement raccourcies.",
+  "planches": [
+    {
+      "code": "103",
+      "titre": "Bloc, culasse et supports",
+      "groupe": "1 · Moteur",
+      "description": "Le bloc 5 cylindres, la culasse et tout ce qui la ferme.",
+      "positions": [
+        { "pos": 1, "cle": "bloc", "nom": "Bloc-cylindres", "qte": "1", "remarque": "5 cylindres en ligne, fonte" },
+        { "pos": 2, "cle": "joint-culasse", "nom": "Joint de culasse", "organe": "culasse", "qte": "1", "remarque": "Épaisseur selon dépassement des pistons" },
+        { "pos": 3, "cle": "culasse", "nom": "Culasse", "organe": "culasse", "qte": "1" },
+        { "pos": 4, "cle": "poussoirs", "nom": "Poussoirs hydrauliques", "organe": "culasse", "qte": "10" },
+        { "pos": 5, "cle": "arbre-cames", "nom": "Arbre à cames", "organe": "culasse", "qte": "1" },
+        { "pos": 6, "cle": "vis-culasse", "nom": "Vis de culasse", "organe": "culasse", "qte": "12", "remarque": "À remplacer à chaque dépose" },
+        { "pos": 7, "cle": "joint-couvre", "nom": "Joint de couvre-culasse", "organe": "joints-moteur", "qte": "1" },
+        { "pos": 8, "cle": "couvre-culasse", "nom": "Couvre-culasse", "organe": "joints-moteur", "qte": "1" },
+        { "pos": 9, "cle": "reniflard", "nom": "Reniflard et durite", "organe": "joints-moteur", "qte": "1" },
+        { "pos": 10, "cle": "pompe-vide", "nom": "Pompe à vide", "organe": "pompe-vide", "qte": "1", "remarque": "Entraînée par l'arbre à cames, assistance de freinage" },
+        { "pos": 11, "cle": "supports-moteur", "nom": "Supports moteur", "organe": "support-moteur", "qte": "2" }
+      ]
+    },
+    {
+      "code": "115",
+      "titre": "Lubrification",
+      "groupe": "1 · Moteur",
+      "description": "Le circuit d'huile, du carter au filtre.",
+      "positions": [
+        { "pos": 1, "cle": "bouchon-remplissage", "nom": "Bouchon de remplissage d'huile", "organe": "huile-moteur", "qte": "1" },
+        { "pos": 2, "cle": "jauge", "nom": "Jauge à huile et tube", "organe": "huile-moteur", "qte": "1" },
+        { "pos": 3, "cle": "support-filtre", "nom": "Support de filtre à huile", "organe": "filtre-huile", "qte": "1" },
+        { "pos": 4, "cle": "filtre-huile", "nom": "Cartouche de filtre à huile", "organe": "filtre-huile", "qte": "1", "remarque": "À chaque vidange" },
+        { "pos": 5, "cle": "joint-carter", "nom": "Joint de carter d'huile", "organe": "huile-moteur", "qte": "1" },
+        { "pos": 6, "cle": "carter-huile", "nom": "Carter d'huile", "organe": "huile-moteur", "qte": "1" },
+        { "pos": 7, "cle": "bouchon-vidange", "nom": "Bouchon de vidange et joint", "organe": "huile-moteur", "qte": "1", "remarque": "Joint neuf à chaque vidange" },
+        { "pos": 8, "cle": "pompe-huile", "nom": "Pompe à huile", "qte": "1" },
+        { "pos": 9, "cle": "crepine", "nom": "Crépine d'aspiration", "qte": "1" }
+      ]
+    },
+    {
+      "code": "109",
+      "titre": "Distribution",
+      "groupe": "1 · Moteur",
+      "description": "La courroie qui synchronise vilebrequin, arbre à cames et pompe à eau, et la petite courroie de pompe d'injection.",
+      "positions": [
+        { "pos": 1, "cle": "courroie-distribution", "nom": "Courroie crantée de distribution", "organe": "distribution", "qte": "1", "remarque": "Casse = moteur détruit" },
+        { "pos": 2, "cle": "galet-tendeur", "nom": "Galet tendeur", "organe": "distribution", "qte": "1", "remarque": "Fourni dans le kit" },
+        { "pos": 3, "cle": "galet-enrouleur", "nom": "Galet enrouleur", "organe": "distribution", "qte": "1", "remarque": "Fourni dans le kit" },
+        { "pos": 4, "cle": "pignon-aac", "nom": "Pignon d'arbre à cames", "qte": "1" },
+        { "pos": 5, "cle": "pignon-vilo", "nom": "Pignon de vilebrequin", "qte": "1" },
+        { "pos": 6, "cle": "pompe-eau", "nom": "Pompe à eau", "organe": "pompe-eau", "qte": "1", "remarque": "Souvent changée avec le kit" },
+        { "pos": 7, "cle": "carter-distribution", "nom": "Carter de distribution", "qte": "1" },
+        { "pos": 8, "cle": "poulie-vilo", "nom": "Poulie de vilebrequin (damper)", "qte": "1" },
+        { "pos": 9, "cle": "courroie-pompe", "nom": "Courroie de pompe d'injection", "organe": "distribution", "qte": "1", "remarque": "À changer avec la distribution" },
+        { "pos": 10, "cle": "tendeur-pompe", "nom": "Tendeur de courroie de pompe", "organe": "distribution", "qte": "1" },
+        { "pos": 11, "cle": "pignon-pompe", "nom": "Pignon de pompe d'injection", "organe": "pompe-injection", "qte": "1", "remarque": "Calage de la pompe" }
+      ]
+    },
+    {
+      "code": "121",
+      "titre": "Refroidissement",
+      "groupe": "1 · Moteur",
+      "description": "Radiateur, ventilateurs, thermostat et circuit d'eau.",
+      "positions": [
+        { "pos": 1, "cle": "radiateur", "nom": "Radiateur", "organe": "liquide-refroidissement", "qte": "1" },
+        { "pos": 2, "cle": "ventilateurs", "nom": "Ventilateurs électriques", "organe": "ventilateurs-radiateur", "qte": "2" },
+        { "pos": 3, "cle": "vase-expansion", "nom": "Vase d'expansion", "organe": "liquide-refroidissement", "qte": "1" },
+        { "pos": 4, "cle": "bouchon-vase", "nom": "Bouchon du vase", "organe": "liquide-refroidissement", "qte": "1", "remarque": "Un bouchon fatigué fait perdre du liquide" },
+        { "pos": 5, "cle": "durites", "nom": "Durites de radiateur", "organe": "liquide-refroidissement", "qte": "2" },
+        { "pos": 6, "cle": "boitier-thermostat", "nom": "Boîtier de thermostat", "organe": "thermostat", "qte": "1" },
+        { "pos": 7, "cle": "thermostat", "nom": "Thermostat", "organe": "thermostat", "qte": "1", "remarque": "Ouvre vers 87 °C" },
+        { "pos": 8, "cle": "sonde-g62", "nom": "Sonde de température G62", "organe": "sonde-temperature", "qte": "1" },
+        { "pos": 9, "cle": "pompe-eau-auxiliaire", "nom": "Pompe à eau auxiliaire", "organe": "pompe-eau-auxiliaire", "qte": "1" },
+        { "pos": 10, "cle": "pompe-eau", "nom": "Pompe à eau", "organe": "pompe-eau", "qte": "1", "remarque": "Voir aussi planche 109" }
+      ]
+    },
+    {
+      "code": "129",
+      "titre": "Admission d'air et turbo",
+      "groupe": "1 · Moteur",
+      "description": "Le chemin de l'air, du filtre jusqu'aux cylindres.",
+      "positions": [
+        { "pos": 1, "cle": "boite-air", "nom": "Boîte à air", "organe": "filtre-air", "qte": "1" },
+        { "pos": 2, "cle": "element-filtrant", "nom": "Élément de filtre à air", "organe": "filtre-air", "qte": "1" },
+        { "pos": 3, "cle": "couvercle-boite", "nom": "Couvercle de boîte à air", "organe": "filtre-air", "qte": "1" },
+        { "pos": 4, "cle": "debitmetre", "nom": "Débitmètre d'air G70", "organe": "debitmetre", "qte": "1" },
+        { "pos": 5, "cle": "durite-admission", "nom": "Durite d'admission", "qte": "1", "remarque": "Une fissure fait perdre de la puissance" },
+        { "pos": 6, "cle": "turbo", "nom": "Turbocompresseur", "organe": "turbo", "qte": "1", "remarque": "Pas d'échangeur sur l'ACV" },
+        { "pos": 7, "cle": "pipe-admission", "nom": "Pipe d'admission", "qte": "1" },
+        { "pos": 8, "cle": "egr", "nom": "Vanne EGR", "organe": "egr", "qte": "1" },
+        { "pos": 9, "cle": "n75", "nom": "Électrovanne de suralimentation N75", "organe": "electrovanne-n75", "qte": "1" }
+      ]
+    },
+    {
+      "code": "130",
+      "titre": "Injection et préchauffage",
+      "groupe": "1 · Moteur",
+      "description": "La pompe VP37, les injecteurs et les bougies de démarrage à froid.",
+      "positions": [
+        { "pos": 1, "cle": "pompe-vp37", "nom": "Pompe d'injection VP37", "organe": "pompe-injection", "qte": "1" },
+        { "pos": 2, "cle": "injecteurs", "nom": "Injecteurs", "organe": "injecteurs", "qte": "5" },
+        { "pos": 3, "cle": "tuyaux-hp", "nom": "Tuyaux haute pression", "organe": "injecteurs", "qte": "5" },
+        { "pos": 4, "cle": "retours", "nom": "Durites de retour de gazole", "organe": "injecteurs", "qte": "1", "remarque": "Durcissent avec l'âge et suintent" },
+        { "pos": 5, "cle": "bougies", "nom": "Bougies de préchauffage", "organe": "bougies-prechauffage", "qte": "5" },
+        { "pos": 6, "cle": "bus-bougies", "nom": "Bus d'alimentation des bougies", "organe": "bougies-prechauffage", "qte": "1" },
+        { "pos": 7, "cle": "filtre-gazole", "nom": "Filtre à gazole", "organe": "filtre-gasoil", "qte": "1" },
+        { "pos": 8, "cle": "relais-103", "nom": "Relais de préchauffage (103)", "organe": "relais-prechauffage", "qte": "1", "remarque": "Sous le tableau de bord, montré à part" }
+      ]
+    },
+    {
+      "code": "903",
+      "titre": "Accessoires, alternateur et démarreur",
+      "groupe": "9 · Électricité",
+      "description": "La courroie d'accessoires et ce qu'elle entraîne, plus le démarreur.",
+      "positions": [
+        { "pos": 1, "cle": "courroie-accessoires", "nom": "Courroie d'accessoires (poly-V)", "organe": "courroie-accessoires", "qte": "1" },
+        { "pos": 2, "cle": "galet-accessoires", "nom": "Galet tendeur d'accessoires", "organe": "courroie-accessoires", "qte": "1" },
+        { "pos": 3, "cle": "alternateur", "nom": "Alternateur", "organe": "alternateur", "qte": "1" },
+        { "pos": 4, "cle": "compresseur-clim", "nom": "Compresseur de climatisation", "organe": "compresseur-clim", "qte": "1" },
+        { "pos": 5, "cle": "pompe-direction", "nom": "Pompe de direction assistée", "qte": "1" },
+        { "pos": 6, "cle": "poulie-vilo", "nom": "Poulie de vilebrequin", "qte": "1", "remarque": "Voir aussi planche 109" },
+        { "pos": 7, "cle": "demarreur", "nom": "Démarreur", "organe": "demarreur", "qte": "1" }
+      ]
+    },
+    {
+      "code": "253",
+      "titre": "Échappement",
+      "groupe": "2 · Échappement",
+      "description": "Du collecteur à la sortie : le catalyseur est maintenant juste avant le silencieux.",
+      "positions": [
+        { "pos": 1, "cle": "collecteur", "nom": "Collecteur d'échappement", "qte": "1" },
+        { "pos": 2, "cle": "joints-collecteur", "nom": "Joints de collecteur", "qte": "5" },
+        { "pos": 3, "cle": "tube-avant", "nom": "Tube avant (descente de turbo)", "organe": "echappement", "qte": "1" },
+        { "pos": 4, "cle": "flexible", "nom": "Flexible d'échappement", "organe": "echappement", "qte": "1" },
+        { "pos": 5, "cle": "tube-intermediaire", "nom": "Tube intermédiaire inox", "organe": "echappement", "qte": "1" },
+        { "pos": 6, "cle": "catalyseur", "nom": "Catalyseur", "organe": "echappement", "qte": "1", "remarque": "Juste avant le silencieux" },
+        { "pos": 7, "cle": "silencieux", "nom": "Silencieux arrière", "organe": "echappement", "qte": "1" },
+        { "pos": 8, "cle": "supports-echappement", "nom": "Silentblocs de suspension", "organe": "echappement", "qte": "3" },
+        { "pos": 9, "cle": "colliers", "nom": "Colliers de serrage", "organe": "echappement", "qte": "3" }
+      ]
+    }
+  ]
+}

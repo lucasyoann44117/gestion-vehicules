@@ -24,6 +24,8 @@
   <ItemGroup>
     <None Include="..\..\src\Vehicules.Web\wwwroot\diagnostic\t4-acv.json" Link="t4-acv.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\src\Vehicules.Web\wwwroot\diagnostic\pieces-t4.json" Link="pieces-t4.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Vehicules.Web\wwwroot\diagnostic\planches-moteur.json" Link="planches-moteur.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Vehicules.Web\wwwroot\js\planches-3d.js" Link="planches-3d.js" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- L'historique réel sert de jeu d'essai s'il est présent (il reste hors du dépôt). -->

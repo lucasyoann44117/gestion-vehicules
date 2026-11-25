@@ -1,0 +1,313 @@
+@page "/moteur/planches"
+@page "/moteur/planches/{Code}"
+@inherits PageBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject ServiceDiagnostic Diagnostics
+@inject NavigationManager Navigation
+
+<Tete Titre="Planches moteur">
+    <a class="btn" href="moteur"><svg aria-hidden="true"><use href="#i-pieces" /></svg>Sous le capot</a>
+</Tete>
+
+@if (catalogue is null)
+{
+    <p class="chargement">Chargement…</p>
+}
+else
+{
+    <nav class="onglets-planches" aria-label="Groupes de pièces">
+        <a class="@(planche is null ? "actif" : "")" href="moteur/planches"><b>1–9</b>Moteur complet</a>
+        @foreach (var p in catalogue.Planches)
+        {
+            <a class="@(planche?.Code == p.Code ? "actif" : "")" href="moteur/planches/@p.Code"><b>@p.Code</b>@p.Titre</a>
+        }
+    </nav>
+}
+
+<div class="atelier-planche">
+    <div class="scene-planche">
+        <div class="toile-planche" @ref="toile"></div>
+
+        <div class="cartouche-planche">
+            @if (planche is null)
+            {
+                <small>T4 2.5 TDI ACV · tous les groupes</small>
+                <strong>Moteur complet</strong>
+            }
+            else
+            {
+                <small>@planche.Groupe</small>
+                <strong>@planche.Code · @planche.Titre</strong>
+            }
+        </div>
+
+        @if (erreur is not null)
+        {
+            <p class="etat-planche">@erreur</p>
+        }
+        else if (!pret)
+        {
+            <p class="etat-planche">Dessin des pièces…</p>
+        }
+
+        <div class="commandes-planche">
+            <label>Éclaté <input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" aria-label="Éclaté" /></label>
+            @if (planche is not null)
+            {
+                <button class="puce-3d @(etats ? "active" : "")" @onclick="BasculerEtatsAsync">Changées / d'origine</button>
+            }
+            <button class="puce-3d" @onclick="RecentrerAsync">Recentrer</button>
+        </div>
+
+        @if (planche is not null && etats)
+        {
+            <div class="legende-planche">
+                <span><i class="ok"></i>Changée</span><span><i class="att"></i>À prévoir</span><span><i class="mal"></i>Dépassée</span><span><i class="origine"></i>D'origine</span>
+            </div>
+        }
+
+        @if (Choisie() is { } c)
+        {
+            var s = SuiviDe(c.Organe);
+            <div class="bulle-planche">
+                <span class="bp-num">@c.Pos</span>
+                <div>
+                    <strong>@c.Nom</strong>
+                    <small class="suivi @s.Classe">@s.Bref</small>
+                </div>
+                @if (c.Organe is not null)
+                {
+                    <a class="btn petit" href="pieces/@c.Organe">Fiche</a>
+                }
+            </div>
+        }
+    </div>
+
+    <aside class="liste-planche">
+        @if (planche is null && catalogue is not null)
+        {
+            <p class="note">Le moteur monté en entier. Touche un numéro de groupe pour ouvrir sa planche.</p>
+            <ul class="groupes-planche">
+                @foreach (var p in catalogue.Planches)
+                {
+                    var suivis = p.Positions.Select(x => SuiviDe(x.Organe)).ToList();
+                    <li class="@(survol == p.Code ? "survol" : "")" @onmouseenter="() => SurvolerAsync(p.Code)" @onmouseleave="() => SurvolerAsync(null)">
+                        <a href="moteur/planches/@p.Code">
+                            <b>@p.Code</b>
+                            <span>@p.Titre<small>@p.Positions.Count pièces · @suivis.Count(s => s.Change) changées · @suivis.Count(s => s.Classe == "origine") d'origine</small></span>
+                            @if (suivis.Any(s => s.Classe is "mal" or "att"))
+                            {
+                                <i class="@(suivis.Any(s => s.Classe == "mal") ? "mal" : "att")"></i>
+                            }
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+        else if (planche is not null)
+        {
+            <p class="note">@planche.Description</p>
+            <table class="table-planche">
+                <thead><tr><th>Pos.</th><th>Désignation</th><th>Qté</th><th>Suivi</th></tr></thead>
+                <tbody>
+                    @foreach (var x in planche.Positions)
+                    {
+                        var s = SuiviDe(x.Organe);
+                        var ouverte = choisie == x.Cle;
+                        <tr class="@(ouverte ? "choisie" : "") @(survol == x.Cle ? "survol" : "")" @onclick="() => ChoisirAsync(x.Cle)"
+                            @onmouseenter="() => SurvolerAsync(x.Cle)" @onmouseleave="() => SurvolerAsync(null)">
+                            <td class="tp-pos">@x.Pos</td>
+                            <td>@x.Nom @if (x.Remarque is not null) { <small>@x.Remarque</small> }</td>
+                            <td>@x.Qte</td>
+                            <td><span class="suivi @s.Classe">@s.Court</span></td>
+                        </tr>
+                        @if (ouverte)
+                        {
+                            <tr class="detail-planche">
+                                <td colspan="4">
+                                    @if (x.Organe is not null && fiches?.Pieces.GetValueOrDefault(x.Organe) is { } f)
+                                    {
+                                        <p>@f.Role</p>
+                                        <div class="p3-prix">
+                                            @if (f.PrixPiece is not null) { <span><small>Pièce</small>@f.PrixPiece</span> }
+                                            @if (f.PrixPose is not null) { <span><small>Posée</small>@f.PrixPose</span> }
+                                            @if (f.DureeVie is not null) { <span><small>Durée de vie</small>@f.DureeVie</span> }
+                                        </div>
+                                    }
+                                    <p class="note">@s.Texte</p>
+                                    @if (x.Organe is not null)
+                                    {
+                                        <div class="boutons gauche">
+                                            <a class="btn principal petit" href="pieces/@x.Organe">Fiche de la pièce</a>
+                                            <a class="btn petit" href="diagnostic?piece=@x.Organe">Pannes liées</a>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        @if (catalogue is not null)
+        {
+            <p class="note petite">@catalogue.Avertissement</p>
+        }
+    </aside>
+</div>
+
+@code {
+    [Parameter] public string? Code { get; set; }
+
+    private ElementReference toile;
+    private IJSObjectReference? module;
+    private DotNetObjectReference<PlanchesMoteur>? reference;
+    private BasePlanches? catalogue;
+    private BaseFichesPieces? fiches;
+    private Planche? planche;
+    private string? choisie, survol, erreur, affichee;
+    private bool pret, etats = true;
+    private int eclat = 100;
+
+    private sealed record Suivi(string Texte, string Court, string Classe, bool Change, string Bref);
+
+    protected override async Task OnInitializedAsync()
+    {
+        catalogue = await Diagnostics.PlanchesAsync();
+        fiches = await Diagnostics.FichesAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        catalogue ??= await Diagnostics.PlanchesAsync();
+        planche = catalogue.Planches.FirstOrDefault(p => p.Code == Code);
+        choisie = null;
+        if (module is not null) await AfficherAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool premier)
+    {
+        if (!premier) return;
+        try
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/planches-3d.js");
+            reference = DotNetObjectReference.Create(this);
+            await module.InvokeVoidAsync("demarrer", toile, reference);
+            await AfficherAsync();
+            pret = true;
+        }
+        catch (JSException e)
+        {
+            erreur = "Les planches n'ont pas pu se charger (connexion nécessaire la première fois). " + e.Message;
+        }
+        StateHasChanged();
+    }
+
+    private async Task AfficherAsync()
+    {
+        if (module is null || catalogue is null) return;
+        var code = planche?.Code ?? "ensemble";
+        if (affichee == code) return;
+        affichee = code;
+        var positions = planche is null
+            ? catalogue.Planches.Select((p, i) => new { pos = i + 1, cle = p.Code }).ToList()
+            : planche.Positions.Select(x => new { pos = x.Pos, cle = x.Cle }).ToList();
+        await module.InvokeVoidAsync("afficher", new { code, positions });
+        await module.InvokeVoidAsync("eclater", eclat / 100.0);
+        await ColorerAsync();
+    }
+
+    /// <summary>Ce que dit l'historique de la pièce : changée (et quand) ou toujours d'origine.</summary>
+    private Suivi SuiviDe(string? organeId)
+    {
+        if (Etat.Organe(organeId) is not { } o) return new("Pas suivie dans l'historique", "–", "sans", false, "Pas suivie dans l'historique");
+        var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == o.VehiculeId).ToList();
+        var e = SuiviOrganes.Etats([o], inter, Etat.Releves(o.VehiculeId), Etat.Aujourdhui).Single();
+        if (e.Dernier is not { } d) return new("Jamais changée depuis le début de l'historique : pièce d'origine ou d'avant 2010.", "D'origine", "origine", false, "D'origine · jamais changée");
+        var classe = Classe(e.Urgence) == "neutre" ? "ok" : Classe(e.Urgence);
+        var fois = e.Changements.Count > 1 ? $" ({e.Changements.Count} fois)" : "";
+        var texte = $"Changée le {Date(d.Date)}{(d.Km is { } k ? $" à {Km(k)}" : "")}{fois}{(d.Garage is null ? "" : $", {d.Garage}")}.";
+        if (e.Urgence == Urgence.Depasse) texte += " Intervalle conseillé dépassé.";
+        else if (e.Urgence == Urgence.Bientot) texte += " À prévoir bientôt.";
+        var bref = $"Changée le {Date(d.Date)}{(d.Km is { } k2 ? $" à {Km(k2)}" : "")}";
+        return new(texte, d.Date.Year.ToString(), classe, true, bref);
+    }
+
+    private PositionPlanche? Choisie() => planche?.Positions.FirstOrDefault(x => x.Cle == choisie);
+
+    [JSInvokable]
+    public async Task PositionChoisie(string? cle)
+    {
+        if (planche is null)
+        {
+            if (cle is not null) Navigation.NavigateTo($"moteur/planches/{cle}");
+            return;
+        }
+        choisie = cle;
+        if (module is not null) await module.InvokeVoidAsync("selectionner", cle);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public Task PositionSurvolee(string? cle)
+    {
+        survol = cle;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private async Task ChoisirAsync(string cle) => await PositionChoisie(choisie == cle ? null : cle);
+
+    private async Task SurvolerAsync(string? cle)
+    {
+        survol = cle;
+        if (module is not null) await module.InvokeVoidAsync("survoler", cle);
+    }
+
+    private async Task Eclater(ChangeEventArgs e)
+    {
+        eclat = int.Parse(e.Value?.ToString() ?? "0");
+        if (module is not null) await module.InvokeVoidAsync("eclater", eclat / 100.0);
+    }
+
+    private async Task BasculerEtatsAsync()
+    {
+        etats = !etats;
+        await ColorerAsync();
+    }
+
+    private async Task ColorerAsync()
+    {
+        if (module is null) return;
+        Dictionary<string, string>? carte = null;
+        if (etats && planche is not null)
+            carte = planche.Positions
+                .Select(x => (x.Cle, s: SuiviDe(x.Organe)))
+                .Where(x => x.s.Change)
+                .ToDictionary(x => x.Cle, x => x.s.Classe);
+        await module.InvokeVoidAsync("colorer", carte);
+    }
+
+    private async Task RecentrerAsync()
+    {
+        if (module is not null) await module.InvokeVoidAsync("recentrer");
+    }
+
+    public override void Dispose() { }
+
+    public async ValueTask DisposeAsync()
+    {
+        base.Dispose();
+        try
+        {
+            if (module is not null)
+            {
+                await module.InvokeVoidAsync("arreter");
+                await module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        reference?.Dispose();
+    }
+}

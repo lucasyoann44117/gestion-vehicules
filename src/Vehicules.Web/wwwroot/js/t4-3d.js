@@ -598,7 +598,8 @@ export function demarrer(element, refDotnet) {
   controles.target.copy(cible);
   controles.enableDamping = true;
   controles.minDistance = 0.6;
-  controles.maxDistance = 16;
+  // Assez de recul pour cadrer tout le camion éclaté dans la bande libre d'un écran de téléphone.
+  controles.maxDistance = 45;
   controles.maxPolarAngle = Math.PI * 0.495;
   controles.addEventListener('start', () => { animationCamera = false; });
 
@@ -835,19 +836,34 @@ function peindre() {
   }
 }
 
+/**
+ * Cadre des objets dans la partie de l'image que le panneau laisse libre :
+ * chaque coin de leur boîte doit tenir dans le champ, en largeur comme en hauteur
+ * (sur téléphone, c'est la largeur qui limite).
+ * distance > 2 : une pièce seule, montrée avec un peu de son voisinage.
+ */
 function cadrer(objets, distance = 1.0) {
-  const boiteEnglobante = new THREE.Box3();
-  objets.forEach(o => boiteEnglobante.expandByObject(o));
-  const centre = boiteEnglobante.getCenter(new THREE.Vector3());
-  const rayon = Math.max(0.5, boiteEnglobante.getSize(new THREE.Vector3()).length() / 2);
+  const b = new THREE.Box3();
+  objets.forEach(o => b.expandByObject(o));
+  if (b.isEmpty()) return;
+  if (distance > 2) b.expandByScalar(0.35);
+  const centre = b.getCenter(new THREE.Vector3());
   const direction = camera.position.clone().sub(controles.target).normalize();
   if (direction.y < 0.25) direction.y = 0.35;
   direction.normalize();
-  // Recule selon la place que le panneau laisse libre (le centre de l'image est déjà décalé).
+  const droite = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), direction).normalize();
+  const haut = new THREE.Vector3().crossVectors(direction, droite);
   const { demiV, demiH } = champLibre();
-  const recul = Math.max(1, Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / Math.tan(Math.min(demiV, demiH)));
+  const tanV = Math.tan(demiV) * 0.9, tanH = Math.tan(demiH) * 0.9;
+  let recul = 0.8;
+  const c = new THREE.Vector3();
+  for (const x of [b.min.x, b.max.x]) for (const y of [b.min.y, b.max.y]) for (const z of [b.min.z, b.max.z]) {
+    c.set(x, y, z).sub(centre);
+    const avant = c.dot(direction);
+    recul = Math.max(recul, avant + Math.abs(c.dot(droite)) / tanH, avant + Math.abs(c.dot(haut)) / tanV);
+  }
   cible.copy(centre);
-  camCible.copy(cible).addScaledVector(direction, rayon * 3.1 * distance * recul);
+  camCible.copy(cible).addScaledVector(direction, recul * (distance > 2 ? 1 : distance));
   animationCamera = true;
 }
 
@@ -857,7 +873,10 @@ export function focaliser(systeme) {
   peindre();
   if (focus) {
     // Laisse l'éclatement se faire avant de cadrer.
-    setTimeout(() => cadrer([groupes[focus]], 1.1), 320);
+    // Laisse l'éclatement se faire avant de cadrer, puis affine une fois les pièces arrivées.
+    const zone = focus;
+    setTimeout(() => { if (focus === zone && !selection) cadrer([groupes[zone]], 1.05); }, 320);
+    setTimeout(() => { if (focus === zone && !selection) cadrer([groupes[zone]], 1.05); }, 1100);
     const liste = pieces.filter(p => p.systeme === focus).map(p => ({ cle: p.cle, nom: p.nom, organe: p.organe }));
     dotnet?.invokeMethodAsync('SystemeChoisi', focus, SYSTEMES[focus].nom, liste);
   } else {

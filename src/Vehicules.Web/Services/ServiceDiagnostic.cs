@@ -18,6 +18,12 @@ public sealed class ServiceDiagnostic(HttpClient http)
     public async Task<BaseFichesPieces> FichesAsync() =>
         fiches ??= await http.GetFromJsonAsync<BaseFichesPieces>("diagnostic/pieces-t4.json", Json.Options) ?? new BaseFichesPieces();
 
+    private BasePlanches? planches;
+
+    /// <summary>Planches éclatées du moteur (wwwroot/diagnostic/planches-moteur.json).</summary>
+    public async Task<BasePlanches> PlanchesAsync() =>
+        planches ??= await http.GetFromJsonAsync<BasePlanches>("diagnostic/planches-moteur.json", Json.Options) ?? new BasePlanches();
+
     /// <summary>Recherche directe dans le forum T4Zone (il faut y être connecté pour certains sous-forums).</summary>
     public static string LienForum(string recherche) =>
         "https://t4zone.info/forum/search.php?terms=all&sr=topics&keywords=" + Uri.EscapeDataString(
