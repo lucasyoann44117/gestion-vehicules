@@ -219,7 +219,7 @@
     },
     "batterie": {
       "role": "Fournit le courant au démarrage et quand le moteur est arrêté.",
-      "emplacement": "Sous le siège conducteur.",
+      "emplacement": "Dans le compartiment moteur, côté conducteur (à droite quand on fait face au camion).",
       "usure": "Démarreur qui tourne lentement, surtout l'hiver.",
       "dureeVie": "5 à 7 ans.",
       "prixPiece": "100 à 200 €",

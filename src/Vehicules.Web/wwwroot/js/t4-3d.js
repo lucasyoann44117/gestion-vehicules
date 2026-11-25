@@ -286,6 +286,8 @@ const SELECTION_MOTEUR = {
   '103': null, '115': null, '109': null, '129': null, '130': null, '903': null,
   '121': ['boitier-thermostat', 'thermostat', 'sonde-g62'],
   '253': ['collecteur', 'joints-collecteur'],
+  // Ce qu'on voit capot ouvert : échangeur, boîte à air ronde, vase, bocaux, batterie, traverse.
+  'capot': null,
 };
 const VERS_CAMION = new THREE.Matrix4().set(0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
 let catalogueMoteur = null;   // noms et pièces suivies, lus dans diagnostic/planches-moteur.json
@@ -325,11 +327,21 @@ const MATIERES_REELLES = {
   'filtre-gazole': t => t === 'clair' ? plastiqueNoir() : M.alu(),
   'bougies': t => t === 'clair' ? M.acier() : M.cuivre(),
   'supports-moteur': t => t === 'gomme' ? M.gomme() : M.noir(),
+  'echangeur': t => t === 'clair' ? M.alu() : t === 'gomme' ? M.gomme() : t === 'moyen' ? M.alu() : plastiqueNoir(),
+  'traverse-avant': t => t === 'moyen' ? M.acier() : plastiqueNoir(),
+  'boite-air-ronde': t => t === 'moyen' ? M.acier() : plastiqueNoir(),
+  'bouchon-huile': () => plastiqueNoir(),
+  'lave-glace': t => t === 'clair' ? new THREE.MeshStandardMaterial({ color: 0xf2f0ea, roughness: 0.5 }) : null,
+  'reservoir-direction': t => t === 'fonce' ? plastiqueNoir() : null,
+  'vase-expansion': t => typeof t === 'number' && t !== 0xe6cfa3 ? null : M.liquide(),
+  'batterie-capot': t => t === 'moyen' ? M.acier() : plastiqueNoir(),
 };
 
 function matiereMoteur(teinte, cle) {
   const reelle = MATIERES_REELLES[cle]?.(teinte);
   if (reelle) return reelle;
+  // Couleur imposée par la pièce (bouchons bleu, jaune, vert ; vase beige).
+  if (typeof teinte === 'number') return new THREE.MeshStandardMaterial({ color: teinte, roughness: 0.45 });
   switch (teinte) {
     case 'clair': return M.alu();
     case 'moyen': return M.acier();
@@ -366,7 +378,6 @@ function construireRefroidissement() {
     placer(boite(0.07, 0.42, 0.04, M.alu(), 0.01), 0, 0, -0.54),
   ), [0, 0, 0]);
   piece(S, 'condenseur', 'Condenseur de clim', 'clim', placer(boite(0.03, 0.38, 0.98, M.cuivre(), 0.01), 0.07, 0, 0), [0.35, 0, 0]);
-  piece(S, 'vase', 'Vase d\'expansion', 'liquide-refroidissement', placer(boite(0.12, 0.12, 0.16, M.liquide(), 0.03), -0.35, 0.2, 0.55), [-0.1, 0.3, 0.2]);
   const ventilos = new THREE.Group();
   for (const z of [-0.26, 0.26]) {
     const v = placer(cylindre(0.17, 0.05, M.noir(), 'x'), -0.07, 0, z);
@@ -502,12 +513,7 @@ function construireEchappement() {
 
 function construireElectricite() {
   const S = 'electricite';
-  piece(S, 'batterie', 'Batterie 95 Ah', 'batterie', grouper(
-    boite(0.28, 0.2, 0.17, M.noir(), 0.015),
-    placer(cylindre(0.015, 0.03, M.rouge()), 0.09, 0.11, 0.05),
-    placer(cylindre(0.015, 0.03, M.noir()), -0.09, 0.11, 0.05),
-  ), [0, 0.15, -0.2]).position.set(0.95, 0.5, -0.5);
-  pieces.at(-1).base.copy(pieces.at(-1).objet.position);
+  // La batterie principale est dans le compartiment moteur, côté conducteur : voir les pièces « capot ».
   piece(S, 'batterie-aux', 'Batterie auxiliaire 70 Ah', 'batterie-auxiliaire', grouper(
     boite(0.26, 0.19, 0.17, M.noir(), 0.015),
     placer(cylindre(0.015, 0.03, M.rouge()), 0.08, 0.1, 0.05),

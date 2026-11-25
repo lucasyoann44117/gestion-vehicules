@@ -1,4 +1,5 @@
 @inject Etat Etat
+@inject IJSRuntime JS
 
 <PageTitle>Connexion · Mes véhicules</PageTitle>
 <section class="connexion">
@@ -11,11 +12,11 @@
             </div>
         </div>
         <label>Identifiant (e-mail)
-            <input type="email" autocomplete="username" @bind="email" required />
+            <input id="identifiant" name="username" type="email" autocomplete="username" @bind="email" required />
         </label>
         <label>Mot de passe
             <span class="mdp">
-                <input type="@(voir ? "text" : "password")" autocomplete="current-password" @bind="motDePasse" required />
+                <input id="mot-de-passe" name="password" type="@(voir ? "text" : "password")" autocomplete="current-password" @bind="motDePasse" required />
                 <button type="button" class="btn petit" @onclick="() => voir = !voir" aria-pressed="@voir">@(voir ? "Masquer" : "Afficher")</button>
             </span>
         </label>
@@ -35,6 +36,20 @@
     private bool envoi;
     private string? erreur;
 
+    private const string CleIdentifiant = "vehicules.identifiant";
+
+    // L'adresse de la dernière connexion est reprise ; le mot de passe, lui, reste au gestionnaire du téléphone.
+    protected override async Task OnAfterRenderAsync(bool premier)
+    {
+        if (!premier || email != "") return;
+        try
+        {
+            email = await JS.InvokeAsync<string?>("localStorage.getItem", CleIdentifiant) ?? "";
+            if (email != "") StateHasChanged();
+        }
+        catch (JSException) { }
+    }
+
     private async Task Envoyer()
     {
         envoi = true;
@@ -42,6 +57,7 @@
         try
         {
             await Etat.ConnexionAsync(email.Trim(), motDePasse);
+            await JS.InvokeVoidAsync("localStorage.setItem", CleIdentifiant, email.Trim());
         }
         catch (ErreurSupabase e)
         {

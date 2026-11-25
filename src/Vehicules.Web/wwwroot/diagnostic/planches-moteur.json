@@ -379,7 +379,7 @@
           "nom": "Turbocompresseur",
           "organe": "turbo",
           "qte": "1",
-          "remarque": "Pas d'échangeur sur l'ACV"
+          "remarque": "Son air passe ensuite par l'échangeur posé sur le moteur"
         },
         {
           "pos": 7,
@@ -400,6 +400,13 @@
           "nom": "Électrovanne de suralimentation N75",
           "organe": "electrovanne-n75",
           "qte": "1"
+        },
+        {
+          "pos": 10,
+          "cle": "echangeur",
+          "nom": "Échangeur air/air (intercooler)",
+          "qte": "1",
+          "remarque": "Posé sur le moteur, sous le cache « TDI 2.5 »"
         }
       ],
       "moteur": true
@@ -1314,7 +1321,7 @@
           "nom": "Batterie principale",
           "organe": "batterie",
           "qte": "1",
-          "remarque": "Sous le siège conducteur"
+          "remarque": "Dans le compartiment moteur, côté conducteur"
         },
         {
           "pos": 2,
@@ -1416,6 +1423,90 @@
         }
       ],
       "moteur": false
+    },
+    {
+      "code": "capot",
+      "titre": "Capot ouvert",
+      "groupe": "1 · Moteur",
+      "moteur": false,
+      "description": "Ce que tu vois en levant le capot, disposé comme sur un T4 2.5 TDI ACV : touche un bouchon ou un bocal pour savoir ce que c'est.",
+      "positions": [
+        {
+          "pos": 1,
+          "cle": "traverse-avant",
+          "nom": "Traverse avant",
+          "qte": "1"
+        },
+        {
+          "pos": 2,
+          "cle": "echangeur",
+          "nom": "Échangeur air/air (intercooler)",
+          "qte": "1",
+          "remarque": "Sous le cache noir « TDI 2.5 »"
+        },
+        {
+          "pos": 3,
+          "cle": "boite-air-ronde",
+          "nom": "Boîte à air et filtre",
+          "organe": "filtre-air",
+          "qte": "1",
+          "remarque": "Le gros pot rond à gauche"
+        },
+        {
+          "pos": 4,
+          "cle": "bouchon-huile",
+          "nom": "Bouchon de remplissage d'huile",
+          "organe": "huile-moteur",
+          "qte": "1"
+        },
+        {
+          "pos": 5,
+          "cle": "jauge-huile",
+          "nom": "Jauge à huile",
+          "organe": "huile-moteur",
+          "qte": "1",
+          "remarque": "Poignée jaune"
+        },
+        {
+          "pos": 6,
+          "cle": "lave-glace",
+          "nom": "Réservoir de lave-glace",
+          "qte": "1",
+          "remarque": "Bouchon bleu"
+        },
+        {
+          "pos": 7,
+          "cle": "reservoir-direction",
+          "nom": "Réservoir de direction assistée",
+          "organe": "direction",
+          "qte": "1",
+          "remarque": "Bouchon vert"
+        },
+        {
+          "pos": 8,
+          "cle": "vase-expansion",
+          "nom": "Vase d'expansion",
+          "organe": "liquide-refroidissement",
+          "qte": "1",
+          "remarque": "Bouchon bleu ; niveau entre min et max, moteur froid"
+        },
+        {
+          "pos": 9,
+          "cle": "bocal-frein",
+          "nom": "Bocal de liquide de frein",
+          "organe": "liquide-frein",
+          "qte": "1",
+          "remarque": "Bouchon jaune"
+        },
+        {
+          "pos": 10,
+          "cle": "batterie-capot",
+          "nom": "Batterie",
+          "organe": "batterie",
+          "qte": "1",
+          "remarque": "Côté conducteur"
+        }
+      ]
     }
   ]
 }

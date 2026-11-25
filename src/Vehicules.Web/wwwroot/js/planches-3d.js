@@ -553,10 +553,11 @@ Object.assign(PIECES, {
 
   // 915 — Batteries et câblage
   '915': {
-    'batterie': { eclat: [0, 0.28, 0.1], faire: () => g(a(boite(0.1, 0.07, 0.06, 'fonce', 0.006), 0.36, 0.16, 0.17), a(cyl(0.007, 0.015, 'moyen'), 0.33, 0.2, 0.17), a(cyl(0.007, 0.015, 'moyen'), 0.39, 0.2, 0.17)) },
+    // Batterie principale dans le compartiment moteur, côté conducteur (comme sur la photo capot ouvert).
+    'batterie': { eclat: [0.1, 0.28, 0.1], faire: () => g(a(boite(0.1, 0.065, 0.06, 'fonce', 0.006), 0.72, 0.32, 0.2), a(cyl(0.007, 0.015, 'moyen'), 0.69, 0.36, 0.2), a(cyl(0.007, 0.015, 'moyen'), 0.75, 0.36, 0.2)) },
     'batterie-aux': { eclat: [0, 0.28, -0.1], faire: () => g(a(boite(0.09, 0.065, 0.055, 'fonce', 0.006), 0.36, 0.16, -0.17), a(cyl(0.007, 0.015, 'moyen'), 0.33, 0.2, -0.17), a(cyl(0.007, 0.015, 'moyen'), 0.39, 0.2, -0.17)) },
     'coupleur': { eclat: [0, 0.4, 0], faire: () => a(boite(0.03, 0.02, 0.04, 'moyen', 0.004), 0.36, 0.2, 0) },
-    'cables-batterie': { eclat: [0, 0.15, 0], faire: () => g(tuyau([[0.39, 0.21, 0.17], [0.55, 0.22, 0.17], [0.7, 0.25, 0.1]], 0.006, 'fonce', 24), tuyau([[0.39, 0.21, -0.17], [0.38, 0.21, -0.02], [0.36, 0.21, 0]], 0.005, 'fonce', 24)) },
+    'cables-batterie': { eclat: [0, 0.15, 0], faire: () => g(tuyau([[0.69, 0.37, 0.2], [0.6, 0.3, 0.12], [0.45, 0.22, 0.04], [0.36, 0.21, 0]], 0.006, 'fonce', 32), tuyau([[0.39, 0.21, -0.17], [0.38, 0.21, -0.02], [0.36, 0.21, 0]], 0.005, 'fonce', 24)) },
     'platine-relais': { eclat: [0.12, 0.25, 0.12], faire: () => g(a(boite(0.08, 0.06, 0.1, 'clair', 0.006), 0.58, 0.3, 0.18), [-0.03, 0, 0.03].map(z => a(boite(0.02, 0.025, 0.02, 'fonce', 0.003), 0.58, 0.345, 0.18 + z))) },
     'faisceau-porte': { eclat: [0, 0, 0.22], faire: () => tuyau([[0.56, 0.36, 0.3], [0.53, 0.37, 0.32], [0.5, 0.36, 0.33]], 0.012, 'gomme', 16) },
     'tresse-masse': { eclat: [0.15, -0.12, 0], faire: () => tuyau([[0.72, 0.14, -0.1], [0.75, 0.12, -0.08], [0.78, 0.12, -0.05]], 0.006, 'moyen', 16) },
@@ -575,6 +576,41 @@ Object.assign(PIECES, {
     'climatronic': { eclat: [0.22, 0.25, 0], faire: () => a(boite(0.01, 0.04, 0.1, 'fonce', 0.003), 0.67, 0.42, 0) },
   },
 });
+
+// ---------- Capot ouvert : ce qu'on voit en levant le capot (d'après une photo d'un T4 2.5 TDI ACV identique) ----------
+// Repère moteur : +X côté passager (à gauche quand on fait face au camion), +Z vers la calandre.
+const BEIGE = 0xe6cfa3, BLEU_BOUCHON = 0x2f5fb8, JAUNE_BOUCHON = 0xf2c200, VERT_BOUCHON = 0x8dc63f, BLANC_BOCAL = 0xeeeae0;
+
+PIECES['129']['echangeur'] = { eclat: [0, 0.32, 0.05], faire: () => {
+  // Échangeur air/air posé sur le moteur : ailettes alu dans un cadre noir « TDI 2.5 ».
+  const ailettes = Array.from({ length: 11 }, (_, i) => a(boite(0.3, 0.012, 0.012, 'clair', 0.002), 0.03, 0.565, -0.06 + i * 0.022));
+  const cadre = g(a(boite(0.36, 0.035, 0.03, 'fonce', 0.006), 0.03, 0.56, -0.095), a(boite(0.36, 0.035, 0.03, 'fonce', 0.006), 0.03, 0.56, 0.175),
+    a(boite(0.03, 0.035, 0.3, 'fonce', 0.006), -0.15, 0.56, 0.04), a(boite(0.03, 0.035, 0.3, 'fonce', 0.006), 0.21, 0.56, 0.04),
+    a(boite(0.32, 0.05, 0.07, 'fonce', 0.01), 0.03, 0.575, -0.15));
+  const durite = tuyau([[-0.15, 0.54, 0.12], [-0.22, 0.48, 0.18], [-0.23, 0.34, 0.2]], 0.035, 'gomme');
+  return g(a(boite(0.3, 0.045, 0.24, 'moyen', 0.006), 0.03, 0.53, 0.04), ailettes, cadre, durite);
+} };
+
+PIECES['capot'] = {
+  'traverse-avant': { eclat: [0, -0.05, 0.25], faire: () => g(a(boite(1.55, 0.06, 0.1, 'fonce', 0.01), -0.02, 0.3, 0.45), a(boite(0.08, 0.03, 0.02, 'moyen', 0.004), 0.1, 0.34, 0.5)) },
+  'echangeur': { doublon: true, eclat: [0, 0.32, 0.05], faire: () => PIECES['129']['echangeur'].faire() },
+  'boite-air-ronde': { eclat: [0.2, 0.15, 0], faire: () => {
+    const pot = tour([[0.001, -0.13], [0.15, -0.13], [0.17, -0.05], [0.17, 0.08], [0.12, 0.13], [0.001, 0.13]], 'fonce', 'y', 40);
+    const grille = g(cyl(0.09, 0.01, 'moyen', 'z', 32), Array.from({ length: 7 }, (_, i) => a(boite(0.17, 0.004, 0.012, 'fonce', 0.001), 0, -0.075 + i * 0.025, 0)));
+    grille.position.set(0.05, 0.05, 0.16); grille.rotation.y = -0.5;
+    return a(g(pot, grille), 0.5, 0.42, 0.1);
+  } },
+  'bouchon-huile': { eclat: [0, 0.2, 0.12], faire: () => g(a(cyl(0.022, 0.14, 'fonce'), 0.32, 0.43, 0.12), a(cyl(0.032, 0.035, 'fonce', 'y', 20), 0.32, 0.51, 0.12)) },
+  'jauge-huile': { eclat: [0, 0.25, 0.15], faire: () => g(a(cyl(0.004, 0.2, 'moyen', 'y', 8), 0, 0.38, 0.26), a(boite(0.03, 0.025, 0.015, JAUNE_BOUCHON, 0.006), 0, 0.49, 0.26)) },
+  'lave-glace': { eclat: [0.15, 0.15, 0.15], faire: () => g(a(cyl(0.02, 0.08, 'clair'), 0.62, 0.32, 0.3), a(cyl(0.035, 0.03, BLEU_BOUCHON, 'y', 20), 0.62, 0.38, 0.3)) },
+  'reservoir-direction': { eclat: [0.1, 0.2, 0.15], faire: () => g(a(cyl(0.04, 0.07, 'fonce'), 0.5, 0.3, 0.33), a(cyl(0.037, 0.02, VERT_BOUCHON, 'y', 20), 0.5, 0.345, 0.33)) },
+  'vase-expansion': { eclat: [-0.1, 0.25, 0.05], faire: () => g(
+    a(tour([[0.001, -0.1], [0.08, -0.1], [0.12, -0.03], [0.12, 0.04], [0.08, 0.1], [0.001, 0.1]], BEIGE, 'y', 40), -0.3, 0.46, 0.1),
+    a(cyl(0.035, 0.03, BLEU_BOUCHON, 'y', 20), -0.3, 0.575, 0.08)) },
+  'bocal-frein': { eclat: [-0.1, 0.3, -0.1], faire: () => g(a(boite(0.09, 0.07, 0.07, BLANC_BOCAL, 0.012), -0.43, 0.53, -0.12), a(cyl(0.025, 0.025, JAUNE_BOUCHON, 'y', 20), -0.43, 0.58, -0.12)) },
+  'batterie-capot': { eclat: [-0.25, 0.15, 0], faire: () => g(a(boite(0.28, 0.18, 0.17, 'fonce', 0.012), -0.72, 0.32, 0.05),
+    a(cyl(0.014, 0.025, 'moyen'), -0.63, 0.42, 0.1), a(cyl(0.014, 0.025, 'moyen'), -0.81, 0.42, 0.1)) },
+};
 
 // Pièces dessinées dans un autre groupe : réutilisées sans être dessinées deux fois en vue complète.
 PIECES['121']['pompe-eau'] = { doublon: true, eclat: [0.18, 0, 0.10], faire: () => PIECES['109']['pompe-eau'].faire() };
@@ -600,6 +636,14 @@ export function piecesMoteur(selection, fabriqueMat) {
   }
 }
 
+/**
+ * Les pièces du moteur sont dessinées dans un repère inversé (X le long du vilebrequin) : pour que la planche
+ * se lise comme le vrai moteur capot ouvert (boîte à air à gauche vue de face), on la retourne à l'affichage.
+ */
+function miroir(code) {
+  return code === 'capot' || code === 'ensemble' || !!MISE_EN_PAGE[code]?.ensemble;
+}
+
 // Angle de vue et décalage du groupe dans la vue « Moteur complet ».
 const MISE_EN_PAGE = {
   '103': { vue: [0.8, 0.55, 0.9], ensemble: [0, 0, 0] },
@@ -612,6 +656,8 @@ const MISE_EN_PAGE = {
   '253': { vue: [0.35, 0.5, -1], ensemble: [0, -0.30, -0.55] },
   'ensemble': { vue: [0.9, 0.6, 0.85] },
   // Hors moteur : pas de moteur en filigrane ; la caisse en filigrane pour ce qui est réparti dans le camion.
+  // Capot ouvert : vu d'en haut et de face, comme quand on lève le capot (moteur en filigrane).
+  'capot': { vue: [0, 1.3, 1] },
   '301': { vue: [0.55, 0.45, 1], filigrane: null },
   '407': { vue: [0.75, 0.45, 1], filigrane: null },
   '409': { vue: [0.15, 0.55, 1], filigrane: null },
@@ -722,9 +768,12 @@ export function afficher(planche) {
       if (!ensemble && !position) continue;
       // Côté gauche et reflet à droite pour les pièces en double (train, freins) ; sinon une seule fois.
       const cotes = def.cotes ? [1, -1] : def.cote ? [def.cote] : [0];
+      const m = miroir(planche.code) ? -1 : 1;
       for (const s of cotes) {
         let dessin = def.faire();
         if (s) { const reflet = g(dessin); reflet.position.z = s * (def.ecart ?? 0.75); reflet.scale.z = s; dessin = reflet; }
+        // Repère moteur remis à l'endroit : la planche se lit comme le vrai moteur, capot ouvert.
+        if (m < 0) { const endroit = g(dessin); endroit.scale.x = -1; dessin = endroit; }
         // Conteneur neutre : l'éclaté déplace le conteneur sans écraser la place de la pièce.
         const objet = g(dessin);
         habiller(objet);
@@ -733,8 +782,8 @@ export function afficher(planche) {
         const element = {
           cle: ensemble ? code : cle, pos: position.pos, groupe: code, objet,
           centre: boite.getCenter(new THREE.Vector3()),
-          eclat: new THREE.Vector3(ex, ey, s ? ez * s : ez).multiplyScalar(ensemble ? 0.35 : 1),
-          decalage: new THREE.Vector3(...(ensemble ? MISE_EN_PAGE[code].ensemble : [0, 0, 0])),
+          eclat: new THREE.Vector3(ex * m, ey, s ? ez * s : ez).multiplyScalar(ensemble ? 0.35 : 1),
+          decalage: new THREE.Vector3(...(ensemble ? MISE_EN_PAGE[code].ensemble : [0, 0, 0])).multiply(new THREE.Vector3(m, 1, 1)),
         };
         objet.userData.element = element;
         scene.add(objet);
@@ -847,7 +896,9 @@ function cadrer(immediat = false) {
   if (!elements.length) return;
   const b = boiteEclatee(Math.max(eclatCible, 0.0001));
   const centre = b.getCenter(new THREE.Vector3());
-  const dir = new THREE.Vector3(...(MISE_EN_PAGE[actuelle.code]?.vue ?? [1, 0.5, 1])).normalize();
+  const dir = new THREE.Vector3(...(MISE_EN_PAGE[actuelle.code]?.vue ?? [1, 0.5, 1]));
+  if (miroir(actuelle.code)) dir.x = -dir.x;
+  dir.normalize();
   // Repère de la caméra pour cette direction.
   const droite = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), dir).normalize();
   const haut = new THREE.Vector3().crossVectors(dir, droite);

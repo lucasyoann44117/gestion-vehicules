@@ -48,7 +48,7 @@ else
                     {
                         <li><a href="planches/moteur"><b>1–9</b><span>Moteur complet<small>Tous les groupes du moteur montés ensemble</small></span><i>›</i></a></li>
                     }
-                    @foreach (var p in groupe.OrderBy(p => p.Code))
+                    @foreach (var p in groupe.OrderBy(p => Ordre(p.Code)))
                     {
                         var suivis = p.Positions.Select(x => SuiviDe(x.Organe)).ToList();
                         <li>
@@ -256,7 +256,10 @@ else
     private IEnumerable<Planche> PlanchesDuGroupe() =>
         catalogue is null ? [] : planche is null
             ? catalogue.Planches.Where(p => p.Moteur)
-            : catalogue.Planches.Where(p => p.Groupe == planche.Groupe || (planche.Moteur && p.Moteur)).OrderBy(p => p.Code);
+            : catalogue.Planches.Where(p => p.Groupe == planche.Groupe || (planche.Moteur && p.Moteur)).OrderBy(p => Ordre(p.Code));
+
+    /// <summary>« Capot ouvert » d'abord dans le groupe moteur : c'est la première chose qu'on voit.</summary>
+    private static string Ordre(string code) => code == "capot" ? "0" : code;
 
     private bool defilerOnglet;
 
