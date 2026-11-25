@@ -15,7 +15,13 @@ public sealed class ServicePhotos(ClientSupabase supabase, OptionsSupabase optio
     private const int Largeur = 1600;
     private readonly Dictionary<string, (string Url, DateTime Expire)> liens = [];
 
-    public bool Disponible => options.Configure;
+    /// <summary>
+    /// Désactivé : les photos ne servent qu'à la modélisation 3D, aucun stockage n'est créé.
+    /// Pour l'activer : exécuter supabase/photos.sql puis passer cette valeur à vrai.
+    /// </summary>
+    public const bool StockageActive = false;
+
+    public bool Disponible => StockageActive && options.Configure;
 
     /// <summary>Réduit la photo choisie et l'envoie ; renvoie la fiche à ajouter au véhicule.</summary>
     public async Task<PhotoVehicule> AjouterAsync(string vehiculeId, IBrowserFile fichier, DateOnly aujourdhui)

@@ -23,6 +23,12 @@
             }
         </nav>
         <div class="reglages-3d">
+            <span class="vues-3d" role="group" aria-label="Angle de vue">
+                @foreach (var (cle, nom) in new[] { ("profil", "Profil"), ("troisQuarts", "3/4 avant"), ("face", "Face"), ("libre", "Libre") })
+                {
+                    <button class="puce-3d @(vueActive == cle ? "active" : "")" @onclick="() => Vue(cle)">@nom</button>
+                }
+            </span>
             <label>Éclaté <input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" /></label>
             <button class="puce-3d @(etats ? "active" : "")" @onclick="BasculerEtats">Couleurs d'état</button>
             <button class="puce-3d @(fantome ? "active" : "")" @onclick="BasculerCarrosserie">Carrosserie transparente</button>
@@ -174,6 +180,15 @@
     private async Task Choisir(string cle)
     {
         if (module is not null) await module.InvokeVoidAsync("choisirPiece", cle);
+    }
+
+    private string vueActive = "libre";
+
+    private async Task Vue(string cle)
+    {
+        vueActive = cle;
+        piece = null;
+        if (module is not null) await module.InvokeVoidAsync("vue", cle);
     }
 
     private async Task Eclater(ChangeEventArgs e)

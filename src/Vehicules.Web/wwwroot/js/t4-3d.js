@@ -11,8 +11,8 @@ import { RoundedBoxGeometry } from 'https://esm.sh/three@0.170.0/examples/jsm/ge
 import { RoomEnvironment } from 'https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js';
 
 // ---------- Cotes du véhicule ----------
-const AV = 1.44;          // essieu avant
-const AR = -1.48;         // essieu arrière (empattement 2,92 m)
+const AV = 1.60;          // essieu avant (sous le bas du pare-brise, mesuré sur la photo de profil)
+const AR = -1.45;         // essieu arrière
 const R_ROUE = 0.324;     // 205/65 R15
 const VOIE = 0.79;        // demi-voie
 
@@ -162,22 +162,22 @@ function construireCarrosserie() {
 
   // Pare-chocs couleur caisse, avec la grille basse noire.
   const avant = grouper(
-    placer(boite(0.2, 0.26, 1.9, M.peinture(), 0.08), 2.36, 0.44, 0),
-    placer(boite(0.02, 0.05, 0.86, M.noir(), 0.02), 2.465, 0.47, 0),
-    placer(boite(0.02, 0.05, 0.86, M.noir(), 0.02), 2.465, 0.40, 0),
+    placer(boite(0.2, 0.42, 1.9, M.peinture(), 0.1), 2.36, 0.54, 0),
+    placer(boite(0.02, 0.05, 0.9, M.noir(), 0.02), 2.465, 0.66, 0),
+    placer(boite(0.02, 0.05, 0.9, M.noir(), 0.02), 2.465, 0.59, 0),
   );
-  const arriere = placer(boite(0.18, 0.24, 1.9, M.peinture(), 0.08), -2.42, 0.44, 0);
+  const arriere = placer(boite(0.18, 0.34, 1.9, M.peinture(), 0.1), -2.42, 0.5, 0);
   piece(S, 'pare-chocs', 'Pare-chocs couleur caisse', null, grouper(avant, arriere), [0.15, 0.1, 0]);
 
   // Calandre couleur caisse à lamelles, sigle VW et monogramme TDI.
   const calandre = new THREE.Group();
-  for (let i = 0; i < 4; i++) calandre.add(placer(boite(0.025, 0.022, 0.7, M.noir(), 0.008), 2.4, 0.74 + i * 0.045, 0));
-  calandre.add(placer(boite(0.03, 0.2, 0.74, M.peinture(), 0.02), 2.385, 0.81, 0));
+  for (let i = 0; i < 4; i++) calandre.add(placer(boite(0.025, 0.022, 0.7, M.noir(), 0.008), 2.4, 0.84 + i * 0.045, 0));
+  calandre.add(placer(boite(0.03, 0.2, 0.74, M.peinture(), 0.02), 2.385, 0.91, 0));
   const sigle = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.009, 12, 40), M.chrome());
   sigle.rotation.y = Math.PI / 2;
-  sigle.position.set(2.425, 0.82, 0);
-  calandre.add(sigle, placer(cylindre(0.05, 0.01, M.peinture(), 'x'), 2.42, 0.82, 0));
-  calandre.add(placer(boite(0.008, 0.02, 0.09, M.chrome(), 0.004), 2.42, 0.77, 0.18));
+  sigle.position.set(2.425, 0.92, 0);
+  calandre.add(sigle, placer(cylindre(0.05, 0.01, M.peinture(), 'x'), 2.42, 0.92, 0));
+  calandre.add(placer(boite(0.008, 0.02, 0.09, M.chrome(), 0.004), 2.42, 0.87, 0.18));
   piece(S, 'calandre', 'Calandre', null, calandre, [0.3, 0.15, 0]);
 
   // Prise d'air sur le capot.
@@ -187,9 +187,9 @@ function construireCarrosserie() {
   // Phares (blocs clairs avec clignotant intégré), antibrouillards, feux arrière.
   const feux = new THREE.Group();
   for (const s of [-1, 1]) {
-    feux.add(placer(boite(0.05, 0.16, 0.3, M.phare(), 0.03), 2.4, 0.82, s * 0.55));
-    feux.add(placer(boite(0.05, 0.14, 0.11, M.phare(), 0.03), 2.37, 0.82, s * 0.78));
-    feux.add(placer(boite(0.04, 0.07, 0.13, M.antibrouillard(), 0.02), 2.455, 0.39, s * 0.66));
+    feux.add(placer(boite(0.05, 0.17, 0.32, M.phare(), 0.03), 2.4, 0.93, s * 0.56));
+    feux.add(placer(boite(0.05, 0.15, 0.12, M.phare(), 0.03), 2.37, 0.93, s * 0.79));
+    feux.add(placer(boite(0.04, 0.07, 0.14, M.antibrouillard(), 0.02), 2.465, 0.46, s * 0.66));
     feux.add(placer(boite(0.05, 0.26, 0.1, M.rouge(), 0.02), -2.44, 0.74, s * 0.84));
   }
   piece(S, 'feux', 'Phares, antibrouillards et feux', 'eclairage', feux, [0.3, 0.2, 0]);
@@ -221,7 +221,7 @@ function construireCarrosserie() {
   };
   const plaque = () => new THREE.Mesh(new THREE.PlaneGeometry(0.52, 0.11), new THREE.MeshStandardMaterial({ map: texturePlaque('HL-472-CA'), roughness: 0.4 }));
   const plaques = new THREE.Group();
-  const pAv = plaque(); pAv.rotation.y = Math.PI / 2; plaques.add(placer(pAv, 2.468, 0.6, 0.12));
+  const pAv = plaque(); pAv.rotation.y = Math.PI / 2; plaques.add(placer(pAv, 2.468, 0.5, 0.12));
   const pAr = plaque(); pAr.rotation.y = -Math.PI / 2; plaques.add(placer(pAr, -2.512, 0.62, 0));
   piece(S, 'plaques', 'Plaques HL-472-CA', 'plaques', plaques, [0.3, -0.1, 0]);
 
@@ -250,15 +250,24 @@ function construireCarrosserie() {
   for (const s of [-1, 1]) {
     decors.add(placer(boite(4.3, 0.012, 0.01, new THREE.MeshStandardMaterial({ color: 0x163f94, roughness: 0.5 }), 0.004), -0.05, 0.83, s * (Z + 0.002)));
   }
-  piece(S, 'decors', 'Monogrammes et baguettes', null, decors, [0, 0.3, 0]);
+  // Joints de portes relevés sur la photo de profil : porte avant, porte coulissante, trappe à carburant.
+  const joint = () => new THREE.MeshStandardMaterial({ color: 0x0b2a6b, roughness: 0.6 });
+  for (const s of [-1, 1]) {
+    const z = s * (Z + 0.002);
+    decors.add(placer(boite(0.008, 1.42, 0.006, joint(), 0.002), 0.5, 1.12, z));
+    decors.add(placer(boite(0.008, 1.42, 0.006, joint(), 0.002), -1.0, 1.12, z));
+    decors.add(placer(boite(1.5, 0.008, 0.006, joint(), 0.002), -0.25, 0.42, z));
+  }
+  decors.add(placer(boite(0.13, 0.17, 0.006, joint(), 0.01), 0.38, 0.64, -(Z + 0.003)));
+  piece(S, 'decors', 'Monogrammes, baguettes et joints', null, decors, [0, 0.3, 0]);
 
   // Rétroviseurs couleur caisse sur leur bras, poignées de porte noires.
   const retros = new THREE.Group();
   for (const s of [-1, 1]) {
     retros.add(placer(boite(0.06, 0.04, 0.12, M.noir(), 0.015), 1.12, 1.26, s * (Z + 0.05)));
     retros.add(placer(boite(0.09, 0.24, 0.16, M.peinture(), 0.04), 1.08, 1.32, s * (Z + 0.14)));
-    retros.add(placer(boite(0.07, 0.07, 0.02, M.noir(), 0.01), 0.62, 1.12, s * (Z + 0.012)));
-    retros.add(placer(boite(0.07, 0.07, 0.02, M.noir(), 0.01), 0.16, 1.12, s * (Z + 0.012)));
+    retros.add(placer(boite(0.07, 0.07, 0.02, M.noir(), 0.01), 0.46, 1.15, s * (Z + 0.012)));
+    retros.add(placer(boite(0.07, 0.07, 0.02, M.noir(), 0.01), 0.24, 1.15, s * (Z + 0.012)));
   }
   piece(S, 'retros', 'Rétroviseurs et poignées', null, retros, [0, 0.1, 0]);
 
@@ -560,13 +569,26 @@ function redimensionner() {
   if (!focus) vueInitiale(true);
 }
 
+/** Angles de vue repris des photos du camion : profil gauche, 3/4 avant gauche, face. */
+const VUES = {
+  profil: new THREE.Vector3(0, 0.12, -1),
+  troisQuarts: new THREE.Vector3(1, 0.32, -0.95),
+  face: new THREE.Vector3(1, 0.08, 0),
+  libre: new THREE.Vector3(5.8, 2.6, 6.4),
+};
+let directionVue = VUES.libre.clone();
+
+export function vue(nom) {
+  directionVue = (VUES[nom] ?? VUES.libre).clone();
+  if (focus) focaliser(null); else vueInitiale();
+}
 /** Place la caméra pour voir tout le camion (et l'éclaté), quel que soit le format de l'écran. */
 function vueInitiale(immediat = false) {
   const rayon = 2.9 + eclatCible * 1.9;
   const demiV = THREE.MathUtils.degToRad(camera.fov / 2);
   const demiH = Math.atan(Math.tan(demiV) * camera.aspect);
   const distance = rayon / Math.sin(Math.min(demiV, demiH));
-  const direction = new THREE.Vector3(5.8, 2.6, 6.4).normalize();
+  const direction = directionVue.clone().normalize();
   cible.set(eclatCible * 0.45, 0.9 + eclatCible * 0.5, 0);
   camCible.copy(cible).addScaledVector(direction, distance);
   if (immediat) { camera.position.copy(camCible); controles.target.copy(cible); }
