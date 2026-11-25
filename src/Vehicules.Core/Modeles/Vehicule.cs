@@ -24,6 +24,9 @@ public sealed class Vehicule
     /// <summary>Immatriculations successives, de la plus ancienne à la plus récente.</summary>
     public List<Immatriculation> Immatriculations { get; set; } = [];
 
+    /// <summary>Carte d'identité : type, motorisation, dimensions, équipements.</summary>
+    public Identite? Identite { get; set; }
+
     /// <summary>Photos du véhicule (fichiers dans le stockage Supabase « vehicules-photos »).</summary>
     public List<PhotoVehicule> Photos { get; set; } = [];
 

@@ -84,6 +84,39 @@
             <rect x="6" y="22" width="52" height="20" rx="3" class="aplat" />
             <path d="M12 22v20M52 22v20M18 32h4M26 32h10M40 32h6" />
             break;
+        case "siege":
+            <path d="M22 10h14a4 4 0 0 1 4 4v20H20V14a4 4 0 0 1 2-4z" class="aplat" />
+            <path d="M16 34h30a4 4 0 0 1 4 4v4H14v-4a2 2 0 0 1 2-2zM20 42v10M44 42v10M14 56h36" />
+            <path d="M52 22a10 10 0 0 1 0 14" /><path d="m52 36 3-1M52 36l1 3" />
+            break;
+        case "lit":
+            <rect x="8" y="30" width="48" height="12" rx="4" class="aplat" />
+            <path d="M8 42v8M56 42v8M8 30v-8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8" />
+            <path d="M40 22c4 0 6-3 6-6M44 12h6l-6 6h6" />
+            break;
+        case "rideau":
+            <path d="M8 10h48" stroke-width="3" />
+            <path d="M12 10c0 14 4 30 8 44h10c-4-14-6-30-6-44z" class="aplat" />
+            <path d="M52 10c0 14-4 30-8 44H34c4-14 6-30 6-44z" class="aplat" />
+            <circle cx="12" cy="10" r="2" /><circle cx="52" cy="10" r="2" />
+            break;
+        case "vitre":
+            <rect x="8" y="14" width="48" height="36" rx="5" class="aplat" />
+            <path d="M32 14v36M16 24l8-6M38 30l10-8" />
+            break;
+        case "retro":
+            <path d="M14 30h12" stroke-width="4" />
+            <rect x="26" y="18" width="28" height="26" rx="8" class="aplat" />
+            <path d="M32 26l10 10" />
+            break;
+        case "velo":
+            <circle cx="16" cy="42" r="10" class="aplat" /><circle cx="48" cy="42" r="10" class="aplat" />
+            <path d="M16 42l10-18h14l8 18M26 24l8 18h6M38 18h6M22 20h8" />
+            break;
+        case "table":
+            <rect x="8" y="16" width="48" height="8" rx="3" class="aplat" />
+            <path d="M14 24v28M50 24v28M14 36h36" />
+            break;
         case "chauffage":
             <path d="M32 8c6 8 14 14 14 26a14 14 0 0 1-28 0c0-6 3-10 6-13 0 6 3 9 6 9-2-8 0-15 2-22z" class="aplat" />
             break;
@@ -101,6 +134,9 @@
     public static string Famille(string? id)
     {
         var c = id ?? "";
+        string[] directes = ["siege", "lit", "rideau", "vitre", "retro", "velo", "table", "huile", "filtre", "courroie", "moteur", "turbo",
+                             "batterie", "alternateur", "lumiere", "clim", "frein", "pneu", "suspension", "transmission", "echappement", "eau", "chauffage"];
+        if (directes.Contains(c)) return c;
         bool A(params string[] mots) => mots.Any(c.Contains);
         return true switch
         {

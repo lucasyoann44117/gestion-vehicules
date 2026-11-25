@@ -34,6 +34,9 @@
         {
             <span class="plaque"><span>@immat</span></span>
         }
+        <a class="bouton-photos" href="vehicule/@Vehicule.Id/fiche">
+            <svg aria-hidden="true"><use href="#i-ct" /></svg><span>Fiche d'identité</span>
+        </a>
         @if (Photos.Disponible)
         {
             <a class="bouton-photos" href="vehicule/@Vehicule.Id/photos" aria-label="Photos du @Vehicule.Nom">

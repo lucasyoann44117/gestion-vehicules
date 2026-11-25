@@ -1,0 +1,156 @@
+@page "/vehicule/{Id}/fiche"
+@inherits PageBase
+@inject ServicePhotos Photos
+
+@if (Etat.Vehicule(Id) is not { } v)
+{
+    <Tete Titre="Véhicule introuvable" />
+}
+else
+{
+    var id = v.Identite;
+    var vin = v.Vin is { } x && DecodeurVin.EstValide(x) ? x : null;
+    var segments = vin is null ? new List<SegmentVin>() : DecodeurVin.Decoder(vin);
+    var km = Etat.KmEstime(v.Id);
+
+    <Tete Titre="@($"Fiche d'identité · {v.Nom}")">
+        <a class="btn" href="vehicule/@v.Id/photos"><svg aria-hidden="true"><use href="#i-photo" /></svg>Photos</a>
+    </Tete>
+
+    <article class="hero hero-fiche @(photo is null ? "" : "avec-photo")" style="--accent:@v.Couleur">
+        @if (photo is not null)
+        {
+            <img class="hero-photo" src="@photo" alt="" style="object-position:50% @(v.PhotoCouverture?.CadrageY ?? 60)%" />
+        }
+        else
+        {
+            <svg class="hero-silhouette" aria-hidden="true"><use href="#s-@v.Silhouette" /></svg>
+        }
+        <header class="hero-tete">
+            <p class="sur-titre">@v.Marque · @v.Modele</p>
+            <h2 class="hero-nom">@(id?.Finition?.Split('(')[0].Trim() ?? v.Nom)</h2>
+            <p class="hero-sous">@string.Join(" · ", new[] { id?.CodeMoteur is { } m ? $"Moteur {m}" : null, id?.PuissanceCh is { } ch ? $"{ch} ch" : null, id?.Couleur }.Where(s => s is not null))</p>
+        </header>
+        <div class="hero-droite">
+            @if (v.ImmatriculationActuelle is { } immat)
+            {
+                <span class="plaque"><span>@immat</span></span>
+            }
+        </div>
+        <div class="hero-stats">
+            <div class="tuile"><span>Mise en circulation</span><strong>@(v.MiseEnCirculation?.Year.ToString() ?? "–")</strong><small>@Date(v.MiseEnCirculation)</small></div>
+            <div class="tuile"><span>En France depuis</span><strong>@(id?.PremiereImmatriculationFrance?.Year.ToString() ?? "–")</strong><small>@Date(id?.PremiereImmatriculationFrance)</small></div>
+            <div class="tuile"><span>Âge</span><strong>@(v.Age(Etat.Aujourdhui) is { } a ? $"{a} ans" : "–")</strong><small>Millésime @(id?.Millesime)</small></div>
+            <div class="tuile"><span>Compteur</span><strong>@(km is { } k ? Nombre(k / 1000.0, 0) + "k" : "–")<em>km</em></strong><small>Estimé aujourd'hui</small></div>
+        </div>
+    </article>
+
+    @if (vin is not null)
+    {
+        <section>
+            <h2>Numéro de série (VIN)</h2>
+            <div class="carte vin">
+                <div class="vin-caracteres" role="img" aria-label="@vin">
+                    @foreach (var (s, i) in segments.Select((s, i) => (s, i)))
+                    {
+                        <span class="vin-segment seg-@i @(survol == i ? "actif" : "")" @onmouseenter="() => survol = i" @onclick="() => survol = i">
+                            @foreach (var lettre in s.Valeur) { <b>@lettre</b> }
+                        </span>
+                    }
+                </div>
+                <ol class="vin-legende">
+                    @foreach (var (s, i) in segments.Select((s, i) => (s, i)))
+                    {
+                        <li class="seg-@i @(survol == i ? "actif" : "")" @onmouseenter="() => survol = i">
+                            <span class="vin-pos">@(s.Debut + 1)@(s.Valeur.Length > 1 ? $"-{s.Debut + s.Valeur.Length}" : "")</span>
+                            <div><strong>@s.Nom</strong> <code>@s.Valeur</code><br /><small>@s.Signification</small></div>
+                        </li>
+                    }
+                </ol>
+                <p class="note">Il est frappé dans la baie de pare-brise côté passager et repris sur la carte grise (repère E). Le contrôle technique signale depuis 2012 que la plaque constructeur est illisible : ce numéro permet de la refaire faire.</p>
+            </div>
+        </section>
+    }
+
+    @if (id is not null)
+    {
+        <section>
+            <h2>Carte grise et caractéristiques</h2>
+            <div class="grille-fiche">
+                <dl class="carte fiche-bloc">
+                    <dt>Finition</dt><dd>@id.Finition</dd>
+                    <dt>Type mines (D.2)</dt><dd><code>@id.TypeMines</code></dd>
+                    <dt>Genre (J.1) / Catégorie</dt><dd>@id.Genre · @id.Categorie</dd>
+                    <dt>Puissance fiscale (P.6)</dt><dd>@(id.PuissanceFiscale is { } cv ? $"{cv} CV" : "–")</dd>
+                    <dt>Usine</dt><dd>@id.Usine</dd>
+                </dl>
+                <dl class="carte fiche-bloc">
+                    <dt>Moteur</dt><dd><strong>@id.CodeMoteur</strong> · @id.Cylindree</dd>
+                    <dt>Puissance</dt><dd>@id.PuissanceKw kW · @id.PuissanceCh ch</dd>
+                    <dt>Boîte</dt><dd>@id.Boite</dd>
+                    <dt>Transmission</dt><dd>@id.Transmission</dd>
+                    <dt>Énergie</dt><dd>@(v.Energie ?? "–")</dd>
+                </dl>
+                <div class="carte fiche-bloc gabarit">
+                    <svg viewBox="0 0 320 150" aria-hidden="true">
+                        <use href="#s-@v.Silhouette" x="0" y="10" width="320" height="130" />
+                        <path d="M14 145h294" class="cote" /><path d="M14 140v10M308 140v10" class="cote" />
+                        <path d="M70 128v10M250 128v10M70 133h180" class="cote" />
+                    </svg>
+                    <div class="cotes">
+                        <span>Longueur <b>@Metres(id.LongueurM)</b></span>
+                        <span>Largeur <b>@Metres(id.LargeurM)</b></span>
+                        <span>Hauteur <b>@Metres(id.HauteurM)</b> <small>mesurée</small></span>
+                        <span>Empattement <b>@Metres(id.EmpattementM)</b></span>
+                    </div>
+                </div>
+                <dl class="carte fiche-bloc">
+                    <dt>Couleur</dt><dd><span class="pastille-couleur" style="background:@v.Couleur"></span>@id.Couleur</dd>
+                    <dt>Jantes</dt><dd>@id.Jantes</dd>
+                    <dt>Pneus</dt><dd>@id.Pneus</dd>
+                    <dt>Immatriculations</dt><dd>@string.Join(" → ", v.Immatriculations.Select(i => i.Numero))</dd>
+                </dl>
+            </div>
+        </section>
+
+        @if (id.Equipements.Count > 0)
+        {
+            <section>
+                <h2>Équipements et options <small>@id.Equipements.Count repérés</small></h2>
+                @foreach (var groupe in id.Equipements.GroupBy(e => e.Categorie))
+                {
+                    <span class="categorie">@groupe.Key</span>
+                    <div class="grille-equipements">
+                        @foreach (var e in groupe)
+                        {
+                            <div class="equipement">
+                                <span class="tp-illu"><Illustration OrganeId="@(e.Icone ?? "outil")" /></span>
+                                <div>
+                                    <strong>@e.Nom</strong>
+                                    @if (!string.IsNullOrWhiteSpace(e.Detail)) { <small>@e.Detail</small> }
+                                    <span class="provenance @(e.Provenance == "d'origine" ? "origine" : "")">@e.Provenance</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                @if (id.CodesPr.Count == 0)
+                {
+                    <p class="note">Liste reconstituée à partir de tes factures, de tes PV, de tes photos et de ton sujet T4Zone. La liste exacte des options d'usine (codes PR) figure sur l'autocollant « Données du véhicule », dans le carnet d'entretien : en le scannant, on pourra la compléter.</p>
+                }
+            </section>
+        }
+    }
+}
+
+@code {
+    [Parameter] public string Id { get; set; } = "";
+
+    private string? photo;
+    private int? survol;
+
+    protected override async Task OnParametersSetAsync() =>
+        photo = await Photos.LienAsync(Etat.Vehicule(Id)?.PhotoCouverture);
+
+    private static string Metres(decimal? m) => m is { } v ? v.ToString("0.00", Format.Fr) + " m" : "–";
+}
