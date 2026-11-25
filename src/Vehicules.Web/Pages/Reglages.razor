@@ -31,7 +31,7 @@
             </label>
             <h3>Intervalles conseillés</h3>
             <table class="tableau intervalles">
-                <thead><tr><th>Pièce</th><th>Tous les… km</th><th>Tous les… mois</th></tr></thead>
+                <thead><tr><th>Pièce</th><th>Tous les… km</th><th>Tous les… mois</th><th></th></tr></thead>
                 <tbody>
                     @foreach (var o in Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id).OrderBy(o => o.Categorie).ThenBy(o => o.Nom))
                     {
@@ -39,6 +39,7 @@
                             <td data-label="Pièce"><input @bind="o.Nom" aria-label="Nom" /></td>
                             <td data-label="Km"><input type="number" step="1000" @bind="o.IntervalleKm" aria-label="Intervalle en km" /></td>
                             <td data-label="Mois"><input type="number" @bind="o.IntervalleMois" aria-label="Intervalle en mois" /></td>
+                            <td><a href="pieces/@o.Id" aria-label="Fiche de @o.Nom">Fiche ›</a></td>
                         </tr>
                     }
                 </tbody>

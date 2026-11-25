@@ -41,7 +41,7 @@ else
             <div class="tuile"><span>Mise en circulation</span><strong>@(v.MiseEnCirculation?.Year.ToString() ?? "–")</strong><small>@Date(v.MiseEnCirculation)</small></div>
             <div class="tuile"><span>En France depuis</span><strong>@(id?.PremiereImmatriculationFrance?.Year.ToString() ?? "–")</strong><small>@Date(id?.PremiereImmatriculationFrance)</small></div>
             <div class="tuile"><span>Âge</span><strong>@(v.Age(Etat.Aujourdhui) is { } a ? $"{a} ans" : "–")</strong><small>Millésime @(id?.Millesime)</small></div>
-            <div class="tuile"><span>Compteur</span><strong>@(km is { } k ? Nombre(k / 1000.0, 0) + "k" : "–")<em>km</em></strong><small>Estimé aujourd'hui</small></div>
+            <a class="tuile" href=""><span>Compteur</span><strong>@(km is { } k ? Nombre(k / 1000.0, 0) + "k" : "–")<em>km</em></strong><small>Estimé aujourd'hui · bilan ›</small></a>
         </div>
     </article>
 
@@ -85,10 +85,10 @@ else
                     <dt>Usine</dt><dd>@id.Usine</dd>
                 </dl>
                 <dl class="carte fiche-bloc">
-                    <dt>Moteur</dt><dd><strong>@id.CodeMoteur</strong> · @id.Cylindree</dd>
+                    <dt>Moteur</dt><dd><a href="moteur/planches"><strong>@id.CodeMoteur</strong> · @id.Cylindree ›</a></dd>
                     <dt>Puissance</dt><dd>@id.PuissanceKw kW · @id.PuissanceCh ch</dd>
-                    <dt>Boîte</dt><dd>@id.Boite</dd>
-                    <dt>Transmission</dt><dd>@id.Transmission</dd>
+                    <dt>Boîte</dt><dd><a href="pieces/huile-boite">@id.Boite ›</a></dd>
+                    <dt>Transmission</dt><dd><a href="pieces/cardan-avd">@id.Transmission ›</a></dd>
                     <dt>Énergie</dt><dd>@(v.Energie ?? "–")</dd>
                 </dl>
                 <div class="carte fiche-bloc gabarit">
@@ -106,9 +106,9 @@ else
                 </div>
                 <dl class="carte fiche-bloc">
                     <dt>Couleur</dt><dd><span class="pastille-couleur" style="background:@v.Couleur"></span>@id.Couleur</dd>
-                    <dt>Jantes</dt><dd>@id.Jantes</dd>
-                    <dt>Pneus</dt><dd>@id.Pneus</dd>
-                    <dt>Immatriculations</dt><dd>@string.Join(" → ", v.Immatriculations.Select(i => i.Numero))</dd>
+                    <dt>Jantes</dt><dd><a href="pieces/jantes">@id.Jantes ›</a></dd>
+                    <dt>Pneus</dt><dd><a href="pneus">@id.Pneus ›</a></dd>
+                    <dt>Immatriculations</dt><dd><a href="pieces/plaques">@string.Join(" → ", v.Immatriculations.Select(i => i.Numero)) ›</a></dd>
                 </dl>
             </div>
         </section>
@@ -123,14 +123,14 @@ else
                     <div class="grille-equipements">
                         @foreach (var e in groupe)
                         {
-                            <div class="equipement">
+                            <a class="equipement lien-carte" href="@LienEquipement(v, e)">
                                 <span class="tp-illu"><Illustration OrganeId="@(e.Icone ?? "outil")" /></span>
                                 <div>
                                     <strong>@e.Nom</strong>
                                     @if (!string.IsNullOrWhiteSpace(e.Detail)) { <small>@e.Detail</small> }
                                     <span class="provenance @(e.Provenance == "d'origine" ? "origine" : "")">@e.Provenance</span>
                                 </div>
-                            </div>
+                            </a>
                         }
                     </div>
                 }
@@ -152,5 +152,27 @@ else
     protected override async Task OnParametersSetAsync() =>
         photo = await Photos.LienAsync(Etat.Vehicule(Id)?.PhotoCouverture);
 
+    private static readonly HashSet<string> MotsVides = ["les", "des", "une", "sur", "aux", "par", "pour", "avec", "sans", "et", "de", "du", "la", "le"];
+    private static readonly HashSet<string> MotsDePosition = ["avant", "arriere", "droit", "droite", "gauche", "av", "ar", "porte"];
+
+    private static List<string> MotsUtiles(string texte) =>
+        MoteurDiagnostic.Normaliser(texte).Split([' ', '-', '\''], StringSplitOptions.RemoveEmptyEntries)
+            .Where(m => m.Length >= 3 && !MotsVides.Contains(m)).ToList();
+
+    /// <summary>
+    /// Un équipement mène à la pièce suivie dont le nom partage le plus de mots avec lui
+    /// (au moins un mot qui n'est pas une simple position), sinon aux factures qui en parlent.
+    /// </summary>
+    private string LienEquipement(Vehicule v, Equipement e)
+    {
+        var mots = MotsUtiles(e.Nom);
+        var meilleure = Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id)
+            .Select(o => (o, communs: MotsUtiles(o.Nom).Intersect(mots).ToList()))
+            .Where(x => x.communs.Any(m => !MotsDePosition.Contains(m)))
+            .OrderByDescending(x => x.communs.Count)
+            .FirstOrDefault();
+        if (meilleure.o is not null) return $"pieces/{meilleure.o.Id}";
+        return $"historique?q={Uri.EscapeDataString(mots.FirstOrDefault(m => !MotsDePosition.Contains(m)) ?? e.Nom)}";
+    }
     private static string Metres(decimal? m) => m is { } v ? v.ToString("0.00", Format.Fr) + " m" : "–";
 }

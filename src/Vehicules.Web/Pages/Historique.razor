@@ -54,9 +54,9 @@
                     <details class="carte intervention" open="@(liste.Count <= 3 || i.Id == ouverte)">
                         <summary>
                             <div class="int-titre">
-                                <span class="type t-@i.Type.ToString().ToLowerInvariant()">@Libelle(i.Type)</span>
+                                <a class="type t-@i.Type.ToString().ToLowerInvariant()" href="historique?type=@i.Type" title="Toutes les interventions de ce type">@Libelle(i.Type)</a>
                                 <strong>@i.Titre</strong>
-                                <small>@Date(i.Date)@(i.Km is { } k ? $" · {Km(k)}" : "")@(i.Garage is null ? "" : $" · {i.Garage}")@(Etat.VehiculeId is null && v is not null ? $" · {v.Nom}" : "")</small>
+                                <small>@Date(i.Date)@(i.Km is { } k ? $" · {Km(k)}" : "")@if (i.Garage is not null) { <span> · </span><a href="historique?q=@Uri.EscapeDataString(i.Garage)" title="Toutes les interventions de ce garage">@i.Garage</a> }@(Etat.VehiculeId is null && v is not null ? $" · {v.Nom}" : "")</small>
                             </div>
                             <strong class="montant">@Euros(i.TotalTtc)</strong>
                         </summary>
@@ -126,6 +126,7 @@
     [SupplyParameterFromQuery(Name = "annee")] public int? AnneeQuery { get; set; }
     [SupplyParameterFromQuery(Name = "type")] public string? TypeQuery { get; set; }
     [SupplyParameterFromQuery(Name = "id")] public string? IdQuery { get; set; }
+    [SupplyParameterFromQuery(Name = "q")] public string? RechercheQuery { get; set; }
 
     [Inject] private IJSRuntime JS { get; set; } = default!;
 
@@ -141,6 +142,7 @@
         organe = OrganeQuery ?? "";
         annee = AnneeQuery?.ToString() ?? "";
         type = TypeQuery ?? "";
+        recherche = RechercheQuery ?? "";
         ouverte = IdQuery;
         defiler = IdQuery is not null;
     }

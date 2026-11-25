@@ -15,6 +15,7 @@
     var affichees = etats
         .Where(e => categorie is null || e.Etat.Organe.Categorie == categorie)
         .Where(e => tout || e.Etat.Changements.Count > 0)
+        .Where(e => !urgentes || e.Etat.Urgence is Urgence.Bientot or Urgence.Depasse)
         .OrderByDescending(e => e.Etat.Urgence is Urgence.Depasse or Urgence.Bientot)
         .ThenByDescending(e => e.Etat.Avancement ?? -1)
         .ThenBy(e => e.Etat.Dernier?.Date ?? DateOnly.MaxValue)
@@ -23,27 +24,27 @@
 }
 
 <section class="stats">
-    <div class="stat carte mise-en-avant">
+    <button class="stat carte mise-en-avant lien-carte" @onclick="() => { tout = true; urgentes = false; categorie = null; }">
         <span>Pièces suivies</span>
         <strong>@etats.Count</strong>
-        <small>@changees.Count déjà changées au moins une fois</small>
-    </div>
-    <div class="stat carte">
+        <small>@changees.Count déjà changées au moins une fois · tout voir ›</small>
+    </button>
+    <button class="stat carte lien-carte @(urgentes ? "active" : "")" @onclick="() => { urgentes = !urgentes; tout = true; }">
         <span>À surveiller</span>
         <strong>@aSurveiller.Count</strong>
-        <small>@(aSurveiller.Count == 0 ? "Tout est dans les temps" : string.Join(", ", aSurveiller.Take(2).Select(e => e.Etat.Organe.Nom)))</small>
-    </div>
-    <div class="stat carte">
+        <small>@(aSurveiller.Count == 0 ? "Tout est dans les temps" : string.Join(", ", aSurveiller.Take(2).Select(e => e.Etat.Organe.Nom)))@(urgentes ? " · filtre actif ✕" : " ›")</small>
+    </button>
+    <a class="stat carte lien-carte" href="pieces/@(changees.MaxBy(e => e.Etat.Changements.Count)?.Etat.Organe.Id)">
         <span>La plus changée</span>
         @{ var plusChangee = changees.MaxBy(e => e.Etat.Changements.Count); }
         <strong>@(plusChangee?.Etat.Changements.Count ?? 0) fois</strong>
-        <small>@plusChangee?.Etat.Organe.Nom</small>
-    </div>
-    <div class="stat carte">
+        <small>@plusChangee?.Etat.Organe.Nom ›</small>
+    </a>
+    <a class="stat carte lien-carte" href="pieces/@plusChere?.Etat.Organe.Id">
         <span>La plus coûteuse</span>
         <strong>@Euros(plusChere?.Cout ?? 0, 0)</strong>
-        <small>@plusChere?.Etat.Organe.Nom</small>
-    </div>
+        <small>@plusChere?.Etat.Organe.Nom ›</small>
+    </a>
 </section>
 
 <div class="puces filtres-categories" role="group" aria-label="Système">
@@ -90,7 +91,7 @@
 
 @code {
     private string? categorie;
-    private bool tout;
+    private bool tout, urgentes;
 
     private sealed record Ligne(EtatOrgane Etat, Vehicule Vehicule, decimal Cout);
 

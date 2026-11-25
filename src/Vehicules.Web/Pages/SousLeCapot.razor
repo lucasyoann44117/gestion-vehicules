@@ -18,26 +18,26 @@ else
     var derniere = lignes.Where(l => l.Etat.Dernier is not null).MaxBy(l => l.Etat.Dernier!.Date);
 
     <section class="stats">
-        <div class="stat carte mise-en-avant">
+        <a class="stat carte mise-en-avant lien-carte" href="couts">
             <span>Dépensé sous le capot</span>
             <strong>@Euros(total, 0)</strong>
-            <small>@lignes.Count(l => l.Etat.Changements.Count > 0) pièces déjà changées sur @lignes.Count</small>
-        </div>
-        <div class="stat carte">
+            <small>@lignes.Count(l => l.Etat.Changements.Count > 0) pièces déjà changées sur @lignes.Count ›</small>
+        </a>
+        <a class="stat carte lien-carte" href="@(derniere?.Etat.Dernier is { } dn ? $"historique?id={dn.InterventionId}" : "historique")">
             <span>Dernière intervention</span>
             <strong>@(derniere?.Etat.Dernier?.Date.Year.ToString() ?? "–")</strong>
-            <small>@derniere?.Etat.Organe.Nom</small>
-        </div>
-        <div class="stat carte">
+            <small>@derniere?.Etat.Organe.Nom ›</small>
+        </a>
+        <a class="stat carte lien-carte" href="pieces">
             <span>À surveiller</span>
             <strong>@lignes.Count(l => l.Etat.Urgence is Urgence.Bientot or Urgence.Depasse)</strong>
-            <small>D'après les intervalles conseillés</small>
-        </div>
-        <div class="stat carte">
+            <small>D'après les intervalles conseillés ›</small>
+        </a>
+        <a class="stat carte lien-carte" href="moteur/planches">
             <span>Moteur</span>
             <strong>2.5 TDI ACV</strong>
-            <small>5 cylindres, 102 ch, pompe VP37</small>
-        </div>
+            <small>5 cylindres, 102 ch, pompe VP37 · planches ›</small>
+        </a>
     </section>
 
     <p class="note">@fiches.Avertissement</p>
@@ -45,7 +45,13 @@ else
     @foreach (var zone in lignes.GroupBy(l => l.Fiche.Zone ?? "Autre").OrderBy(g => Array.IndexOf(Ordre, g.Key) is var i && i < 0 ? 99 : i))
     {
         <section>
-            <h2>@zone.Key <small>@Euros(zone.Sum(l => l.Cout), 0)</small></h2>
+            <div class="section-tete">
+                <h2>@zone.Key <small>@Euros(zone.Sum(l => l.Cout), 0)</small></h2>
+                @if (PlancheDe(zone.Key) is { } pl)
+                {
+                    <a href="moteur/planches/@pl">Voir la planche 3D ›</a>
+                }
+            </div>
             <div class="grille-capot">
                 @foreach (var l in zone)
                 {
@@ -76,6 +82,14 @@ else
     private static readonly string[] Ordre = ["Moteur", "Admission", "Alimentation", "Démarrage", "Refroidissement", "Électricité", "Climatisation", "Entretien", "Freinage", "Transmission", "Échappement", "Chauffage"];
 
     private BaseFichesPieces? fiches;
+
+    /// <summary>Planche éclatée qui montre les pièces de cette zone.</summary>
+    private static string? PlancheDe(string zone) => zone switch
+    {
+        "Moteur" => "103", "Admission" => "129", "Alimentation" or "Démarrage" => "130",
+        "Refroidissement" => "121", "Électricité" or "Climatisation" => "903",
+        "Entretien" => "115", "Échappement" => "253", _ => null,
+    };
 
     private sealed record Ligne(EtatOrgane Etat, FichePiece Fiche, decimal Cout);
 

@@ -45,26 +45,26 @@ else
     </article>
 
     <section class="stats">
-        <div class="stat carte">
+        <a class="stat carte lien-carte" href="@(etat.Dernier is { } dd ? $"historique?id={dd.InterventionId}" : $"historique?organe={organe.Id}")">
             <span>Depuis le dernier changement</span>
             <strong>@(etat.KmDepuis is { } k ? Km(k) : "–")</strong>
-            <small>@(etat.Dernier is { } d ? $"{Mois(etat.MoisDepuis)}, depuis le {Date(d.Date)}" : "Jamais changée")</small>
-        </div>
-        <div class="stat carte">
+            <small>@(etat.Dernier is { } d ? $"{Mois(etat.MoisDepuis)}, depuis le {Date(d.Date)} ›" : "Jamais changée")</small>
+        </a>
+        <a class="stat carte lien-carte" href="historique?organe=@organe.Id">
             <span>Changée</span>
             <strong>@etat.Changements.Count fois</strong>
-            <small>@(etat.Changements.Count > 0 ? $"Première fois le {Date(etat.Changements[0].Date)}" : "")</small>
-        </div>
-        <div class="stat carte">
+            <small>@(etat.Changements.Count > 0 ? $"Première fois le {Date(etat.Changements[0].Date)} · toutes les factures ›" : "")</small>
+        </a>
+        <a class="stat carte lien-carte" href="pieces/@organe.Id#durees">
             <span>Durée de vie observée</span>
             <strong>@(dureeKm.Count > 0 ? Km((int)dureeKm.Average()) : dureeMois.Count > 0 ? Mois((int)dureeMois.Average()) : "–")</strong>
             <small>@(dureeMois.Count > 0 ? $"En moyenne {Mois((int)dureeMois.Average())} entre deux changements" : "Il faut deux changements")</small>
-        </div>
-        <div class="stat carte mise-en-avant">
+        </a>
+        <a class="stat carte mise-en-avant lien-carte" href="historique?organe=@organe.Id">
             <span>Coût total</span>
             <strong>@Euros(cout, 0)</strong>
-            <small>Pièces et main-d'œuvre, TTC</small>
-        </div>
+            <small>Pièces et main-d'œuvre, TTC · détail ›</small>
+        </a>
     </section>
 
     @if (fiches?.Pieces.GetValueOrDefault(organe.Id) is { } fiche)
@@ -120,15 +120,16 @@ else
 
     @if (etat.Durees.Count > 0)
     {
-        <section>
+        <section id="durees">
             <h2>Combien de temps elle a tenu</h2>
             <div class="carte">
                 <ul class="classement">
                     @{ var maxMois = Math.Max(1, etat.Durees.Max(x => x.Mois)); }
                     @foreach (var x in etat.Durees)
                     {
+                        var remplace = etat.Changements.FirstOrDefault(c => c.Date == x.Au);
                         <li>
-                            <span>@Date(x.Du) → @Date(x.Au)</span>
+                            <a href="@(remplace is null ? $"historique?organe={organe.Id}" : $"historique?id={remplace.InterventionId}")">@Date(x.Du) → @Date(x.Au)</a>
                             <span class="jauge"><i style="width:@((x.Mois * 100.0 / maxMois).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture))%"></i></span>
                             <strong>@Mois(x.Mois)@(x.Km is { } km ? $" · {Km(km)}" : "")</strong>
                         </li>
@@ -146,14 +147,14 @@ else
                 @foreach (var (ct, df) in defauts)
                 {
                     <li class="@(df.Statut == StatutSuivi.Fait ? "ok" : "att")">
-                        <div><strong>@df.Libelle</strong><br /><small>CT du @Date(ct.Date) · @df.Code</small></div>
+                        <a class="ligne-lien" href="controles"><div><strong>@df.Libelle</strong><br /><small>CT du @Date(ct.Date) · @df.Code</small></div></a>
                         <span class="pastille @(df.Statut == StatutSuivi.Fait ? "ok" : "att")">@Libelle(df.Statut)</span>
                     </li>
                 }
                 @foreach (var t in travaux)
                 {
                     <li class="@(t.Statut == StatutSuivi.Fait ? "ok" : "att")">
-                        <div><strong>@t.Libelle</strong><br /><small>@t.Source, @Date(t.DateSignalement)</small></div>
+                        <a class="ligne-lien" href="@(t.InterventionId is { } ti ? $"historique?id={ti}" : "controles")"><div><strong>@t.Libelle</strong><br /><small>@t.Source, @Date(t.DateSignalement)</small></div></a>
                         <span class="pastille @(t.Statut == StatutSuivi.Fait ? "ok" : "att")">@Libelle(t.Statut)</span>
                     </li>
                 }

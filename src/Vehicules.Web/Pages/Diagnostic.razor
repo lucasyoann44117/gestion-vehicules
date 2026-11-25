@@ -180,7 +180,7 @@ else
                     @if (cc.Historique.Count > 0)
                     {
                         <ul class="histo-cause">
-                            @foreach (var h in cc.Historique) { <li>@h</li> }
+                            @foreach (var h in cc.Historique) { <li><a href="historique?organe=@c.Organes.FirstOrDefault()">@h ›</a></li> }
                         </ul>
                     }
                     @if (c.Verifications.Count > 0)
