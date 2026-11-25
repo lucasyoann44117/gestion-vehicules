@@ -58,6 +58,8 @@ public sealed class FichePiece
     public string? PrixPose { get; set; }
     /// <summary>Zone du compartiment moteur (Moteur, Admission, Alimentation…).</summary>
     public string? Zone { get; set; }
+    /// <summary>Tutos pas à pas (T4Zone, BuSpirit), un par sujet.</summary>
+    public List<Source> Tutos { get; set; } = [];
 }
 
 public sealed class BaseFichesPieces

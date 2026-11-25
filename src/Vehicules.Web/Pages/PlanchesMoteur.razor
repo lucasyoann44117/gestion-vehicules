@@ -179,6 +179,10 @@ else
                                             @if (f.PrixPose is not null) { <span><small>Posée</small>@f.PrixPose</span> }
                                             @if (f.DureeVie is not null) { <span><small>Durée de vie</small>@f.DureeVie</span> }
                                         </div>
+                                        @if (f.Tutos.Count > 0)
+                                        {
+                                            <p class="tutos-planche">Tutos : @for (var i = 0; i < f.Tutos.Count; i++) { var t = f.Tutos[i]; <a href="@t.Url" target="_blank" rel="noopener">@t.Titre</a>@(i < f.Tutos.Count - 1 ? " · " : "") }</p>
+                                        }
                                     }
                                     <p class="note">@s.Texte</p>
                                     @if (x.Organe is not null)

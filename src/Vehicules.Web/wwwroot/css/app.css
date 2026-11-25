@@ -1227,3 +1227,6 @@ a.tuile::after { content: '›'; position: absolute; right: 12px; top: 8px; font
 .groupe-etka em.att { background: #f59e0b; } .groupe-etka em.mal { background: #dc2626; }
 .groupe-etka i { font-style: normal; color: var(--tres-doux); font-weight: 700; }
 @media (max-width: 760px) { .groupes-etka { grid-template-columns: 1fr; } }
+
+.tutos-planche { font-size: 13px; line-height: 1.6; }
+.tutos-planche a { white-space: normal; }

@@ -83,6 +83,18 @@ else
                 <small>@fiches.Avertissement</small>
             </div>
         </section>
+        @if (fiche.Tutos.Count > 0)
+        {
+            <section>
+                <h2>Tutos pas à pas</h2>
+                <ul class="liste">
+                    @foreach (var t in fiche.Tutos)
+                    {
+                        <li><a class="ligne-lien" href="@t.Url" target="_blank" rel="noopener"><span>@t.Titre</span><span class="chevron">↗</span></a></li>
+                    }
+                </ul>
+            </section>
+        }
     }
 
     @if (etat.Changements.Count > 0)

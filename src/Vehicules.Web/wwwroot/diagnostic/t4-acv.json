@@ -508,6 +508,29 @@
               "url": "https://t4zone.info/forum/viewtopic.php?t=91604"
             }
           ]
+        },
+        {
+          "id": "relais-109",
+          "libelle": "Relais 109 (J317) défaillant : le moteur se coupe ou ne redémarre pas à chaud",
+          "frequence": 3,
+          "verifications": [
+            "Le voyant de préchauffage ne s'allume pas du tout au contact",
+            "Le moteur s'arrête net en roulant, puis repart après une ou deux minutes",
+            "Relais 109 dans la boîte à fusibles à gauche du volant : refaire ses soudures ou le remplacer par le modèle gris"
+          ],
+          "organes": [
+            "relais-prechauffage"
+          ],
+          "codes": [],
+          "difficulte": "facile",
+          "cout": "environ 15 €",
+          "image": "T4 TDI relais 109 J317",
+          "sources": [
+            {
+              "titre": "Coupure moteur sur TDI : réparation (T4Zone)",
+              "url": "https://t4zone.info/cms/wiki/wiki.php?title=coupure-moteur-sur-tdi-reparation"
+            }
+          ]
         }
       ],
       "questions": [
@@ -732,6 +755,64 @@
             {
               "titre": "ACV sans puissance, code 17660 : N75 grippée, manchon de turbo, N108 coupée",
               "url": "https://t4zone.info/forum/viewtopic.php?t=52969"
+            }
+          ]
+        },
+        {
+          "id": "durite-calculateur",
+          "libelle": "Durite de pression vers le calculateur fendue ou pincée",
+          "frequence": 2,
+          "verifications": [
+            "Le turbo ne pousse plus alors que débitmètre et durites de N75 ont été changés",
+            "Au VAG-COM, la pression de suralimentation reste trop basse quand le turbo devrait pousser",
+            "Vérifier la longue durite qui part de l'échangeur vers le calculateur au pied de la batterie (et que le cache ne la pince pas)"
+          ],
+          "organes": [
+            "turbo"
+          ],
+          "codes": [
+            "00575"
+          ],
+          "difficulte": "moyen",
+          "cout": "5 à 20 € de durite",
+          "image": "T4 TDI calculateur durite pression",
+          "sources": [
+            {
+              "titre": "Calculateur TDI : durite interne (T4Zone)",
+              "url": "https://t4zone.info/cms/wiki/wiki.php?title=calculateur-tdi-controle-et-remplacement-de-la-durite-interne"
+            },
+            {
+              "titre": "TDI manque de puissance : causes possibles (T4Zone)",
+              "url": "https://t4zone.info/cms/wiki/wiki.php?title=tdi-manque-de-puissance-defauts-possibles-et-questions"
+            }
+          ]
+        },
+        {
+          "id": "contacteur-frein-puissance",
+          "libelle": "Contacteur de pédale de frein : moteur bridé vers 2 000 tr/min",
+          "frequence": 3,
+          "verifications": [
+            "Le moteur refuse de monter au-dessus de 2 000 tr/min et le voyant de préchauffage clignote",
+            "Le régulateur de vitesse ne s'enclenche plus",
+            "Contrôler les feux stop et le contacteur double au-dessus de la pédale"
+          ],
+          "organes": [
+            "eclairage"
+          ],
+          "codes": [
+            "16955"
+          ],
+          "difficulte": "facile",
+          "cout": "15 à 40 €",
+          "image": "T4 contacteur pédale de frein",
+          "sources": [
+            {
+              "titre": "TDI manque de puissance : causes possibles (T4Zone)",
+              "url": "https://t4zone.info/cms/wiki/wiki.php?title=tdi-manque-de-puissance-defauts-possibles-et-questions"
+            },
+            {
+              "titre": "Voyant de préchauffage qui clignote : contacteur de frein (BuSpirit)",
+              "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=1094"
             }
           ]
         }
@@ -2293,6 +2374,29 @@
             "turbo"
           ],
           "difficulte": "garage"
+        },
+        {
+          "id": "tendeur-accessoires",
+          "libelle": "Tendeur de courroie d'accessoires usé (crissement à froid)",
+          "frequence": 3,
+          "verifications": [
+            "Crissement au démarrage à froid qui s'allonge de jour en jour",
+            "Un peu d'eau sur la courroie fait taire le bruit : la courroie patine",
+            "Si courroie et galets sont neufs, le tendeur d'origine (rouille, usure) est en cause"
+          ],
+          "organes": [
+            "courroie-accessoires"
+          ],
+          "codes": [],
+          "difficulte": "difficile",
+          "cout": "80 à 250 €",
+          "image": "T4 2.5 TDI ACV tendeur courroie accessoires",
+          "sources": [
+            {
+              "titre": "Courroie d'accessoires ACV : couinement (T4Zone)",
+              "url": "https://t4zone.info/cms/wiki/wiki.php?title=courroie-d-accessoires-moteur-acv-102cv-couinement"
+            }
+          ]
         }
       ],
       "questions": [
