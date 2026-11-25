@@ -684,6 +684,9 @@ function placerReperes() {
       }
   avecRepere.forEach((e, i) => {
     const p = places[i];
+    // Les numéros restent dans le cadre, même pour une pièce au bord.
+    p.x = Math.min(Math.max(p.x, 16), l - 16);
+    p.y = Math.min(Math.max(p.y, 16), h - 16);
     const visible = p.z < 1;
     e.repere.style.display = visible ? '' : 'none';
     e.repere.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%)`;

@@ -187,9 +187,17 @@ else
         if (module is not null) await AfficherAsync();
     }
 
+    private bool defilerOnglet;
+
     protected override async Task OnAfterRenderAsync(bool premier)
     {
-        if (!premier) return;
+        if (!premier)
+        {
+            if (!defilerOnglet) return;
+            defilerOnglet = false;
+            await JS.InvokeVoidAsync("eval", "document.querySelector('.onglets-planches a.actif')?.scrollIntoView({ inline: 'center', block: 'nearest' })");
+            return;
+        }
         try
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/planches-3d.js");
@@ -215,6 +223,8 @@ else
             ? catalogue.Planches.Select((p, i) => new { pos = i + 1, cle = p.Code }).ToList()
             : planche.Positions.Select(x => new { pos = x.Pos, cle = x.Cle }).ToList();
         await module.InvokeVoidAsync("afficher", new { code, positions });
+        // L'onglet de la planche ouverte reste visible dans la rangée (téléphone).
+        defilerOnglet = true;
         await module.InvokeVoidAsync("eclater", eclat / 100.0);
         await ColorerAsync();
     }
