@@ -1,0 +1,109 @@
+@page "/kilometrage"
+@inherits PageBase
+
+@* Étape intermédiaire pour le compteur, le rythme et le coût au km : km par année, puis chaque relevé et sa source. *@
+
+@if (VehiculeAffiche() is not { } v)
+{
+    <Tete Titre="Kilométrage" />
+    <p class="vide">Aucun véhicule.</p>
+}
+else
+{
+    var releves = Kilometrage.Tries(Etat.Releves(v.Id));
+    var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id).ToList();
+    var controles = Etat.Donnees.Controles.Where(c => c.VehiculeId == v.Id).ToList();
+    var aujourdhui = Etat.KmEstime(v.Id);
+    var rythme = Kilometrage.KmParAn(releves);
+    var dernier = releves.LastOrDefault();
+    var premier = releves.FirstOrDefault();
+    var annees = Couts.ParAnnee(inter, releves, Etat.Aujourdhui).Where(a => a.KmParcourus is not null).ToList();
+    var maxKm = annees.Count == 0 ? 1 : Math.Max(1, annees.Max(a => a.KmParcourus ?? 0));
+    var total = inter.Sum(i => i.TotalTtc);
+    var debut = inter.Count == 0 ? (DateOnly?)null : inter.Min(i => i.Date);
+    var kmSuivis = debut is { } d0 ? Kilometrage.Parcourus(releves, d0, Etat.Aujourdhui, Etat.Aujourdhui) : null;
+
+    <Tete Titre="@($"Kilométrage · {v.Nom}")">
+        <a class="btn" href="couts">Coûts</a>
+    </Tete>
+
+    <section class="stats">
+        <a class="stat carte mise-en-avant lien-carte" href="kilometrage#releves">
+            <span>Compteur estimé aujourd'hui</span>
+            <strong>@Km(aujourdhui)</strong>
+            <small>@(dernier is null ? "Aucun relevé" : $"D'après le relevé du {Date(dernier.Date)}") ›</small>
+        </a>
+        <a class="stat carte lien-carte" href="kilometrage#par-annee">
+            <span>Rythme</span>
+            <strong>@(rythme is null ? "–" : Nombre(rythme)) km/an</strong>
+            <small>Sur les 2 dernières années · par année ›</small>
+        </a>
+        <a class="stat carte lien-carte" href="couts">
+            <span>Coût au km</span>
+            <strong>@(kmSuivis is > 0 ? Euros(total / kmSuivis.Value, 3) : "–")</strong>
+            <small>@(kmSuivis is > 0 ? $"{Euros(total, 0)} sur {Km(kmSuivis)}" : "Pas assez de relevés") ›</small>
+        </a>
+        <a class="stat carte lien-carte" href="@(dernier is null ? "kilometrage" : LienSource(dernier, inter, controles))">
+            <span>Dernier relevé</span>
+            <strong>@(dernier is null ? "–" : Km(dernier.Km))</strong>
+            <small>@(dernier is null ? "" : $"{Date(dernier.Date)} · {Source(dernier.Source)}") ›</small>
+        </a>
+    </section>
+
+    @if (annees.Count > 0)
+    {
+        <section id="par-annee">
+            <h2>Km parcourus par année</h2>
+            <ul class="classement carte">
+                @foreach (var a in Enumerable.Reverse(annees))
+                {
+                    <li id="annee-@a.Annee">
+                        <a href="couts/@a.Annee">@a.Annee</a>
+                        <span class="jauge"><i style="width:@(((a.KmParcourus ?? 0) * 100.0 / maxKm).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture))%"></i></span>
+                        <strong>@Km(a.KmParcourus)</strong>
+                    </li>
+                }
+            </ul>
+            <p class="note">Estimé entre les relevés connus (factures, contrôles techniques, saisies). Touche une année pour voir ce qu'elle a coûté.</p>
+        </section>
+    }
+
+    <section id="releves">
+        <h2>Relevés du compteur <small>@releves.Count depuis @(premier is null ? "–" : premier.Date.Year.ToString())</small></h2>
+        <ul class="liste">
+            @foreach (var r in Enumerable.Reverse(releves))
+            {
+                <li>
+                    <a class="ligne-lien" href="@LienSource(r, inter, controles)">
+                        <div>
+                            <strong>@Km(r.Km)</strong><br />
+                            <small>@Date(r.Date) · @Source(r.Source)@(r.Note is null ? "" : $" · {r.Note}")</small>
+                        </div>
+                        <span class="chevron">›</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </section>
+}
+
+@code {
+    private Vehicule? VehiculeAffiche() =>
+        (Etat.VehiculeId is { } id ? Etat.Vehicule(id) : null) ?? Etat.Donnees.Vehicules.FirstOrDefault();
+
+    private static string Source(SourceReleve s) => s switch
+    {
+        SourceReleve.Facture => "facture",
+        SourceReleve.ControleTechnique => "contrôle technique",
+        SourceReleve.Saisie => "saisi à la main",
+        _ => "autre",
+    };
+
+    /// <summary>D'où vient le relevé : la facture du même jour, le contrôle technique, sinon l'année des coûts.</summary>
+    private static string LienSource(ReleveKm r, List<Intervention> inter, List<ControleTechnique> controles)
+    {
+        if (inter.FirstOrDefault(i => i.Date == r.Date) is { } i) return $"historique?id={i.Id}";
+        if (controles.Any(c => c.Date == r.Date)) return "controles";
+        return $"couts/{r.Date.Year}";
+    }
+}

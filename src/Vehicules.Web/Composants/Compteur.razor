@@ -1,5 +1,5 @@
 @* Compteur kilométrique façon tableau de bord : un chiffre par case. *@
-<div class="compteur">
+<a class="compteur" href="@Lien">
     <div class="compteur-chiffres" role="img" aria-label="@(Km is null ? "Kilométrage inconnu" : $"{Format.Km(Km)}")">
         @foreach (var c in Texte)
         {
@@ -17,11 +17,13 @@
         <strong>km estimés aujourd'hui</strong>
         <span>@Detail</span>
     </div>
-</div>
+</a>
 
 @code {
     [Parameter] public int? Km { get; set; }
     [Parameter] public string? Detail { get; set; }
+    /// <summary>Où mène le compteur quand on le touche : les relevés de kilométrage.</summary>
+    [Parameter] public string Lien { get; set; } = "kilometrage";
 
     private string Texte => Km is null ? "------" : Km.Value.ToString("#,##0", System.Globalization.CultureInfo.InvariantCulture).Replace(',', ' ');
 }

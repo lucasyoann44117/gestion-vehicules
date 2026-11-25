@@ -1,0 +1,118 @@
+@page "/couts/{Annee:int}"
+@inherits PageBase
+
+@* Étape intermédiaire entre la vue des coûts et les factures : une année, ventilée par type et par pièce. *@
+
+@{
+    var toutes = Etat.Interventions.ToList();
+    var inter = toutes.Where(i => i.Date.Year == Annee).OrderByDescending(i => i.Date).ToList();
+    var releves = Etat.VehiculeId is { } vid ? Etat.Releves(vid) : (Etat.Vehicules.Count() == 1 ? Etat.Releves(Etat.Vehicules.First().Id) : []);
+    var annees = toutes.Select(i => i.Date.Year).Append(Etat.Aujourdhui.Year).Distinct().Order().ToList();
+    var bilan = Couts.ParAnnee(toutes, releves, Etat.Aujourdhui).FirstOrDefault(a => a.Annee == Annee);
+    var precedente = annees.LastOrDefault(a => a < Annee);
+    var suivante = annees.FirstOrDefault(a => a > Annee);
+    var parType = inter.GroupBy(i => i.Type).Select(g => (Type: g.Key, Total: g.Sum(i => i.TotalTtc), Nombre: g.Count())).OrderByDescending(x => x.Total).ToList();
+    var parPiece = Couts.ParOrgane(inter).OrderByDescending(x => x.Value).ToList();
+    var maxType = parType.Count == 0 ? 0 : parType[0].Total;
+    var maxPiece = parPiece.Count == 0 ? 0 : parPiece[0].Value;
+    var moyenne = annees.Count == 0 ? 0 : toutes.Sum(i => i.TotalTtc) / annees.Count;
+}
+
+<Tete Titre="@($"Coûts {Annee}")">
+    @if (precedente > 0)
+    {
+        <a class="btn" href="couts/@precedente">‹ @precedente</a>
+    }
+    <a class="btn" href="couts">Toutes les années</a>
+    @if (suivante > 0)
+    {
+        <a class="btn" href="couts/@suivante">@suivante ›</a>
+    }
+</Tete>
+
+<section class="stats">
+    <a class="stat carte mise-en-avant lien-carte" href="couts/@Annee#factures">
+        <span>Dépensé en @Annee</span>
+        <strong>@Euros(bilan?.TotalTtc ?? 0, 0)</strong>
+        <small>@(moyenne > 0 ? $"Moyenne de toutes les années : {Euros(moyenne, 0)}" : "") ›</small>
+    </a>
+    <a class="stat carte lien-carte" href="couts/@Annee#factures">
+        <span>Interventions</span>
+        <strong>@inter.Count</strong>
+        <small>@(inter.Count == 0 ? "Aucune" : $"La plus chère : {Euros(inter.Max(i => i.TotalTtc), 0)}") ›</small>
+    </a>
+    <a class="stat carte lien-carte" href="couts/@Annee#par-piece">
+        <span>Pièces / main-d'œuvre</span>
+        <strong>@Euros(bilan?.PiecesHt ?? 0, 0) / @Euros(bilan?.MainOeuvreHt ?? 0, 0)</strong>
+        <small>HT · par pièce ›</small>
+    </a>
+    <a class="stat carte lien-carte" href="kilometrage#annee-@Annee">
+        <span>Km parcourus</span>
+        <strong>@Km(bilan?.KmParcourus)</strong>
+        <small>@(bilan?.CoutParKm is { } c ? $"{Euros(c, 3)} par km" : "Pas assez de relevés") ›</small>
+    </a>
+</section>
+
+@if (inter.Count == 0)
+{
+    <p class="vide">Aucune dépense enregistrée en @Annee.</p>
+}
+else
+{
+    <section>
+        <h2>Par type d'intervention</h2>
+        <ul class="classement carte">
+            @foreach (var (type, total, nombre) in parType)
+            {
+                <li>
+                    <a href="historique?annee=@Annee&type=@type">@Libelle(type) <small>@nombre ×</small></a>
+                    <span class="jauge"><i style="width:@Pourcent(total, maxType)%"></i></span>
+                    <strong>@Euros(total, 0)</strong>
+                </li>
+            }
+        </ul>
+    </section>
+
+    @if (parPiece.Count > 0)
+    {
+        <section id="par-piece">
+            <h2>Par pièce</h2>
+            <ul class="classement carte">
+                @foreach (var (id, montant) in parPiece)
+                {
+                    <li>
+                        <a href="pieces/@id">@(Etat.Organe(id)?.Nom ?? id)</a>
+                        <span class="jauge"><i style="width:@Pourcent(montant, maxPiece)%"></i></span>
+                        <strong>@Euros(montant, 0)</strong>
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+
+    <section id="factures">
+        <h2>Les factures de @Annee</h2>
+        <ul class="liste dernieres">
+            @foreach (var i in inter)
+            {
+                <li>
+                    <a class="ligne-lien" href="historique?id=@i.Id">
+                        <div>
+                            <span class="type t-@i.Type.ToString().ToLowerInvariant()">@Libelle(i.Type)</span><br />
+                            <strong>@i.Titre</strong><br />
+                            <small>@Date(i.Date)@(i.Km is { } k ? $" · {Km(k)}" : "")@(i.Garage is null ? "" : $" · {i.Garage}")</small>
+                        </div>
+                        <div class="droite"><span class="montant">@Euros(i.TotalTtc, 0)</span><span class="chevron">›</span></div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </section>
+}
+
+@code {
+    [Parameter] public int Annee { get; set; }
+
+    private static string Pourcent(decimal v, decimal max) =>
+        (max <= 0 ? 0 : Math.Round(v / max * 100, 1)).ToString(System.Globalization.CultureInfo.InvariantCulture);
+}

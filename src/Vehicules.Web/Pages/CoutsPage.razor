@@ -22,14 +22,14 @@
 else
 {
     <section class="stats">
-        <a class="stat carte mise-en-avant lien-carte" href="historique"><span>Total depuis le @Date(debut)</span><strong>@Euros(total, 0)</strong><small>@inter.Count interventions ›</small></a>
-        <a class="stat carte lien-carte" href="historique?annee=@Etat.Aujourdhui.Year"><span>12 derniers mois</span><strong>@Euros(Couts.SurDouzeMois(inter, Etat.Aujourdhui), 0)</strong><small>Glissants · voir @Etat.Aujourdhui.Year ›</small></a>
-        <a class="stat carte lien-carte" href="#par-annee"><span>Pièces / main-d'œuvre</span><strong>@Euros(inter.Sum(i => i.TotalPiecesHt), 0) / @Euros(inter.Sum(i => i.TotalMainOeuvreHt), 0)</strong><small>Montants HT · détail par année ›</small></a>
-        <div class="stat carte">
+        <a class="stat carte mise-en-avant lien-carte" href="couts#par-annee"><span>Total depuis le @Date(debut)</span><strong>@Euros(total, 0)</strong><small>@inter.Count interventions · par année ›</small></a>
+        <a class="stat carte lien-carte" href="couts/@Etat.Aujourdhui.Year"><span>12 derniers mois</span><strong>@Euros(Couts.SurDouzeMois(inter, Etat.Aujourdhui), 0)</strong><small>Glissants · voir @Etat.Aujourdhui.Year ›</small></a>
+        <a class="stat carte lien-carte" href="couts#par-annee"><span>Pièces / main-d'œuvre</span><strong>@Euros(inter.Sum(i => i.TotalPiecesHt), 0) / @Euros(inter.Sum(i => i.TotalMainOeuvreHt), 0)</strong><small>Montants HT · détail par année ›</small></a>
+        <a class="stat carte lien-carte" href="kilometrage">
             <span>Coût au km</span>
             <strong>@(kmTotal is > 0 ? Euros(total / kmTotal.Value, 3) : "–")</strong>
-            <small>@(Etat.VehiculeId is null ? "Choisir un véhicule" : kmTotal is > 0 ? $"Sur {Km(kmTotal)}, hors carburant et assurance" : "Pas assez de relevés")</small>
-        </div>
+            <small>@(Etat.VehiculeId is null ? "Choisir un véhicule" : kmTotal is > 0 ? $"Sur {Km(kmTotal)}, hors carburant et assurance" : "Pas assez de relevés") ›</small>
+        </a>
     </section>
 
     <section>
@@ -44,7 +44,7 @@ else
         <div class="barres" role="img" aria-label="Dépenses par année">
             @foreach (var a in annees)
             {
-                <a class="barre-annee" href="historique?annee=@a.Annee" style="--p:@Pourcent(a.TotalTtc, max)%" title="Voir les interventions de @a.Annee">
+                <a class="barre-annee" href="couts/@a.Annee" style="--p:@Pourcent(a.TotalTtc, max)%" title="Voir les interventions de @a.Annee">
                     <span class="valeur">@Euros(a.TotalTtc, 0)</span>
                     <div class="pile">
                         @foreach (var t in types.Where(a.ParType.ContainsKey))
@@ -64,7 +64,7 @@ else
             <tbody>
                 @foreach (var a in annees.AsEnumerable().Reverse())
                 {
-                    <tr @onclick='() => Nav.NavigateTo($"historique?annee={a.Annee}")'>
+                    <tr @onclick='() => Nav.NavigateTo($"couts/{a.Annee}")'>
                         <td data-label="Année"><strong>@a.Annee</strong></td>
                         <td data-label="TTC" class="nb">@Euros(a.TotalTtc)</td>
                         <td data-label="Interv." class="nb">@a.NombreInterventions</td>

@@ -49,12 +49,12 @@
     <Compteur Km="km" Detail="@(dernier is null ? "Aucun relevé" : $"Dernier relevé {Format.Km(dernier.Km)} le {Date(dernier.Date)}")" />
 
     <div class="hero-stats">
-        <a class="tuile" href="couts#par-annee">
+        <a class="tuile" href="kilometrage#par-annee">
             <span>Rythme</span>
             <strong>@(rythme is null ? "–" : Nombre(rythme))<em>km/an</em></strong>
-            <small>Sur 2 ans de relevés · km par année ›</small>
+            <small>Sur 2 ans de relevés ›</small>
         </a>
-        <a class="tuile" href="historique?annee=@Etat.Aujourdhui.Year">
+        <a class="tuile" href="couts/@Etat.Aujourdhui.Year">
             <span>Dépenses @Etat.Aujourdhui.Year</span>
             <strong>@Euros(annee, 0)</strong>
             <small>12 mois glissants : @Euros(douzeMois, 0)</small>
@@ -64,7 +64,7 @@
             <strong>@Euros(total, 0)</strong>
             <small>@(debut is { } d ? $"Depuis {d:MMMM yyyy}" : "Aucune dépense")</small>
         </a>
-        <a class="tuile" href="couts">
+        <a class="tuile" href="kilometrage">
             <span>Coût au km</span>
             <strong>@(kmSuivis is > 0 ? Euros(total / kmSuivis.Value, 2) : "–")</strong>
             <small>@(kmSuivis is > 0 ? $"Sur {Format.Km(kmSuivis)}, hors carburant" : "Pas assez de relevés")</small>

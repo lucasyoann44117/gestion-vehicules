@@ -1178,3 +1178,12 @@ a.equipement { color: inherit; text-decoration: none; }
 .intervention summary small a, .intervention summary a.type { color: inherit; text-decoration: none; }
 .intervention summary small a:hover { color: var(--atlantis); text-decoration: underline; }
 .classement li > a:first-child { color: inherit; }
+
+/* Compteur et titres d'année cliquables */
+a.compteur { color: inherit; text-decoration: none; }
+a.compteur:hover .compteur-libelle strong { text-decoration: underline; }
+a.lien-titre { color: inherit; text-decoration: none; }
+a.lien-titre:hover { color: var(--atlantis); }
+
+.classement.carte { padding: 16px 18px; }
+.classement li > a small { color: var(--doux); font-weight: 600; }

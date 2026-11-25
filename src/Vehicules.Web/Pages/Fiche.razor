@@ -41,7 +41,7 @@ else
             <div class="tuile"><span>Mise en circulation</span><strong>@(v.MiseEnCirculation?.Year.ToString() ?? "–")</strong><small>@Date(v.MiseEnCirculation)</small></div>
             <div class="tuile"><span>En France depuis</span><strong>@(id?.PremiereImmatriculationFrance?.Year.ToString() ?? "–")</strong><small>@Date(id?.PremiereImmatriculationFrance)</small></div>
             <div class="tuile"><span>Âge</span><strong>@(v.Age(Etat.Aujourdhui) is { } a ? $"{a} ans" : "–")</strong><small>Millésime @(id?.Millesime)</small></div>
-            <a class="tuile" href=""><span>Compteur</span><strong>@(km is { } k ? Nombre(k / 1000.0, 0) + "k" : "–")<em>km</em></strong><small>Estimé aujourd'hui · bilan ›</small></a>
+            <a class="tuile" href="kilometrage"><span>Compteur</span><strong>@(km is { } k ? Nombre(k / 1000.0, 0) + "k" : "–")<em>km</em></strong><small>Estimé aujourd'hui · relevés ›</small></a>
         </div>
     </article>
 

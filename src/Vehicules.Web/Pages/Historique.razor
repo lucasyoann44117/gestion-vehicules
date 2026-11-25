@@ -45,7 +45,7 @@
 @foreach (var annee in liste.GroupBy(i => i.Date.Year))
 {
     <section class="annee">
-        <h2>@annee.Key <small>@Euros(annee.Sum(i => i.TotalTtc), 0)</small></h2>
+        <h2><a class="lien-titre" href="couts/@annee.Key">@annee.Key <small>@Euros(annee.Sum(i => i.TotalTtc), 0) ›</small></a></h2>
         <ol class="frise">
             @foreach (var i in annee)
             {
