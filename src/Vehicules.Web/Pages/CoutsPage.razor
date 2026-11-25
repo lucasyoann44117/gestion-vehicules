@@ -1,5 +1,6 @@
 @page "/couts"
 @inherits PageBase
+@inject NavigationManager Nav
 
 <Tete Titre="Coûts" />
 
@@ -21,9 +22,9 @@
 else
 {
     <section class="stats">
-        <div class="stat carte mise-en-avant"><span>Total depuis le @Date(debut)</span><strong>@Euros(total, 0)</strong><small>@inter.Count interventions</small></div>
-        <div class="stat carte"><span>12 derniers mois</span><strong>@Euros(Couts.SurDouzeMois(inter, Etat.Aujourdhui), 0)</strong><small>Glissants</small></div>
-        <div class="stat carte"><span>Pièces / main-d'œuvre</span><strong>@Euros(inter.Sum(i => i.TotalPiecesHt), 0) / @Euros(inter.Sum(i => i.TotalMainOeuvreHt), 0)</strong><small>Montants HT</small></div>
+        <a class="stat carte mise-en-avant lien-carte" href="historique"><span>Total depuis le @Date(debut)</span><strong>@Euros(total, 0)</strong><small>@inter.Count interventions ›</small></a>
+        <a class="stat carte lien-carte" href="historique?annee=@Etat.Aujourdhui.Year"><span>12 derniers mois</span><strong>@Euros(Couts.SurDouzeMois(inter, Etat.Aujourdhui), 0)</strong><small>Glissants · voir @Etat.Aujourdhui.Year ›</small></a>
+        <a class="stat carte lien-carte" href="#par-annee"><span>Pièces / main-d'œuvre</span><strong>@Euros(inter.Sum(i => i.TotalPiecesHt), 0) / @Euros(inter.Sum(i => i.TotalMainOeuvreHt), 0)</strong><small>Montants HT · détail par année ›</small></a>
         <div class="stat carte">
             <span>Coût au km</span>
             <strong>@(kmTotal is > 0 ? Euros(total / kmTotal.Value, 3) : "–")</strong>
@@ -37,40 +38,41 @@ else
         <div class="legende">
             @foreach (var t in types)
             {
-                <span><i class="t-@t.ToString().ToLowerInvariant()"></i>@Libelle(t)</span>
+                <a href="historique?type=@t"><i class="t-@t.ToString().ToLowerInvariant()"></i>@Libelle(t)</a>
             }
         </div>
         <div class="barres" role="img" aria-label="Dépenses par année">
             @foreach (var a in annees)
             {
-                <div class="barre-annee">
+                <a class="barre-annee" href="historique?annee=@a.Annee" style="--p:@Pourcent(a.TotalTtc, max)%" title="Voir les interventions de @a.Annee">
                     <span class="valeur">@Euros(a.TotalTtc, 0)</span>
-                    <div class="pile" style="height:@Pourcent(a.TotalTtc, max)%">
+                    <div class="pile">
                         @foreach (var t in types.Where(a.ParType.ContainsKey))
                         {
                             <i class="t-@t.ToString().ToLowerInvariant()" style="flex:@a.ParType[t].ToString(System.Globalization.CultureInfo.InvariantCulture)" title="@Libelle(t) : @Euros(a.ParType[t])"></i>
                         }
                     </div>
                     <span class="an">@a.Annee</span>
-                </div>
+                </a>
             }
         </div>
         </div>
-        <table class="tableau">
+        <table class="tableau cliquable" id="par-annee">
             <thead>
-                <tr><th>Année</th><th class="nb">TTC</th><th class="nb">Interventions</th><th class="nb">Pièces HT</th><th class="nb">Main-d'œuvre HT</th><th class="nb">Km parcourus</th><th class="nb">€ / km</th></tr>
+                <tr><th>Année</th><th class="nb">TTC</th><th class="nb">Interventions</th><th class="nb">Pièces HT</th><th class="nb">Main-d'œuvre HT</th><th class="nb">Km parcourus</th><th class="nb">€ / km</th><th></th></tr>
             </thead>
             <tbody>
                 @foreach (var a in annees.AsEnumerable().Reverse())
                 {
-                    <tr>
+                    <tr @onclick='() => Nav.NavigateTo($"historique?annee={a.Annee}")'>
                         <td data-label="Année"><strong>@a.Annee</strong></td>
                         <td data-label="TTC" class="nb">@Euros(a.TotalTtc)</td>
-                        <td data-label="Interventions" class="nb">@a.NombreInterventions</td>
+                        <td data-label="Interv." class="nb">@a.NombreInterventions</td>
                         <td data-label="Pièces HT" class="nb">@Euros(a.PiecesHt, 0)</td>
-                        <td data-label="Main-d'œuvre HT" class="nb">@Euros(a.MainOeuvreHt, 0)</td>
+                        <td data-label="M.-O. HT" class="nb">@Euros(a.MainOeuvreHt, 0)</td>
                         <td data-label="Km" class="nb">@Km(a.KmParcourus)</td>
                         <td data-label="€ / km" class="nb">@(a.CoutParKm is { } c ? Euros(c, 3) : "–")</td>
+                        <td class="chevron" aria-hidden="true">›</td>
                     </tr>
                 }
             </tbody>
@@ -105,8 +107,10 @@ else
             @foreach (var i in inter.OrderByDescending(i => i.TotalTtc).Take(5))
             {
                 <li>
-                    <div><strong>@i.Titre</strong><br /><small>@Date(i.Date) · @i.Garage</small></div>
-                    <div class="droite"><strong>@Euros(i.TotalTtc)</strong></div>
+                    <a class="ligne-lien" href="historique?id=@i.Id">
+                        <div><strong>@i.Titre</strong><br /><small>@Date(i.Date) · @i.Garage</small></div>
+                        <div class="droite"><strong>@Euros(i.TotalTtc)</strong></div>
+                    </a>
                 </li>
             }
         </ul>

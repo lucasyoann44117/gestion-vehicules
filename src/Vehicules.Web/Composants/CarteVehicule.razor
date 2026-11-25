@@ -54,21 +54,21 @@
             <strong>@(rythme is null ? "–" : Nombre(rythme))<em>km/an</em></strong>
             <small>Sur 2 ans de relevés</small>
         </div>
-        <div class="tuile">
+        <a class="tuile" href="historique?annee=@Etat.Aujourdhui.Year">
             <span>Dépenses @Etat.Aujourdhui.Year</span>
             <strong>@Euros(annee, 0)</strong>
             <small>12 mois glissants : @Euros(douzeMois, 0)</small>
-        </div>
-        <div class="tuile">
+        </a>
+        <a class="tuile" href="couts">
             <span>Total suivi</span>
             <strong>@Euros(total, 0)</strong>
             <small>@(debut is { } d ? $"Depuis {d:MMMM yyyy}" : "Aucune dépense")</small>
-        </div>
-        <div class="tuile">
+        </a>
+        <a class="tuile" href="couts">
             <span>Coût au km</span>
             <strong>@(kmSuivis is > 0 ? Euros(total / kmSuivis.Value, 2) : "–")</strong>
             <small>@(kmSuivis is > 0 ? $"Sur {Format.Km(kmSuivis)}, hors carburant" : "Pas assez de relevés")</small>
-        </div>
+        </a>
     </div>
 
     @if (Vehicule.ValeurEstimee is { } valeur && valeur > 0)

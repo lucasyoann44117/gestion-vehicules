@@ -24,7 +24,7 @@ l'application calcule l'usure en mm pour 1 000 km et le kilométrage restant ava
                 @foreach (var e in etats)
                 {
                     var classe = e.DerniereMm <= UsurePneus.SeuilLegalMm ? "mal" : e.DerniereMm <= UsurePneus.SeuilConseilleMm ? "att" : "ok";
-                    <article class="carte pneu @classe">
+                    <a class="carte pneu lien-carte @classe" href="pieces/@(e.Position is PositionPneu.AvantGauche or PositionPneu.AvantDroit ? "pneus-av" : "pneus-ar")">
                         <strong>@Libelle(e.Position)</strong>
                         <span class="mm">@e.DerniereMm.ToString("0.0") mm</span>
                         <small>Mesuré le @Date(e.DerniereDate) à @Km(e.DernierKm)</small>
@@ -33,7 +33,7 @@ l'application calcule l'usure en mm pour 1 000 km et le kilométrage restant ava
                         {
                             <small>Encore ≈ @Km(kc) avant 3 mm</small>
                         }
-                    </article>
+                    </a>
                 }
             </div>
         }

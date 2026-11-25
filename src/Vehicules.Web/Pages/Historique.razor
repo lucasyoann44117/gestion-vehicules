@@ -15,6 +15,13 @@
             <option value="@t">@Libelle(t)</option>
         }
     </select>
+    <select @bind="annee" aria-label="Année">
+        <option value="">Toutes les années</option>
+        @foreach (var a in Etat.Interventions.Select(i => i.Date.Year).Distinct().OrderDescending())
+        {
+            <option value="@a">@a</option>
+        }
+    </select>
     <select @bind="organe" aria-label="Pièce">
         <option value="">Toutes les pièces</option>
         @foreach (var o in Etat.Donnees.Organes.Where(o => Etat.VehiculeId is null || o.VehiculeId == Etat.VehiculeId).OrderBy(o => o.Nom))
@@ -27,7 +34,13 @@
 @{
     var liste = Filtrer().OrderByDescending(i => i.Date).ToList();
 }
-<p class="resume">@liste.Count intervention@(liste.Count > 1 ? "s" : "") · @Euros(liste.Sum(i => i.TotalTtc))</p>
+<p class="resume">
+    @liste.Count intervention@(liste.Count > 1 ? "s" : "") · @Euros(liste.Sum(i => i.TotalTtc))
+    @if (annee != "" || type != "" || organe != "" || recherche != "")
+    {
+        <button class="lien-effacer" @onclick="Effacer">Tout afficher ✕</button>
+    }
+</p>
 
 @foreach (var annee in liste.GroupBy(i => i.Date.Year))
 {
@@ -37,8 +50,8 @@
             @foreach (var i in annee)
             {
                 var v = Etat.Vehicule(i.VehiculeId);
-                <li style="--accent:@(v?.Couleur ?? "#888")">
-                    <details class="carte intervention" open="@(liste.Count <= 3)">
+                <li style="--accent:@(v?.Couleur ?? "#888")" id="int-@i.Id">
+                    <details class="carte intervention" open="@(liste.Count <= 3 || i.Id == ouverte)">
                         <summary>
                             <div class="int-titre">
                                 <span class="type t-@i.Type.ToString().ToLowerInvariant()">@Libelle(i.Type)</span>
@@ -108,21 +121,49 @@
 }
 
 @code {
+    // Liens venus des autres écrans : historique?annee=2024, ?type=Reparation, ?organe=turbo, ?id=… (ouvre une facture).
     [SupplyParameterFromQuery(Name = "organe")] public string? OrganeQuery { get; set; }
+    [SupplyParameterFromQuery(Name = "annee")] public int? AnneeQuery { get; set; }
+    [SupplyParameterFromQuery(Name = "type")] public string? TypeQuery { get; set; }
+    [SupplyParameterFromQuery(Name = "id")] public string? IdQuery { get; set; }
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
 
     private string recherche = "";
     private string type = "";
     private string organe = "";
+    private string annee = "";
+    private string? ouverte;
+    private bool defiler;
 
     protected override void OnParametersSet()
     {
-        if (OrganeQuery is not null) organe = OrganeQuery;
+        organe = OrganeQuery ?? "";
+        annee = AnneeQuery?.ToString() ?? "";
+        type = TypeQuery ?? "";
+        ouverte = IdQuery;
+        defiler = IdQuery is not null;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool premier)
+    {
+        if (!defiler || ouverte is null) return;
+        defiler = false;
+        await Task.Delay(60);
+        await JS.InvokeVoidAsync("eval", $"document.getElementById('int-{ouverte}')?.scrollIntoView({{block:'center', behavior:'smooth'}})");
+    }
+
+    private void Effacer()
+    {
+        recherche = type = organe = annee = "";
+        Nav.NavigateTo("historique");
     }
 
     private IEnumerable<Intervention> Filtrer()
     {
         var q = Etat.Interventions;
         if (Enum.TryParse<TypeIntervention>(type, out var t)) q = q.Where(i => i.Type == t);
+        if (int.TryParse(annee, out var an)) q = q.Where(i => i.Date.Year == an);
         if (organe != "") q = q.Where(i => i.Lignes.Any(l => l.OrganeId == organe));
         if (!string.IsNullOrWhiteSpace(recherche))
         {

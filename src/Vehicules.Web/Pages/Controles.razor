@@ -46,7 +46,7 @@
                                 }
                                 @if (d.InterventionId is { } iid && Etat.Donnees.Interventions.FirstOrDefault(i => i.Id == iid) is { } inter)
                                 {
-                                    <span> · réglé le @Date(inter.Date)</span>
+                                    <span> · <a href="historique?id=@inter.Id">réglé le @Date(inter.Date)</a></span>
                                 }
                             </small>
                         </div>
@@ -94,6 +94,10 @@
             {
                 <li class="att">
                     <div><strong>@g.First().d.Libelle</strong><br /><small>Relevé aux contrôles du @string.Join(", ", g.Select(x => Date(x.c.Date)).Distinct())</small></div>
+                    @if (Etat.Organe(g.First().d.OrganeId) is { } og)
+                    {
+                        <a class="btn petit" href="pieces/@og.Id">@og.Nom ›</a>
+                    }
                 </li>
             }
         </ul>
@@ -116,9 +120,13 @@
                         <strong>@t.Libelle</strong>
                         <small>
                             Signalé le @Date(t.DateSignalement) · @t.Source
+                            @if (Etat.Organe(t.OrganeId) is { } ot)
+                            {
+                                <span> · <a href="pieces/@ot.Id">@ot.Nom</a></span>
+                            }
                             @if (t.InterventionId is { } iid && Etat.Donnees.Interventions.FirstOrDefault(i => i.Id == iid) is { } inter)
                             {
-                                <span> · fait le @Date(inter.Date)</span>
+                                <span> · <a href="historique?id=@inter.Id">fait le @Date(inter.Date)</a></span>
                             }
                         </small>
                     </div>

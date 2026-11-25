@@ -46,7 +46,8 @@
     <ul class="echeances">
         @foreach (var e in aVenir)
         {
-            <li class="echeance @Classe(e.Urgence)">
+            <li>
+            <a class="echeance @Classe(e.Urgence)" href="@Lien(e)">
                 <span class="ech-icone"><svg aria-hidden="true"><use href="#@Icone(e.Type)" /></svg></span>
                 <div class="ech-haut">
                     <strong>@e.Libelle</strong>
@@ -62,6 +63,7 @@
                     <span>@e.Detail@(Etat.VehiculeId is null ? $" · {Etat.Vehicule(e.VehiculeId)?.Nom}" : "")</span>
                     <span>@Prochain(e)</span>
                 </div>
+            </a>
             </li>
         }
     </ul>
@@ -73,7 +75,7 @@
             <ul class="liste">
                 @foreach (var e in defauts)
                 {
-                    <li><div>@e.Libelle<br /><small>@e.Detail</small></div></li>
+                    <li><a class="ligne-lien" href="@Lien(e)"><div>@e.Libelle<br /><small>@e.Detail</small></div><span class="chevron">›</span></a></li>
                 }
             </ul>
             <a href="controles">Gérer le suivi des défauts</a>
@@ -90,12 +92,14 @@
         @foreach (var i in Etat.Interventions.OrderByDescending(i => i.Date).Take(4))
         {
             <li>
+                <a class="ligne-lien" href="historique?id=@i.Id">
                 <div>
                     <span class="type t-@i.Type.ToString().ToLowerInvariant()">@Libelle(i.Type)</span><br />
                     <strong>@i.Titre</strong><br />
                     <small>@Date(i.Date)@(i.Km is { } k ? $" · {Km(k)}" : "") · @i.Garage</small>
                 </div>
                 <div class="droite"><span class="montant">@Euros(i.TotalTtc, 0)</span></div>
+                </a>
             </li>
         }
     </ul>
@@ -116,6 +120,10 @@
         TypeEcheance.TravailAPrevoir => "i-alerte",
         _ => "i-pieces",
     };
+
+    /// <summary>Où mène une échéance : la fiche de la pièce, ou les contrôles techniques.</summary>
+    private static string Lien(Echeance e) =>
+        e.OrganeId is { } o ? $"pieces/{o}" : "controles";
 
     private static string Largeur(double avancement) =>
         Math.Clamp(avancement * 100, 2, 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
