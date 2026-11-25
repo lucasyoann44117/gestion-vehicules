@@ -1187,3 +1187,28 @@ a.lien-titre:hover { color: var(--atlantis); }
 
 .classement.carte { padding: 16px 18px; }
 .classement li > a small { color: var(--doux); font-weight: 600; }
+
+/* Accès direct à la 3D, aux planches et au diagnostic depuis le Bilan */
+.explorer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.explorer-tuile {
+  display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: var(--r);
+  background: var(--surface); border: 1px solid var(--trait); box-shadow: var(--ombre); color: var(--encre); text-decoration: none;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+}
+.explorer-tuile:first-child { background: var(--degrade-principal); color: #fff; border-color: transparent; }
+.explorer-tuile:first-child small { color: rgb(255 255 255 / .8); }
+.explorer-tuile:hover { transform: translateY(-2px); box-shadow: var(--ombre-forte); text-decoration: none; }
+.explorer-tuile svg { flex: none; width: 30px; height: 30px; }
+.explorer-tuile span { display: flex; flex-direction: column; gap: 2px; }
+.explorer-tuile small { color: var(--doux); font-size: 13px; }
+.compte .version { display: block; margin-top: 4px; opacity: .55; font-size: 11px; }
+.version-plus { text-align: center; margin-top: 18px; }
+a.puce-3d { text-decoration: none; display: inline-flex; align-items: center; }
+@media (max-width: 760px) {
+  .explorer { grid-template-columns: 1fr; gap: 8px; }
+  .explorer-tuile { padding: 12px 14px; }
+}
+
+/* Les tuiles du véhicule montrent qu'on peut les toucher */
+a.tuile { position: relative; color: inherit; }
+a.tuile::after { content: '›'; position: absolute; right: 12px; top: 8px; font-size: 1.3rem; font-weight: 700; color: rgb(255 255 255 / .55); }

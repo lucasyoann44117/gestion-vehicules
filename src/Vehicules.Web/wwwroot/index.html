@@ -111,7 +111,24 @@
         };
     </script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });</script>
+    <script>
+        // Mise à jour automatique : dès qu'une nouvelle version est publiée, elle s'installe et la page se recharge une fois.
+        (function () {
+            if (!('serviceWorker' in navigator)) return;
+            const avaitUnControleur = !!navigator.serviceWorker.controller;
+            let recharge = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!avaitUnControleur || recharge) return;
+                recharge = true;
+                location.reload();
+            });
+            navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' }).then(reg => {
+                const verifier = () => reg.update().catch(() => { });
+                document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') verifier(); });
+                setInterval(verifier, 30 * 60 * 1000);
+            });
+        })();
+    </script>
 </body>
 
 </html>

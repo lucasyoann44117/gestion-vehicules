@@ -49,9 +49,11 @@
                     <button class="puce-3d @(vueActive == cle ? "active" : "")" @onclick="() => Vue(cle)">@nom</button>
                 }
             </span>
-            <label class="eclat-3d">Éclaté <input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" /></label>
+            <button class="puce-3d @(eclat > 0 ? "active" : "")" @onclick="BasculerEclatAsync">@(eclat > 0 ? "Remonter" : "Éclater")</button>
+            <label class="eclat-3d"><input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" aria-label="Éclaté" /></label>
             <button class="puce-3d @(etats ? "active" : "")" @onclick="BasculerEtats">Couleurs d'état</button>
             <button class="puce-3d @(fantome ? "active" : "")" @onclick="BasculerCarrosserie">Caisse transparente</button>
+            <a class="puce-3d" href="moteur/planches">Planches moteur</a>
         </div>
     </header>
 
@@ -130,6 +132,10 @@
         else if (systeme is not null)
         {
             <p class="note p3-aide">@piecesSysteme.Count pièces. Survole un nom pour la repérer, touche-le pour l'ouvrir.</p>
+            @if (systeme == "moteur")
+            {
+                <a class="btn principal petit" href="moteur/planches">Planches détaillées du moteur (façon ETKA)</a>
+            }
             <ul class="p3-liste">
                 @foreach (var p in piecesSysteme)
                 {
@@ -287,6 +293,12 @@
         vueActive = cle;
         piece = null;
         if (module is not null) await module.InvokeVoidAsync("vue", cle);
+    }
+
+    private async Task BasculerEclatAsync()
+    {
+        eclat = eclat > 0 ? 0 : 100;
+        if (module is not null) await module.InvokeVoidAsync("eclater", eclat / 100.0);
     }
 
     private async Task Eclater(ChangeEventArgs e)

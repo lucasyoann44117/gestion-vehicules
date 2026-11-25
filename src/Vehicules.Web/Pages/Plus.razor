@@ -4,16 +4,18 @@
 <Tete Titre="Plus" />
 
 <nav class="menu-plus">
+    <a class="carte" href="diagnostic"><svg aria-hidden="true"><use href="#i-diag" /></svg><span><strong>Diagnostic de panne</strong><small>Décris le symptôme (à la voix), codes défaut VCDS</small></span></a>
     @foreach (var v in Etat.Donnees.Vehicules)
     {
         <a class="carte" href="vehicule/@v.Id/fiche"><svg aria-hidden="true"><use href="#i-ct" /></svg><span><strong>Fiche d'identité du @v.Nom</strong><small>Numéro de série, carte grise, équipements</small></span></a>
     }
     <a class="carte" href="moteur"><svg aria-hidden="true"><use href="#i-pieces" /></svg><span><strong>Sous le capot</strong><small>Chaque pièce du moteur : à quoi elle sert, prix, dernier changement</small></span></a>
     <a class="carte" href="moteur/planches"><svg aria-hidden="true"><use href="#i-3d" /></svg><span><strong>Planches moteur en 3D</strong><small>Le moteur éclaté groupe par groupe, façon ETKA</small></span></a>
-                <a class="carte" href="3d"><svg aria-hidden="true"><use href="#i-3d" /></svg><span><strong>Vue 3D du T4</strong><small>Le camion en éclaté, pièce par pièce</small></span></a>
+    <a class="carte" href="3d"><svg aria-hidden="true"><use href="#i-3d" /></svg><span><strong>Vue 3D du T4</strong><small>Le camion en éclaté, pièce par pièce</small></span></a>
     <a class="carte" href="couts"><svg aria-hidden="true"><use href="#i-couts" /></svg><span><strong>Coûts</strong><small>Dépenses par année, coût au km</small></span></a>
     <a class="carte" href="controles"><svg aria-hidden="true"><use href="#i-ct" /></svg><span><strong>Contrôles techniques</strong><small>PV, défauts à surveiller, échéance</small></span></a>
     <a class="carte" href="pneus"><svg aria-hidden="true"><use href="#i-pneu" /></svg><span><strong>Pneus et freins</strong><small>Mesures d'usure</small></span></a>
     <a class="carte" href="intervention/nouvelle"><svg aria-hidden="true"><use href="#i-historique" /></svg><span><strong>Nouvelle intervention</strong><small>Saisir une facture</small></span></a>
     <a class="carte" href="reglages"><svg aria-hidden="true"><use href="#i-reglages" /></svg><span><strong>Réglages</strong><small>Véhicules, intervalles, sauvegarde, déconnexion</small></span></a>
 </nav>
+<p class="note version-plus">Version @VersionAppli.Courte · elle se met à jour toute seule à l'ouverture.</p>

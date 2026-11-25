@@ -26,6 +26,21 @@
     }
 </section>
 
+<nav class="explorer" aria-label="Explorer le véhicule">
+    <a class="explorer-tuile" href="3d">
+        <svg aria-hidden="true"><use href="#i-3d" /></svg>
+        <span><strong>Le T4 éclaté en 3D</strong><small>Ouvre une zone, puis touche une pièce</small></span>
+    </a>
+    <a class="explorer-tuile" href="moteur/planches">
+        <svg aria-hidden="true"><use href="#i-pieces" /></svg>
+        <span><strong>Le moteur pièce par pièce</strong><small>Planches éclatées façon ETKA</small></span>
+    </a>
+    <a class="explorer-tuile" href="diagnostic">
+        <svg aria-hidden="true"><use href="#i-diag" /></svg>
+        <span><strong>Une panne ?</strong><small>Décris le symptôme, même à la voix</small></span>
+    </a>
+</nav>
+
 @{
     var echeances = Echeances.Calculer(Etat.Donnees, Etat.Aujourdhui)
         .Where(e => Etat.VehiculeId is null || e.VehiculeId == Etat.VehiculeId)

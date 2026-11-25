@@ -17,6 +17,8 @@ const manifestUrlList = self.assetsManifest.assets.map(asset => new URL(asset.ur
 
 async function onInstall(event) {
     console.info('Service worker: Install');
+    // Nouvelle version : elle remplace l'ancienne tout de suite, sans attendre que l'appli soit fermée partout.
+    self.skipWaiting();
 
     // Fetch and cache all matching items from the assets manifest
     const assetsRequests = self.assetsManifest.assets
@@ -34,6 +36,8 @@ async function onActivate(event) {
     await Promise.all(cacheKeys
         .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
         .map(key => caches.delete(key)));
+    // Prend la main sur les pages déjà ouvertes (elles se rechargent, voir index.html).
+    await self.clients.claim();
 }
 
 async function onFetch(event) {
