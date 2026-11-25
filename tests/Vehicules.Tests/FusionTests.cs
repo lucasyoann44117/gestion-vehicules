@@ -17,7 +17,7 @@ public class FusionTests
         };
         var local = new Donnees
         {
-            Vehicules = [new Vehicule { Id = "v", Nom = "T4", ValeurEstimee = 3000 }],
+            Vehicules = [new Vehicule { Id = "v", Nom = "T4", ValeurEstimee = 3000, Photos = [new PhotoVehicule { Chemin = "v/a.jpg", Couverture = true }] }],
             Organes = [new Organe { Id = "vidange", VehiculeId = "v", IntervalleKm = 10000 }],
             Interventions = [new Intervention { Id = "a" }, new Intervention { Id = "saisie" }],
             Releves = [new ReleveKm { VehiculeId = "v", Date = new DateOnly(2026, 11, 1), Km = 480000 }],
@@ -29,6 +29,7 @@ public class FusionTests
         Assert.Equal(["a", "b", "saisie"], r.Interventions.Select(i => i.Id).Order());
         Assert.Single(r.Releves);
         Assert.Equal(3000m, r.Vehicules[0].ValeurEstimee);
+        Assert.Equal("v/a.jpg", Assert.Single(r.Vehicules[0].Photos).Chemin);
         Assert.Equal(10000, r.Organes[0].IntervalleKm);
         Assert.Equal(StatutSuivi.Fait, r.Travaux[0].Statut);
     }

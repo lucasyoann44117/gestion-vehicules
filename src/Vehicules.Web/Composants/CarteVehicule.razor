@@ -1,4 +1,5 @@
 @inject Etat Etat
+@inject ServicePhotos Photos
 
 @{
     var releves = Etat.Releves(Vehicule.Id);
@@ -14,8 +15,15 @@
     var age = Vehicule.Age(Etat.Aujourdhui);
 }
 
-<article class="hero" style="--accent:@Vehicule.Couleur">
-    <svg class="hero-silhouette" aria-hidden="true"><use href="#s-@Vehicule.Silhouette" /></svg>
+<article class="hero @(photo is null ? "" : "avec-photo")" style="--accent:@Vehicule.Couleur">
+    @if (photo is not null)
+    {
+        <img class="hero-photo" src="@photo" alt="" style="object-position:50% @(Vehicule.PhotoCouverture?.CadrageY ?? 60)%" />
+    }
+    else
+    {
+        <svg class="hero-silhouette" aria-hidden="true"><use href="#s-@Vehicule.Silhouette" /></svg>
+    }
     <header class="hero-tete">
         <p class="sur-titre">@Vehicule.Marque · @Vehicule.Modele</p>
         <h2 class="hero-nom">@Vehicule.Nom</h2>
@@ -25,6 +33,13 @@
         @if (Vehicule.ImmatriculationActuelle is { } immat)
         {
             <span class="plaque"><span>@immat</span></span>
+        }
+        @if (Photos.Disponible)
+        {
+            <a class="bouton-photos" href="vehicule/@Vehicule.Id/photos" aria-label="Photos du @Vehicule.Nom">
+                <svg aria-hidden="true"><use href="#i-photo" /></svg>
+                <span>@(Vehicule.Photos.Count == 0 ? "Ajouter une photo" : $"{Vehicule.Photos.Count} photo{(Vehicule.Photos.Count > 1 ? "s" : "")}")</span>
+            </a>
         }
     </div>
 
@@ -65,4 +80,9 @@
 
 @code {
     [Parameter, EditorRequired] public Vehicule Vehicule { get; set; } = default!;
+
+    private string? photo;
+
+    protected override async Task OnParametersSetAsync() =>
+        photo = await Photos.LienAsync(Vehicule.PhotoCouverture);
 }

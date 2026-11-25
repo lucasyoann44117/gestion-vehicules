@@ -95,6 +95,23 @@ public sealed class ClientSupabase(OptionsSupabase options, IJSRuntime js)
         return reponse;
     }
 
+    /// <summary>Envoi d'un fichier (stockage), avec remplacement s'il existe déjà.</summary>
+    public async Task EnvoyerFichierAsync(string chemin, byte[] contenu, string type)
+    {
+        var requete = Requete(HttpMethod.Post, chemin, null, await JetonAsync());
+        requete.Content = new ByteArrayContent(contenu);
+        requete.Content.Headers.ContentType = new(type);
+        requete.Headers.Add("x-upsert", "true");
+        var reponse = await http.SendAsync(requete);
+        if (reponse.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.NotFound or HttpStatusCode.BadRequest)
+            throw new ErreurSupabase("Envoi refusé par Supabase : le stockage des photos n'est peut-être pas encore créé (supabase/photos.sql).");
+        if (!reponse.IsSuccessStatusCode)
+            throw new ErreurSupabase($"Envoi de la photo impossible ({(int)reponse.StatusCode}).");
+    }
+
+    /// <summary>Adresse absolue construite à partir d'un chemin relatif renvoyé par l'API.</summary>
+    public string Absolue(string chemin) => $"{options.Url!.TrimEnd('/')}/{chemin.TrimStart('/')}";
+
     private async Task<string> JetonAsync()
     {
         if (session is null) throw new ErreurSupabase("Non connecté.");

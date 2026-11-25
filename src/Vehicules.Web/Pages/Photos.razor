@@ -1,0 +1,157 @@
+@page "/vehicule/{Id}/photos"
+@inherits PageBase
+@inject ServicePhotos Photos
+@inject IJSRuntime JS
+
+@if (Etat.Vehicule(Id) is not { } v)
+{
+    <Tete Titre="Véhicule introuvable" />
+}
+else
+{
+    <Tete Titre="@($"Photos du {v.Nom}")">
+        <a class="btn" href="">Retour au bilan</a>
+    </Tete>
+
+    @if (!Photos.Disponible)
+    {
+        <p class="vide">Les photos sont rangées dans Supabase : elles ne sont pas disponibles dans la version locale de l'application.</p>
+    }
+    else
+    {
+        <section class="carte ajout-photos">
+            <div>
+                <strong>Ajouter des photos</strong>
+                <p class="note">Elles sont réduites à 1 600 px avant l'envoi et restent privées (vos deux comptes seulement).
+                    Pense à masquer la plaque si tu comptes les partager.</p>
+            </div>
+            <label class="btn principal">
+                @(envoi > 0 ? $"Envoi en cours ({envoi})…" : "Choisir des photos")
+                <InputFile OnChange="Ajouter" accept="image/*" multiple hidden disabled="@(envoi > 0)" />
+            </label>
+        </section>
+        @if (erreur is not null)
+        {
+            <p class="erreur">@erreur</p>
+        }
+
+        @if (v.Photos.Count == 0)
+        {
+            <p class="vide">Pas encore de photo. La première ajoutée passera en fond de la carte du @v.Nom sur le bilan.</p>
+        }
+        <section class="galerie">
+            @foreach (var p in v.Photos.OrderByDescending(p => p.Couverture).ThenByDescending(p => p.Ajoutee))
+            {
+                var couverture = v.PhotoCouverture == p;
+                <figure class="photo @(couverture ? "couverture" : "")">
+                    @if (urls.TryGetValue(p.Chemin, out var url) && url is not null)
+                    {
+                        <img src="@url" alt="@(p.Legende ?? v.Nom)" loading="lazy" style="object-position:50% @(p.CadrageY)%" />
+                    }
+                    else
+                    {
+                        <div class="photo-attente">Chargement…</div>
+                    }
+                    <figcaption>
+                        <input value="@p.Legende" placeholder="Légende" @onchange="e => Legender(p, e.Value?.ToString())" aria-label="Légende" />
+                        <small>Ajoutée le @Date(p.Ajoutee)</small>
+                        @if (couverture)
+                        {
+                            <label class="cadrage">Cadrage
+                                <input type="range" min="0" max="100" value="@p.CadrageY" @onchange="e => Cadrer(p, e.Value)" />
+                            </label>
+                        }
+                        <div class="boutons gauche">
+                            @if (!couverture)
+                            {
+                                <button class="btn petit" @onclick="() => Couvrir(v, p)">Mettre en couverture</button>
+                            }
+                            else
+                            {
+                                <span class="pastille ok">Photo de couverture</span>
+                            }
+                            <button class="btn petit danger" @onclick="() => Supprimer(v, p)">Supprimer</button>
+                        </div>
+                    </figcaption>
+                </figure>
+            }
+        </section>
+    }
+}
+
+@code {
+    [Parameter] public string Id { get; set; } = "";
+
+    private readonly Dictionary<string, string?> urls = [];
+    private int envoi;
+    private string? erreur;
+
+    protected override async Task OnParametersSetAsync() => await ChargerLiensAsync();
+
+    private async Task ChargerLiensAsync()
+    {
+        if (Etat.Vehicule(Id) is not { } v) return;
+        foreach (var p in v.Photos.Where(p => !urls.ContainsKey(p.Chemin)))
+            urls[p.Chemin] = await Photos.LienAsync(p);
+    }
+
+    private async Task Ajouter(InputFileChangeEventArgs e)
+    {
+        var v = Etat.Vehicule(Id)!;
+        erreur = null;
+        var fichiers = e.GetMultipleFiles(20);
+        envoi = fichiers.Count;
+        foreach (var f in fichiers)
+        {
+            try
+            {
+                var photo = await Photos.AjouterAsync(v.Id, f, Etat.Aujourdhui);
+                if (v.Photos.Count == 0) photo.Couverture = true;
+                v.Photos.Add(photo);
+                await Etat.EnregistrerAsync();
+                urls[photo.Chemin] = await Photos.LienAsync(photo);
+            }
+            catch (Exception ex) when (ex is ErreurSupabase or HttpRequestException or IOException)
+            {
+                erreur = $"{f.Name} : {ex.Message}";
+            }
+            envoi--;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Couvrir(Vehicule v, PhotoVehicule p)
+    {
+        foreach (var x in v.Photos) x.Couverture = x == p;
+        await Etat.EnregistrerAsync();
+    }
+
+    private async Task Cadrer(PhotoVehicule p, object? valeur)
+    {
+        p.CadrageY = int.TryParse(valeur?.ToString(), out var y) ? y : 60;
+        await Etat.EnregistrerAsync();
+    }
+
+    private async Task Legender(PhotoVehicule p, string? texte)
+    {
+        p.Legende = string.IsNullOrWhiteSpace(texte) ? null : texte.Trim();
+        await Etat.EnregistrerAsync();
+    }
+
+    private async Task Supprimer(Vehicule v, PhotoVehicule p)
+    {
+        if (!await JS.InvokeAsync<bool>("confirm", "Supprimer définitivement cette photo ?")) return;
+        try
+        {
+            await Photos.SupprimerAsync(p);
+        }
+        catch (Exception ex) when (ex is ErreurSupabase or HttpRequestException)
+        {
+            erreur = ex.Message;
+            return;
+        }
+        v.Photos.Remove(p);
+        urls.Remove(p.Chemin);
+        await Etat.EnregistrerAsync();
+    }
+}

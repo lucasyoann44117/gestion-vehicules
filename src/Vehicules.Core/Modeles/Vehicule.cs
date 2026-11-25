@@ -24,6 +24,13 @@ public sealed class Vehicule
     /// <summary>Immatriculations successives, de la plus ancienne à la plus récente.</summary>
     public List<Immatriculation> Immatriculations { get; set; } = [];
 
+    /// <summary>Photos du véhicule (fichiers dans le stockage Supabase « vehicules-photos »).</summary>
+    public List<PhotoVehicule> Photos { get; set; } = [];
+
+    /// <summary>Photo affichée en couverture : celle choisie, sinon la plus récente.</summary>
+    public PhotoVehicule? PhotoCouverture =>
+        Photos.FirstOrDefault(p => p.Couverture) ?? Photos.OrderByDescending(p => p.Ajoutee).FirstOrDefault();
+
     public string? ImmatriculationActuelle =>
         Immatriculations.OrderBy(i => i.Depuis ?? DateOnly.MinValue).LastOrDefault()?.Numero;
 
@@ -38,3 +45,14 @@ public sealed class Vehicule
 }
 
 public sealed record Immatriculation(string Numero, DateOnly? Depuis);
+
+public sealed class PhotoVehicule
+{
+    /// <summary>Chemin du fichier dans le stockage (par exemple « t4/1a2b3c.jpg »).</summary>
+    public string Chemin { get; set; } = "";
+    public string? Legende { get; set; }
+    public DateOnly Ajoutee { get; set; }
+    public bool Couverture { get; set; }
+    /// <summary>Position verticale du cadrage en couverture, de 0 (haut) à 100 (bas).</summary>
+    public int CadrageY { get; set; } = 60;
+}

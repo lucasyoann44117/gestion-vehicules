@@ -24,5 +24,6 @@ else
     builder.Services.AddScoped<IDepot, DepotNavigateur>();
 builder.Services.AddScoped<Etat>();
 builder.Services.AddScoped<ServiceDiagnostic>();
+builder.Services.AddScoped<ServicePhotos>();
 
 await builder.Build().RunAsync();

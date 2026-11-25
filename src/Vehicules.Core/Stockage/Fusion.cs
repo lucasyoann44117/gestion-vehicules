@@ -28,6 +28,9 @@ public static class Fusion
             if (local.Vehicules.FirstOrDefault(x => x.Id == v.Id) is not { } l) continue;
             v.ValeurEstimee ??= l.ValeurEstimee;
             v.Couleur = l.Couleur;
+            // Photos : réunion des deux côtés (l'historique des factures n'en a pas).
+            var chemins = v.Photos.Select(p => p.Chemin).ToHashSet();
+            v.Photos.AddRange(l.Photos.Where(p => !chemins.Contains(p.Chemin)));
             if (l.Immatriculations.Count > v.Immatriculations.Count) v.Immatriculations = l.Immatriculations;
         }
         foreach (var o in r.Organes)
