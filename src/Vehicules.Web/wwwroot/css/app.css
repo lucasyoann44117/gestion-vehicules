@@ -626,6 +626,29 @@ details > summary { cursor: pointer; }
 .cadrage { flex-direction: row; align-items: center; gap: 10px; }
 .cadrage input { min-height: 0; padding: 0; background: none; border: 0; accent-color: var(--atlantis); }
 
+/* ---------- Sous le capot ---------- */
+
+.grille-capot { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.carte-capot {
+  display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: var(--r);
+  background: var(--surface); border: 1px solid var(--trait); box-shadow: var(--ombre); color: var(--encre);
+  transition: transform .18s, box-shadow .18s;
+}
+.carte-capot:hover { text-decoration: none; transform: translateY(-3px); box-shadow: var(--ombre-forte); }
+.carte-capot.att { border-color: color-mix(in srgb, var(--att) 45%, var(--trait)); }
+.carte-capot.mal { border-color: color-mix(in srgb, var(--mal) 55%, var(--trait)); }
+.cc-tete { display: flex; gap: 12px; align-items: center; }
+.cc-tete .tp-illu { flex: none; width: 52px; height: 52px; }
+.cc-tete strong { display: block; font: 700 1.05rem/1.25 var(--titre); }
+.cc-tete small { display: block; font-size: 12.5px; }
+.cc-role { margin: 0; font-size: 14px; color: var(--doux); font-weight: 500; }
+.cc-faits { margin: 0; display: grid; gap: 6px; font-size: 13.5px; }
+.cc-faits div { display: flex; justify-content: space-between; gap: 12px; border-top: 1px dashed var(--trait); padding-top: 6px; }
+.cc-faits dt { color: var(--doux); }
+.cc-faits dd { margin: 0; text-align: right; font-weight: 700; }
+.fiche-role { display: flex; flex-direction: column; gap: 12px; }
+.fiche-role p { margin: 0; font-size: 1.02rem; }
+
 /* ---------- Fiche d'identité ---------- */
 
 .hero-droite { flex-wrap: wrap; justify-content: flex-end; }
@@ -795,6 +818,10 @@ details > summary { cursor: pointer; }
 .panneau-3d .tp-illu { background: rgb(255 255 255 / .07); }
 .p3-tete { display: flex; gap: 12px; align-items: center; }
 .p3-tete strong, .p3-titre { display: block; font: 700 1.15rem/1.2 var(--titre); }
+.p3-role { margin: 0; font-size: 14px; line-height: 1.5; color: rgb(255 255 255 / .85); }
+.p3-prix { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.p3-prix span { display: flex; flex-direction: column; padding: 8px 10px; border-radius: 10px; background: rgb(255 255 255 / .06); font-size: 13px; font-weight: 700; }
+.p3-prix small { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; }
 .p3-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
 .p3-liste button {
   width: 100%; display: flex; align-items: center; gap: 4px; padding: 9px 10px; border-radius: 10px;

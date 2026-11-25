@@ -60,6 +60,19 @@ public class DiagnosticTests
     }
 
     [Fact]
+    public void Les_fiches_de_pieces_visent_des_pieces_suivies()
+    {
+        var fiches = System.Text.Json.JsonSerializer.Deserialize<BaseFichesPieces>(
+            File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "pieces-t4.json")), Json.Options)!;
+        Assert.True(fiches.Pieces.Count >= 30);
+        Assert.All(fiches.Pieces.Values, f => Assert.False(string.IsNullOrWhiteSpace(f.Role)));
+        var chemin = Path.Combine(AppContext.BaseDirectory, "historique.json");
+        if (!File.Exists(chemin)) return;
+        var organes = Json.Lire(File.ReadAllText(chemin)).Organes.Select(o => o.Id).ToHashSet();
+        foreach (var id in fiches.Pieces.Keys) Assert.True(organes.Contains(id), $"Fiche sans pièce suivie : {id}");
+    }
+
+    [Fact]
     public void Les_pieces_citees_existent_dans_l_historique()
     {
         var chemin = Path.Combine(AppContext.BaseDirectory, "historique.json");

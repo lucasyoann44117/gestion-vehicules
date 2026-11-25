@@ -67,6 +67,24 @@ else
         </div>
     </section>
 
+    @if (fiches?.Pieces.GetValueOrDefault(organe.Id) is { } fiche)
+    {
+        <section>
+            <h2>À quoi ça sert</h2>
+            <div class="carte fiche-role">
+                <p>@fiche.Role</p>
+                <dl class="cc-faits">
+                    @if (fiche.Emplacement is not null) { <div><dt>Où elle se trouve</dt><dd>@fiche.Emplacement</dd></div> }
+                    @if (fiche.Usure is not null) { <div><dt>Signes d'usure</dt><dd>@fiche.Usure</dd></div> }
+                    @if (fiche.DureeVie is not null) { <div><dt>Durée de vie</dt><dd>@fiche.DureeVie</dd></div> }
+                    @if (fiche.PrixPiece is not null) { <div><dt>Prix de la pièce</dt><dd>@fiche.PrixPiece</dd></div> }
+                    @if (fiche.PrixPose is not null) { <div><dt>Posée au garage</dt><dd>@fiche.PrixPose</dd></div> }
+                </dl>
+                <small>@fiches.Avertissement</small>
+            </div>
+        </section>
+    }
+
     @if (etat.Changements.Count > 0)
     {
         <section>
@@ -151,4 +169,9 @@ else
 
 @code {
     [Parameter] public string Id { get; set; } = "";
+
+    [Inject] private ServiceDiagnostic Diagnostics { get; set; } = default!;
+    private BaseFichesPieces? fiches;
+
+    protected override async Task OnInitializedAsync() => fiches = await Diagnostics.FichesAsync();
 }

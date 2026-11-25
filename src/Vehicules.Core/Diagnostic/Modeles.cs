@@ -47,6 +47,26 @@ public sealed class Cause
     public List<Source> Sources { get; set; } = [];
 }
 
+/// <summary>« À quoi ça sert » : rôle, emplacement, usure et prix indicatif d'une pièce.</summary>
+public sealed class FichePiece
+{
+    public string Role { get; set; } = "";
+    public string? Emplacement { get; set; }
+    public string? Usure { get; set; }
+    public string? DureeVie { get; set; }
+    public string? PrixPiece { get; set; }
+    public string? PrixPose { get; set; }
+    /// <summary>Zone du compartiment moteur (Moteur, Admission, Alimentation…).</summary>
+    public string? Zone { get; set; }
+}
+
+public sealed class BaseFichesPieces
+{
+    public string Avertissement { get; set; } = "";
+    /// <summary>Fiches par identifiant de pièce suivie.</summary>
+    public Dictionary<string, FichePiece> Pieces { get; set; } = [];
+}
+
 /// <summary>Une discussion de forum ou une page de tuto, résumée dans la base.</summary>
 public sealed class Source
 {

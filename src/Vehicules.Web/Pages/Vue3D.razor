@@ -2,6 +2,7 @@
 @inherits PageBase
 @implements IAsyncDisposable
 @inject IJSRuntime JS
+@inject ServiceDiagnostic Diagnostics
 
 <PageTitle>Vue 3D · Mes véhicules</PageTitle>
 
@@ -62,6 +63,15 @@
                     <strong>@piece.Nom</strong>
                 </div>
             </div>
+            @if (piece.Organe is not null && fiches?.Pieces.GetValueOrDefault(piece.Organe) is { } f)
+            {
+                <p class="p3-role">@f.Role</p>
+                <div class="p3-prix">
+                    @if (f.PrixPiece is not null) { <span><small>Pièce</small>@f.PrixPiece</span> }
+                    @if (f.PrixPose is not null) { <span><small>Posée</small>@f.PrixPose</span> }
+                    @if (f.DureeVie is not null) { <span><small>Durée de vie</small>@f.DureeVie</span> }
+                </div>
+            }
             @if (etat is null)
             {
                 <p class="note">Pas de suivi pour cette pièce dans l'historique.</p>
@@ -126,6 +136,13 @@
     private List<PieceVue> piecesSysteme = [];
 
     public sealed record PieceVue(string Cle, string Nom, string? Organe);
+
+    private BaseFichesPieces? fiches;
+
+    protected override async Task OnInitializedAsync()
+    {
+        fiches = await Diagnostics.FichesAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool premier)
     {

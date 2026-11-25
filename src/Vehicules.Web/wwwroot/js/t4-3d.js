@@ -302,8 +302,27 @@ function construireMoteur() {
   piece(S, 'filtre-gazole', 'Filtre à gazole', 'filtre-gasoil', placer(cylindre(0.045, 0.13, M.noir()), 0.15, 0.36, 0.22), [0.2, 0.35, 0.1]);
   piece(S, 'filtre-air', 'Boîte à air et filtre', 'filtre-air', placer(boite(0.22, 0.13, 0.28, M.noir(), 0.04), 0.02, 0.44, -0.2), [0, 0.6, -0.2]);
   piece(S, 'pompe-vide', 'Pompe à vide (master vac)', 'pompe-vide', placer(cylindre(0.05, 0.07, M.acier(), 'z'), -0.12, 0.2, -0.37), [-0.2, 0.2, -0.25]);
-  piece(S, 'pompe-injection', 'Pompe d\'injection', null, placer(boite(0.12, 0.16, 0.12, M.alu(), 0.02), -0.15, 0.05, 0.25), [-0.3, 0, 0.2]);
-}
+  piece(S, 'pompe-injection', 'Pompe d\'injection VP37', 'pompe-injection', placer(boite(0.12, 0.16, 0.12, M.alu(), 0.02), -0.15, 0.05, 0.25), [-0.3, 0, 0.2]);
+  // Pièces de l'admission, de l'alimentation et du démarrage.
+  const injecteurs = new THREE.Group();
+  const bougies = new THREE.Group();
+  for (let i = 0; i < 5; i++) {
+    const z = -0.24 + i * 0.12;
+    injecteurs.add(placer(cylindre(0.014, 0.09, M.acier()), 0.08, 0.34, z));
+    injecteurs.add(placer(cylindre(0.004, 0.06, M.noir(), 'z'), 0.08, 0.39, z + 0.04));
+    bougies.add(placer(cylindre(0.008, 0.07, M.cuivre()), -0.1, 0.33, z));
+  }
+  piece(S, 'injecteurs', 'Injecteurs et retours', 'injecteurs', injecteurs, [0.1, 0.5, 0]);
+  piece(S, 'bougies', 'Bougies de préchauffage', 'bougies-prechauffage', bougies, [-0.15, 0.45, 0]);
+  piece(S, 'debitmetre', 'Débitmètre d\'air (G70)', 'debitmetre', placer(cylindre(0.045, 0.16, M.noir(), 'x'), -0.12, 0.42, -0.36), [-0.15, 0.45, -0.25]);
+  piece(S, 'n75', 'Électrovanne de turbo N75', 'electrovanne-n75', placer(boite(0.05, 0.05, 0.04, M.noir(), 0.01), -0.05, 0.3, -0.42), [-0.1, 0.35, -0.35]);
+  piece(S, 'egr', 'Vanne EGR', 'egr', placer(cylindre(0.04, 0.05, M.alu()), -0.18, 0.3, 0.05), [-0.3, 0.35, 0.1]);
+  piece(S, 'sonde-g62', 'Sonde de température G62', 'sonde-temperature', placer(cylindre(0.012, 0.05, M.noir(), 'x'), 0.21, 0.24, 0.3), [0.3, 0.2, 0.25]);
+  piece(S, 'thermostat', 'Thermostat', 'thermostat', placer(cylindre(0.04, 0.05, M.noir(), 'x'), 0.23, -0.02, -0.3), [0.35, 0, -0.2]);
+  piece(S, 'supports', 'Supports moteur', 'support-moteur', grouper(
+    placer(boite(0.1, 0.08, 0.1, M.gomme(), 0.02), 0, -0.32, 0.25),
+    placer(boite(0.1, 0.08, 0.1, M.gomme(), 0.02), 0, -0.32, -0.25),
+  ), [0, -0.55, 0]);}
 
 function construireRefroidissement() {
   const S = 'refroidissement';
@@ -316,7 +335,19 @@ function construireRefroidissement() {
   ), [0, 0, 0]);
   piece(S, 'condenseur', 'Condenseur de clim', 'clim', placer(boite(0.03, 0.38, 0.98, M.cuivre(), 0.01), 0.07, 0, 0), [0.35, 0, 0]);
   piece(S, 'vase', 'Vase d\'expansion', 'liquide-refroidissement', placer(boite(0.12, 0.12, 0.16, M.liquide(), 0.03), -0.35, 0.2, 0.55), [-0.1, 0.3, 0.2]);
-}
+  const ventilos = new THREE.Group();
+  for (const z of [-0.26, 0.26]) {
+    const v = placer(cylindre(0.17, 0.05, M.noir(), 'x'), -0.07, 0, z);
+    for (let k = 0; k < 7; k++) {
+      const pale = boite(0.01, 0.15, 0.035, M.noir(), 0.004);
+      pale.position.set(-0.1, Math.cos(k * 0.9) * 0.08, z + Math.sin(k * 0.9) * 0.08);
+      pale.rotation.x = k * 0.9;
+      ventilos.add(pale);
+    }
+    ventilos.add(v);
+  }
+  piece(S, 'ventilateurs', 'Ventilateurs de radiateur (Siemens 450 W)', 'ventilateurs-radiateur', ventilos, [-0.35, 0, 0]);
+  piece(S, 'pompe-aux', 'Pompe à eau auxiliaire', 'pompe-eau-auxiliaire', placer(cylindre(0.03, 0.09, M.noir(), 'z'), -0.55, -0.15, -0.45), [-0.2, -0.1, -0.25]);}
 
 function construireTransmission() {
   const S = 'transmission';
@@ -429,10 +460,11 @@ function construireFreinage() {
 
 function construireEchappement() {
   const S = 'echappement';
-  piece(S, 'ligne', 'Ligne d\'échappement', 'echappement',
-    tube([[1.62, 0.62, -0.15], [1.45, 0.4, 0.05], [1.1, 0.27, 0.32], [-0.6, 0.26, 0.4], [-1.7, 0.27, 0.42], [-2.42, 0.3, 0.42]], 0.028, M.rouille()), [0, 0, 0]);
-  piece(S, 'catalyseur', 'Catalyseur', 'echappement', placer(cylindre(0.08, 0.38, M.acier(), 'x'), 0.75, 0.27, 0.34), [0, 0.1, 0.15]);
-  piece(S, 'silencieux', 'Silencieux arrière', 'echappement', placer(grouper(cylindre(0.13, 0.55, M.acier(), 'x')), -1.95, 0.3, 0.42), [-0.1, 0.1, 0.15]);
+  // Ligne inox (2009) ; le catalyseur est désormais juste avant le silencieux arrière.
+  piece(S, 'ligne', 'Ligne d\'échappement inox', 'echappement',
+    tube([[1.6, 0.78, -0.2], [1.48, 0.5, 0.0], [1.15, 0.28, 0.3], [-0.6, 0.26, 0.4], [-1.25, 0.27, 0.42], [-2.42, 0.3, 0.42]], 0.028, M.acier()), [0, 0, 0]);
+  piece(S, 'catalyseur', 'Catalyseur (juste avant le silencieux)', 'echappement', placer(cylindre(0.085, 0.36, M.acier(), 'x'), -1.44, 0.28, 0.42), [0.15, 0.12, 0.2]);
+  piece(S, 'silencieux', 'Silencieux arrière', 'echappement', placer(grouper(cylindre(0.13, 0.5, M.acier(), 'x')), -1.98, 0.3, 0.42), [-0.15, 0.1, 0.15]);
   groupes[S].children.at(-1).children[0].scale.set(1, 1, 0.65);
 }
 
@@ -443,6 +475,11 @@ function construireElectricite() {
     placer(cylindre(0.015, 0.03, M.rouge()), 0.09, 0.11, 0.05),
     placer(cylindre(0.015, 0.03, M.noir()), -0.09, 0.11, 0.05),
   ), [0, 0.15, -0.2]).position.set(0.95, 0.5, -0.5);
+  pieces.at(-1).base.copy(pieces.at(-1).objet.position);
+  piece(S, 'batterie-aux', 'Batterie auxiliaire 70 Ah', 'batterie-auxiliaire', grouper(
+    boite(0.26, 0.19, 0.17, M.noir(), 0.015),
+    placer(cylindre(0.015, 0.03, M.rouge()), 0.08, 0.1, 0.05),
+  ), [0, 0.15, 0.25]).position.set(0.95, 0.49, 0.5);
   pieces.at(-1).base.copy(pieces.at(-1).objet.position);
   piece(S, 'chauffage', 'Chauffage stationnaire Eberspächer', 'chauffage-stationnaire',
     placer(boite(0.3, 0.12, 0.14, M.noir(), 0.03), 0.3, 0.36, 0.55), [0.2, 0, 0.3]);

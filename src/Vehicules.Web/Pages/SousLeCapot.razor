@@ -1,0 +1,93 @@
+@page "/moteur"
+@inherits PageBase
+@inject ServiceDiagnostic Diagnostics
+
+<Tete Titre="Sous le capot">
+    <a class="btn" href="3d?piece=bloc"><svg aria-hidden="true"><use href="#i-3d" /></svg>Moteur en 3D</a>
+</Tete>
+
+@if (fiches is null)
+{
+    <p class="chargement">Chargement…</p>
+}
+else
+{
+    var lignes = Lignes().ToList();
+    var total = lignes.Sum(l => l.Cout);
+    var derniere = lignes.Where(l => l.Etat.Dernier is not null).MaxBy(l => l.Etat.Dernier!.Date);
+
+    <section class="stats">
+        <div class="stat carte mise-en-avant">
+            <span>Dépensé sous le capot</span>
+            <strong>@Euros(total, 0)</strong>
+            <small>@lignes.Count(l => l.Etat.Changements.Count > 0) pièces déjà changées sur @lignes.Count</small>
+        </div>
+        <div class="stat carte">
+            <span>Dernière intervention</span>
+            <strong>@(derniere?.Etat.Dernier?.Date.Year.ToString() ?? "–")</strong>
+            <small>@derniere?.Etat.Organe.Nom</small>
+        </div>
+        <div class="stat carte">
+            <span>À surveiller</span>
+            <strong>@lignes.Count(l => l.Etat.Urgence is Urgence.Bientot or Urgence.Depasse)</strong>
+            <small>D'après les intervalles conseillés</small>
+        </div>
+        <div class="stat carte">
+            <span>Moteur</span>
+            <strong>2.5 TDI ACV</strong>
+            <small>5 cylindres, 102 ch, pompe VP37</small>
+        </div>
+    </section>
+
+    <p class="note">@fiches.Avertissement</p>
+
+    @foreach (var zone in lignes.GroupBy(l => l.Fiche.Zone ?? "Autre").OrderBy(g => Array.IndexOf(Ordre, g.Key) is var i && i < 0 ? 99 : i))
+    {
+        <section>
+            <h2>@zone.Key <small>@Euros(zone.Sum(l => l.Cout), 0)</small></h2>
+            <div class="grille-capot">
+                @foreach (var l in zone)
+                {
+                    var d = l.Etat.Dernier;
+                    <a class="carte-capot @Classe(l.Etat.Urgence)" href="pieces/@l.Etat.Organe.Id">
+                        <div class="cc-tete">
+                            <span class="tp-illu"><Illustration OrganeId="@l.Etat.Organe.Id" /></span>
+                            <div>
+                                <strong>@l.Etat.Organe.Nom</strong>
+                                <small>@l.Fiche.Emplacement</small>
+                            </div>
+                        </div>
+                        <p class="cc-role">@l.Fiche.Role</p>
+                        <dl class="cc-faits">
+                            <div><dt>Dernier changement</dt><dd>@(d is null ? "Jamais" : $"{Date(d.Date)}{(d.Km is { } k ? $" · {Km(k)}" : "")}")</dd></div>
+                            <div><dt>Ce qu'elle t'a coûté</dt><dd>@(l.Cout > 0 ? Euros(l.Cout, 0) + $" ({l.Etat.Changements.Count}×)" : "–")</dd></div>
+                            <div><dt>Prix indicatif posée</dt><dd>@(l.Fiche.PrixPose ?? "–")</dd></div>
+                            <div><dt>Durée de vie</dt><dd>@(l.Fiche.DureeVie ?? "–")</dd></div>
+                        </dl>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+}
+
+@code {
+    private static readonly string[] Ordre = ["Moteur", "Admission", "Alimentation", "Démarrage", "Refroidissement", "Électricité", "Climatisation", "Entretien", "Freinage", "Transmission", "Échappement", "Chauffage"];
+
+    private BaseFichesPieces? fiches;
+
+    private sealed record Ligne(EtatOrgane Etat, FichePiece Fiche, decimal Cout);
+
+    protected override async Task OnInitializedAsync() => fiches = await Diagnostics.FichesAsync();
+
+    private IEnumerable<Ligne> Lignes()
+    {
+        var v = Etat.Donnees.Vehicules.FirstOrDefault(x => x.Id == "t4") ?? Etat.Vehicules.FirstOrDefault();
+        if (v is null || fiches is null) yield break;
+        var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id).ToList();
+        var couts = Couts.ParOrgane(inter);
+        var organes = Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id && fiches.Pieces.ContainsKey(o.Id));
+        foreach (var e in SuiviOrganes.Etats(organes, inter, Etat.Releves(v.Id), Etat.Aujourdhui))
+            yield return new Ligne(e, fiches.Pieces[e.Organe.Id], couts.GetValueOrDefault(e.Organe.Id));
+    }
+}
