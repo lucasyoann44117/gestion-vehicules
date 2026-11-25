@@ -10,29 +10,48 @@
     <div class="toile-3d" @ref="toile"></div>
 
     <header class="barre-3d">
-        <nav class="fil" aria-label="Niveau">
-            <button class="lien-3d @(systeme is null ? "actif" : "")" @onclick="() => Focaliser(null)">T4 Multivan</button>
-            @if (systeme is not null)
-            {
-                <span>›</span>
-                <button class="lien-3d @(piece is null ? "actif" : "")" @onclick="() => Focaliser(systeme)">@nomSysteme</button>
-            }
-            @if (piece is not null)
-            {
-                <span>›</span>
-                <span class="actif">@piece.Nom</span>
-            }
-        </nav>
+        <div class="ligne-3d">
+            <nav class="fil" aria-label="Niveau">
+                <button class="lien-3d @(systeme is null ? "actif" : "")" @onclick="() => Focaliser(null)">T4</button>
+                @if (systeme is not null)
+                {
+                    <span>›</span>
+                    <button class="lien-3d @(piece is null ? "actif" : "")" @onclick="() => Focaliser(systeme)">@nomSysteme</button>
+                }
+                @if (piece is not null)
+                {
+                    <span>›</span>
+                    <span class="actif">@piece.Nom</span>
+                }
+            </nav>
+            <div class="recherche-3d">
+                <input type="search" placeholder="Trouver une pièce : turbo, rotule…" @bind="recherche" @bind:event="oninput"
+                       @onfocus="() => rechercheOuverte = true" @onblur="FermerRechercheAsync" aria-label="Trouver une pièce" />
+                @if (rechercheOuverte && Resultats().Count > 0)
+                {
+                    <ul class="resultats-3d" role="listbox">
+                        @foreach (var r in Resultats())
+                        {
+                            <li>
+                                <button @onmousedown="() => TrouverAsync(r.Cle)" @onmouseenter="() => SurlignerAsync(r.Cle)" @onmouseleave="() => SurlignerAsync(null)">
+                                    <span>@r.Nom</span><small>@r.NomSysteme</small>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
         <div class="reglages-3d">
             <span class="vues-3d" role="group" aria-label="Angle de vue">
-                @foreach (var (cle, nom) in new[] { ("profil", "Profil"), ("troisQuarts", "3/4 avant"), ("face", "Face"), ("libre", "Libre") })
+                @foreach (var (cle, nom) in new[] { ("profil", "Profil"), ("troisQuarts", "3/4"), ("face", "Face"), ("libre", "Libre") })
                 {
                     <button class="puce-3d @(vueActive == cle ? "active" : "")" @onclick="() => Vue(cle)">@nom</button>
                 }
             </span>
-            <label>Éclaté <input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" /></label>
+            <label class="eclat-3d">Éclaté <input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" /></label>
             <button class="puce-3d @(etats ? "active" : "")" @onclick="BasculerEtats">Couleurs d'état</button>
-            <button class="puce-3d @(fantome ? "active" : "")" @onclick="BasculerCarrosserie">Carrosserie transparente</button>
+            <button class="puce-3d @(fantome ? "active" : "")" @onclick="BasculerCarrosserie">Caisse transparente</button>
         </div>
     </header>
 
@@ -52,15 +71,25 @@
         </div>
     }
 
-    <aside class="panneau-3d @(systeme is null && piece is null ? "replie" : "")">
-        @if (piece is not null)
+    <aside class="panneau-3d @(systeme is null && piece is null ? "replie" : "") @(reduit ? "reduit" : "")" @ref="panneau">
+        @if (systeme is not null || piece is not null)
+        {
+            <button class="p3-poignee" @onclick="() => reduit = !reduit" aria-expanded="@(!reduit)">
+                <span>@(piece?.Nom ?? nomSysteme)</span>
+                <small>@(reduit ? "Afficher ▴" : "Réduire ▾")</small>
+            </button>
+        }
+        @if (reduit)
+        {
+        }
+        else if (piece is not null)
         {
             var etat = EtatDe(piece.Organe);
             <div class="p3-tete">
                 <span class="tp-illu"><Illustration OrganeId="@(piece.Organe ?? piece.Cle)" /></span>
                 <div>
-                    <small>@nomSysteme</small>
-                    <strong>@piece.Nom</strong>
+                    <small>Zone</small>
+                    <strong class="p3-zone">@nomSysteme</strong>
                 </div>
             </div>
             @if (piece.Organe is not null && fiches?.Pieces.GetValueOrDefault(piece.Organe) is { } f)
@@ -100,13 +129,13 @@
         }
         else if (systeme is not null)
         {
-            <strong class="p3-titre">@nomSysteme</strong>
+            <p class="note">@piecesSysteme.Count pièces. Survole un nom pour la repérer, touche-le pour l'ouvrir.</p>
             <ul class="p3-liste">
                 @foreach (var p in piecesSysteme)
                 {
                     var e = EtatDe(p.Organe);
                     <li>
-                        <button @onclick="() => Choisir(p.Cle)">
+                        <button @onclick="() => Choisir(p.Cle)" @onmouseenter="() => SurlignerAsync(p.Cle)" @onmouseleave="() => SurlignerAsync(null)">
                             <span class="point @Classe(e?.Urgence ?? Urgence.Inconnue)"></span>
                             <span>@p.Nom</span>
                             <small>@(e?.Dernier is { } d ? d.Date.Year.ToString() : "")</small>
@@ -126,7 +155,43 @@
 @code {
     [SupplyParameterFromQuery(Name = "piece")] public string? PieceQuery { get; set; }
 
-    private ElementReference toile;
+    private ElementReference toile, panneau;
+    private bool reduit, rechercheOuverte;
+    private string recherche = "";
+    private List<PieceTrouvable> toutes = [];
+
+    public sealed record PieceTrouvable(string Cle, string Nom, string? Organe, string Systeme, string NomSysteme);
+
+    /// <summary>Pièces dont le nom ou la zone contient tous les mots tapés (sans accents).</summary>
+    private List<PieceTrouvable> Resultats()
+    {
+        var mots = MoteurDiagnostic.Normaliser(recherche).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (mots.Length == 0) return [];
+        return toutes
+            .Select(p => (p, texte: MoteurDiagnostic.Normaliser($"{p.Nom} {p.NomSysteme} {Etat.Organe(p.Organe)?.Nom}")))
+            .Where(x => mots.All(m => x.texte.Contains(m)))
+            .Select(x => x.p).Take(8).ToList();
+    }
+
+    private async Task TrouverAsync(string cle)
+    {
+        recherche = "";
+        rechercheOuverte = false;
+        reduit = false;
+        if (module is not null) await module.InvokeVoidAsync("choisirPiece", cle);
+    }
+
+    private async Task SurlignerAsync(string? cle)
+    {
+        if (module is not null) await module.InvokeVoidAsync("surligner", cle);
+    }
+
+    private async Task FermerRechercheAsync()
+    {
+        await Task.Delay(150);
+        rechercheOuverte = false;
+        await SurlignerAsync(null);
+    }
     private IJSObjectReference? module;
     private DotNetObjectReference<Vue3D>? reference;
     private bool pret, etats, fantome;
@@ -152,6 +217,8 @@
             module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/t4-3d.js");
             reference = DotNetObjectReference.Create(this);
             await module.InvokeVoidAsync("demarrer", toile, reference);
+            await module.InvokeVoidAsync("observerPanneau", panneau);
+            toutes = await module.InvokeAsync<List<PieceTrouvable>>("listePieces");
             pret = true;
             if (PieceQuery is not null) await module.InvokeVoidAsync("choisirPiece", PieceQuery);
         }
@@ -167,6 +234,7 @@
     {
         systeme = id;
         nomSysteme = nom;
+        reduit = false;
         piecesSysteme = liste;
         piece = null;
         StateHasChanged();
@@ -177,6 +245,7 @@
     public Task PieceChoisie(string cle, string nom, string? organe)
     {
         piece = new PieceVue(cle, nom, organe);
+        reduit = false;
         StateHasChanged();
         return Task.CompletedTask;
     }

@@ -673,8 +673,56 @@ function redimensionner() {
   const l = hote.clientWidth, h = hote.clientHeight;
   rendu.setSize(l, h);
   camera.aspect = l / h;
-  camera.updateProjectionMatrix();
+  appliquerMarges();
   if (!focus) vueInitiale(true);
+}
+
+// ---------- Place laissée par le panneau ----------
+// Le panneau de pièces recouvre une partie de la vue : on décale le centre de l'image
+// (à gauche sur grand écran, vers le haut sur téléphone) pour que le camion reste visible.
+let marges = { droite: 0, bas: 0 };
+
+export function marger(droite, bas) {
+  if (Math.abs(droite - marges.droite) < 2 && Math.abs(bas - marges.bas) < 2) return;
+  marges = { droite, bas };
+  appliquerMarges();
+  // Recadre ce qui est regardé dans la place restante.
+  if (selection) cadrer([selection.objet], 2.4);
+  else if (focus) cadrer([groupes[focus]], 1.1);
+  else vueInitiale();
+}
+
+/** Suit la taille du panneau de pièces (côté droit sur grand écran, en bas sur téléphone). */
+export function observerPanneau(panneau) {
+  const maj = () => {
+    if (!hote) return;
+    if (panneau.classList.contains('replie')) return marger(0, 0);
+    const p = panneau.getBoundingClientRect(), h = hote.getBoundingClientRect();
+    if (p.width > h.width * 0.7) marger(0, Math.max(0, h.bottom - p.top + 10));
+    else marger(Math.max(0, h.right - p.left + 10), 0);
+  };
+  new ResizeObserver(maj).observe(panneau);
+  new MutationObserver(maj).observe(panneau, { attributes: true, attributeFilter: ['class'] });
+  maj();
+}
+
+/** Demi-angles de vue de la partie de l'image que le panneau ne couvre pas. */
+function champLibre() {
+  const l = hote.clientWidth, h = hote.clientHeight;
+  const d = Math.min(marges.droite, l * 0.6), b = Math.min(marges.bas, h * 0.6);
+  const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * (h - b) / (h + b);
+  const tanH = tanV * (l - d) / Math.max(h - b, 1);
+  return { demiV: Math.atan(tanV), demiH: Math.atan(tanH) };
+}
+
+function appliquerMarges() {
+  if (!camera || !hote) return;
+  const l = hote.clientWidth, h = hote.clientHeight;
+  const d = Math.min(marges.droite, l * 0.6), b = Math.min(marges.bas, h * 0.6);
+  if (d > 0 || b > 0) camera.setViewOffset(l + d, h + b, d, b, l, h);
+  else camera.clearViewOffset();
+  camera.aspect = (l + d) / (h + b);
+  camera.updateProjectionMatrix();
 }
 
 /** Angles de vue repris des photos du camion : profil gauche, 3/4 avant gauche, face. */
@@ -693,8 +741,7 @@ export function vue(nom) {
 /** Place la caméra pour voir tout le camion (et l'éclaté), quel que soit le format de l'écran. */
 function vueInitiale(immediat = false) {
   const rayon = 2.9 + eclatCible * 3.0;
-  const demiV = THREE.MathUtils.degToRad(camera.fov / 2);
-  const demiH = Math.atan(Math.tan(demiV) * camera.aspect);
+  const { demiV, demiH } = champLibre();
   const distance = rayon / Math.sin(Math.min(demiV, demiH));
   const direction = directionVue.clone().normalize();
   cible.set(eclatCible * 0.45, 0.9 + eclatCible * 1.1, 0);
@@ -735,8 +782,9 @@ function majTraitsDeRappel() {
   traits.geometry.attributes.position.needsUpdate = true;
 }
 
-function boucle() {
+function boucle(temps = 0) {
   raf = requestAnimationFrame(boucle);
+  animerSurbrillance(temps);
   eclatGlobal += (eclatCible - eclatGlobal) * 0.08;
   eclatFocus += ((focus ? 1 : 0) - eclatFocus) * 0.08;
 
@@ -766,6 +814,8 @@ function peindre() {
     const estoompe = focus && p.systeme !== focus;
     const fantome = carrosserieFantome && p.systeme === 'carrosserie' && !focus;
     const choisie = selection === p;
+    // Pièce choisie : les voisines de sa zone s'effacent à moitié pour qu'elle ressorte.
+    const voisine = selection && !choisie && p.systeme === focus;
     p.objet.traverse(o => {
       if (!o.isMesh) return;
       const m = o.material;
@@ -773,12 +823,14 @@ function peindre() {
         const etat = p.organe ? couleursEtat[p.organe] ?? 'neutre' : 'neutre';
         m.color.setHex(COULEURS_ETAT[etat]);
       } else m.color.copy(o.userData.couleur);
-      const opacite = estoompe ? 0.07 : fantome ? 0.16 : o.userData.opacite;
+      const opacite = estoompe ? 0.07 : voisine ? 0.22 : fantome ? 0.16 : o.userData.opacite;
       m.transparent = opacite < 1 || o.userData.transparent;
       m.opacity = opacite;
       m.depthWrite = opacite > 0.5;
       if (m.emissive) m.emissive.setHex(choisie ? 0x8a5200 : 0x000000);
       o.castShadow = !estoompe;
+      // Zone ouverte : on l'isole complètement, comme une pièce sortie du puzzle.
+      o.visible = !estoompe;
     });
   }
 }
@@ -791,10 +843,10 @@ function cadrer(objets, distance = 1.0) {
   const direction = camera.position.clone().sub(controles.target).normalize();
   if (direction.y < 0.25) direction.y = 0.35;
   direction.normalize();
-  // Écran étroit : on recule pour garder la pièce entière, et on la remonte au-dessus du panneau.
-  const recul = camera.aspect < 1 ? 1 / Math.max(camera.aspect, 0.5) : 1;
+  // Recule selon la place que le panneau laisse libre (le centre de l'image est déjà décalé).
+  const { demiV, demiH } = champLibre();
+  const recul = Math.max(1, Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / Math.tan(Math.min(demiV, demiH)));
   cible.copy(centre);
-  if (hote.clientWidth < 1100) cible.y -= rayon * 0.35;
   camCible.copy(cible).addScaledVector(direction, rayon * 3.1 * distance * recul);
   animationCamera = true;
 }
@@ -815,9 +867,13 @@ export function focaliser(systeme) {
 }
 
 function choisir(p) {
+  if (surbrillance) { const s = surbrillance; surbrillance = null; eteindre(s); }
   selection = p;
   peindre();
-  setTimeout(() => cadrer([p.objet], 1.6), 50);
+  setTimeout(() => cadrer([p.objet], 2.4), 50);
+  // La pièce choisie clignote quelques secondes pour qu'on la repère.
+  surbrillance = p;
+  setTimeout(() => { if (surbrillance === p) { surbrillance = null; eteindre(p); } }, 2600);
   dotnet?.invokeMethodAsync('PieceChoisie', p.cle, p.nom, p.organe);
 }
 
@@ -826,6 +882,35 @@ export function choisirPiece(cleOuOrgane) {
   if (!p) return;
   if (focus !== p.systeme) focaliser(p.systeme);
   setTimeout(() => choisir(p), focus === p.systeme ? 0 : 450);
+}
+
+// ---------- Trouver une pièce ----------
+
+/** Toutes les pièces cliquables, pour la recherche. */
+export function listePieces() {
+  return pieces.map(p => ({ cle: p.cle, nom: p.nom, organe: p.organe, systeme: p.systeme, nomSysteme: SYSTEMES[p.systeme].nom }));
+}
+
+// Pièce qui clignote (survol d'une ligne de la liste ou d'un résultat de recherche).
+let surbrillance = null;
+
+export function surligner(cle) {
+  if (surbrillance && surbrillance !== selection) eteindre(surbrillance);
+  surbrillance = pieces.find(p => p.cle === cle) ?? null;
+}
+
+function eteindre(p) {
+  p.objet.traverse(o => { if (o.isMesh && o.material.emissive) { o.material.emissive.setHex(p === selection ? 0x8a5200 : 0); o.material.emissiveIntensity = 1; } });
+}
+
+function animerSurbrillance(temps) {
+  if (!surbrillance) return;
+  const intensite = 0.55 + 0.45 * Math.sin(temps * 0.008);
+  surbrillance.objet.traverse(o => {
+    if (!o.isMesh || !o.material.emissive) return;
+    o.material.emissive.setHex(0xffb020);
+    o.material.emissiveIntensity = intensite;
+  });
 }
 
 export function eclater(valeur) {
@@ -844,7 +929,7 @@ export function arreter() {
   etiquette?.remove();
   pieces.length = 0;
   for (const k of Object.keys(groupes)) delete groupes[k];
-  traits = null;
+  traits = null; surbrillance = null; marges = { droite: 0, bas: 0 };
   focus = null; selection = null; survol = null; eclatGlobal = eclatCible = eclatFocus = 0;
   cible.set(0, 0.9, 0); camCible.set(5.8, 3.0, 6.4);
   rendu = scene = camera = controles = hote = dotnet = etiquette = null;
