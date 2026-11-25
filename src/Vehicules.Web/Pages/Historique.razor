@@ -64,7 +64,7 @@
                                         <td data-label="Pièce suivie">
                                             @if (Etat.Organe(l.OrganeId) is { } o)
                                             {
-                                                <a href="pieces?organe=@o.Id">@o.Nom</a>
+                                                <a href="pieces/@o.Id">@o.Nom</a>
                                             }
                                         </td>
                                         <td data-label="Qté" class="nb">@l.Quantite.ToString("0.##")</td>

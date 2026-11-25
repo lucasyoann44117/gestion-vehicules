@@ -1,0 +1,154 @@
+@page "/pieces/{Id}"
+@inherits PageBase
+
+@if (Etat.Organe(Id) is not { } organe)
+{
+    <Tete Titre="Pièce introuvable" />
+    <p class="vide"><a href="pieces">Retour aux pièces</a></p>
+}
+else
+{
+    var vehicule = Etat.Vehicule(organe.VehiculeId);
+    var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == organe.VehiculeId).ToList();
+    var etat = SuiviOrganes.Etats([organe], inter, Etat.Releves(organe.VehiculeId), Etat.Aujourdhui).Single();
+    var cout = Couts.ParOrgane(inter).GetValueOrDefault(organe.Id);
+    var defauts = Etat.Donnees.Controles.Where(c => c.VehiculeId == organe.VehiculeId)
+        .SelectMany(c => c.Defaillances.Where(d => d.OrganeId == organe.Id).Select(d => (c, d)))
+        .OrderByDescending(x => x.c.Date).ToList();
+    var travaux = Etat.Donnees.Travaux.Where(t => t.OrganeId == organe.Id).OrderByDescending(t => t.DateSignalement).ToList();
+    var dureeKm = etat.Durees.Where(x => x.Km is not null).Select(x => x.Km!.Value).ToList();
+    var dureeMois = etat.Durees.Select(x => x.Mois).ToList();
+
+    <Tete Titre="@organe.Nom">
+        <a class="btn" href="pieces">Toutes les pièces</a>
+        <a class="btn" href="3d?piece=@organe.Id"><svg aria-hidden="true"><use href="#i-3d" /></svg>Voir en 3D</a>
+    </Tete>
+
+    <article class="hero-piece @Classe(etat.Urgence)" style="--accent:@(vehicule?.Couleur ?? "#2f6db5")">
+        <div class="hp-illu"><Illustration OrganeId="@organe.Id" /></div>
+        <div class="hp-texte">
+            <p class="sur-titre">@organe.Categorie · @vehicule?.Nom</p>
+            <h2 class="hp-nom">@organe.Nom</h2>
+            <div class="hp-etat">
+                <Pastille Urgence="etat.Urgence" />
+                @if (etat.ProchainKm is not null || etat.ProchaineDate is not null)
+                {
+                    <span>Prochain conseillé : @string.Join(" ou ", new[] { etat.ProchainKm is { } pk ? Km(pk) : null, etat.ProchaineDate is { } pd ? Date(pd) : null }.Where(x => x is not null))</span>
+                }
+            </div>
+            @if (organe.Notes is not null)
+            {
+                <p class="hp-note">@organe.Notes</p>
+            }
+        </div>
+        <Anneau Valeur="etat.Avancement" Urgence="etat.Urgence" />
+    </article>
+
+    <section class="stats">
+        <div class="stat carte">
+            <span>Depuis le dernier changement</span>
+            <strong>@(etat.KmDepuis is { } k ? Km(k) : "–")</strong>
+            <small>@(etat.Dernier is { } d ? $"{Mois(etat.MoisDepuis)}, depuis le {Date(d.Date)}" : "Jamais changée")</small>
+        </div>
+        <div class="stat carte">
+            <span>Changée</span>
+            <strong>@etat.Changements.Count fois</strong>
+            <small>@(etat.Changements.Count > 0 ? $"Première fois le {Date(etat.Changements[0].Date)}" : "")</small>
+        </div>
+        <div class="stat carte">
+            <span>Durée de vie observée</span>
+            <strong>@(dureeKm.Count > 0 ? Km((int)dureeKm.Average()) : dureeMois.Count > 0 ? Mois((int)dureeMois.Average()) : "–")</strong>
+            <small>@(dureeMois.Count > 0 ? $"En moyenne {Mois((int)dureeMois.Average())} entre deux changements" : "Il faut deux changements")</small>
+        </div>
+        <div class="stat carte mise-en-avant">
+            <span>Coût total</span>
+            <strong>@Euros(cout, 0)</strong>
+            <small>Pièces et main-d'œuvre, TTC</small>
+        </div>
+    </section>
+
+    @if (etat.Changements.Count > 0)
+    {
+        <section>
+            <h2>Historique des changements</h2>
+            <ol class="frise">
+                @foreach (var c in Enumerable.Reverse(etat.Changements))
+                {
+                    <li style="--accent:@(vehicule?.Couleur ?? "#888")">
+                        <div class="carte">
+                            <div class="ch-tete">
+                                <div>
+                                    <strong>@Date(c.Date)@(c.Km is { } kc ? $" · {Km(kc)}" : "")</strong>
+                                    <small>@c.Titre@(c.Garage is null ? "" : $" · {c.Garage}")</small>
+                                </div>
+                                <span class="montant">@Euros(c.MontantHt, 0) <small>HT</small></span>
+                            </div>
+                            <ul class="ch-lignes">
+                                @foreach (var l in c.Lignes)
+                                {
+                                    <li>
+                                        <span>@l.Designation @if (l.Reference is not null) { <code>@l.Reference</code> }</span>
+                                        <span class="nb">@Euros(l.MontantHt)</span>
+                                    </li>
+                                }
+                            </ul>
+                            <a href="historique?organe=@organe.Id">Voir la facture complète</a>
+                        </div>
+                    </li>
+                }
+            </ol>
+        </section>
+    }
+
+    @if (etat.Durees.Count > 0)
+    {
+        <section>
+            <h2>Combien de temps elle a tenu</h2>
+            <div class="carte">
+                <ul class="classement">
+                    @{ var maxMois = Math.Max(1, etat.Durees.Max(x => x.Mois)); }
+                    @foreach (var x in etat.Durees)
+                    {
+                        <li>
+                            <span>@Date(x.Du) → @Date(x.Au)</span>
+                            <span class="jauge"><i style="width:@((x.Mois * 100.0 / maxMois).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture))%"></i></span>
+                            <strong>@Mois(x.Mois)@(x.Km is { } km ? $" · {Km(km)}" : "")</strong>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+    }
+
+    @if (defauts.Count > 0 || travaux.Count > 0)
+    {
+        <section>
+            <h2>Signalé par le contrôle technique ou le garage</h2>
+            <ul class="liste">
+                @foreach (var (ct, df) in defauts)
+                {
+                    <li class="@(df.Statut == StatutSuivi.Fait ? "ok" : "att")">
+                        <div><strong>@df.Libelle</strong><br /><small>CT du @Date(ct.Date) · @df.Code</small></div>
+                        <span class="pastille @(df.Statut == StatutSuivi.Fait ? "ok" : "att")">@Libelle(df.Statut)</span>
+                    </li>
+                }
+                @foreach (var t in travaux)
+                {
+                    <li class="@(t.Statut == StatutSuivi.Fait ? "ok" : "att")">
+                        <div><strong>@t.Libelle</strong><br /><small>@t.Source, @Date(t.DateSignalement)</small></div>
+                        <span class="pastille @(t.Statut == StatutSuivi.Fait ? "ok" : "att")">@Libelle(t.Statut)</span>
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+
+    <section>
+        <h2>Pannes liées</h2>
+        <p class="intro">Symptômes qui peuvent venir de cette pièce : <a href="diagnostic?piece=@organe.Id">ouvrir le diagnostic</a>.</p>
+    </section>
+}
+
+@code {
+    [Parameter] public string Id { get; set; } = "";
+}

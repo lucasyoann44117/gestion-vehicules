@@ -42,7 +42,7 @@
                                 @d.Gravite.ToString().ToLowerInvariant()
                                 @if (Etat.Organe(d.OrganeId) is { } o)
                                 {
-                                    <span> · <a href="pieces?organe=@o.Id">@o.Nom</a></span>
+                                    <span> · <a href="pieces/@o.Id">@o.Nom</a></span>
                                 }
                                 @if (d.InterventionId is { } iid && Etat.Donnees.Interventions.FirstOrDefault(i => i.Id == iid) is { } inter)
                                 {

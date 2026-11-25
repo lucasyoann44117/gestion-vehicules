@@ -23,5 +23,6 @@ if (supabase.Configure)
 else
     builder.Services.AddScoped<IDepot, DepotNavigateur>();
 builder.Services.AddScoped<Etat>();
+builder.Services.AddScoped<ServiceDiagnostic>();
 
 await builder.Build().RunAsync();

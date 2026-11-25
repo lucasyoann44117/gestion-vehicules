@@ -91,7 +91,7 @@ else
             @foreach (var (id, montant) in parOrgane)
             {
                 <li>
-                    <a href="pieces?organe=@id">@(Etat.Organe(id)?.Nom ?? id)</a>
+                    <a href="pieces/@id">@(Etat.Organe(id)?.Nom ?? id)</a>
                     <span class="jauge"><i style="width:@Pourcent(montant, maxOrgane)%"></i></span>
                     <strong>@Euros(montant, 0)</strong>
                 </li>

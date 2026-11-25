@@ -1,0 +1,20 @@
+@* Jauge circulaire : part de l'intervalle conseillé déjà consommée. *@
+@{
+    var p = Math.Clamp(Valeur ?? 0, 0, 1);
+    var c = 2 * Math.PI * 26;
+    var trait = (c * p).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+    var reste = c.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+}
+<svg class="anneau @Classe(Urgence)" viewBox="0 0 64 64" role="img" aria-label="@(Valeur is null ? "Pas d'intervalle conseillé" : $"{Nombre(Math.Min(Valeur.Value, 9.99) * 100)} % de l'intervalle")">
+    <circle cx="32" cy="32" r="26" class="fond" />
+    @if (Valeur is not null)
+    {
+        <circle cx="32" cy="32" r="26" class="trace" stroke-dasharray="@trait @reste" transform="rotate(-90 32 32)" />
+    }
+    <text x="32" y="36" text-anchor="middle">@(Valeur is null ? "–" : Valeur.Value > 1 ? $"{Math.Min(Valeur.Value, 9.9):0.#}×" : $"{Valeur.Value * 100:0}%")</text>
+</svg>
+
+@code {
+    [Parameter] public double? Valeur { get; set; }
+    [Parameter] public Urgence Urgence { get; set; }
+}

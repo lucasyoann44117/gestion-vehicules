@@ -21,6 +21,10 @@
     <ProjectReference Include="..\..\src\Vehicules.Core\Vehicules.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\src\Vehicules.Web\wwwroot\diagnostic\t4-acv.json" Link="t4-acv.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <!-- L'historique réel sert de jeu d'essai s'il est présent (il reste hors du dépôt). -->
   <ItemGroup>
     <None Include="..\..\src\Vehicules.Web\wwwroot\donnees\historique.json" Link="historique.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\src\Vehicules.Web\wwwroot\donnees\historique.json')" />

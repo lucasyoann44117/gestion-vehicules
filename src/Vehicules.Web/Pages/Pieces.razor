@@ -1,99 +1,106 @@
 @page "/pieces"
 @inherits PageBase
+@inject NavigationManager Nav
 
-<Tete Titre="Pièces et organes" />
+<Tete Titre="Pièces">
+    <a class="btn" href="3d"><svg aria-hidden="true"><use href="#i-3d" /></svg>Vue 3D</a>
+</Tete>
 
-<p class="intro">Ce qui a été changé, quand, à quel kilométrage, et combien de temps la pièce précédente a tenu.
-Les intervalles conseillés sont indicatifs et se règlent dans <a href="reglages">Réglages</a>.</p>
-
-<div class="filtres">
-    <label class="case"><input type="checkbox" @bind="seulementChanges" /> Seulement les pièces déjà changées</label>
-</div>
-
-@foreach (var v in Etat.Vehicules)
-{
-    var etats = SuiviOrganes.Etats(Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id),
-                                   Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id),
-                                   Etat.Releves(v.Id), Etat.Aujourdhui)
-                            .Where(e => !seulementChanges || e.Changements.Count > 0)
-                            .ToList();
-    var couts = Couts.ParOrgane(Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id));
-    if (Etat.VehiculeId is null)
-    {
-        <h2 class="vehicule-titre" style="--accent:@v.Couleur">@v.Nom</h2>
-    }
-    @foreach (var cat in etats.GroupBy(e => e.Organe.Categorie))
-    {
-        <section>
-            <span class="categorie">@cat.Key</span>
-            <div class="grille-organes">
-                @foreach (var e in cat)
-                {
-                    var ouvert = selection == e.Organe.Id;
-                    <article class="carte organe @Classe(e.Urgence) @(ouvert ? "ouvert" : "")" id="o-@e.Organe.Id">
-                        <button class="organe-tete" @onclick="() => selection = ouvert ? null : e.Organe.Id" aria-expanded="@ouvert">
-                            <strong>@e.Organe.Nom</strong>
-                            <Pastille Urgence="e.Urgence" />
-                        </button>
-                        @if (e.Avancement is { } av)
-                        {
-                            <div class="jauge-vie" role="img" aria-label="@Nombre(Math.Min(av, 1) * 100) % de l'intervalle écoulé"><i style="width:@Math.Clamp(av * 100, 2, 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)%"></i></div>
-                        }
-                        @if (e.Dernier is { } d)
-                        {
-                            <dl class="faits">
-                                <div><dt>Dernier changement</dt><dd>@Date(d.Date)@(d.Km is { } k ? $" · {Km(k)}" : "")</dd></div>
-                                <div><dt>Depuis</dt><dd>@Mois(e.MoisDepuis)@(e.KmDepuis is { } kd ? $" · {Km(kd)}" : "")</dd></div>
-                                @if (e.ProchainKm is not null || e.ProchaineDate is not null)
-                                {
-                                    <div><dt>Prochain conseillé</dt><dd>@string.Join(" ou ", new[] { e.ProchainKm is { } pk ? Km(pk) : null, e.ProchaineDate is { } pd ? Date(pd) : null }.Where(x => x is not null))</dd></div>
-                                }
-                                @if (e.Durees.Count > 0)
-                                {
-                                    <div><dt>Durée de vie observée</dt><dd>@string.Join(" ; ", e.Durees.Select(x => Mois(x.Mois) + (x.Km is { } km ? $" / {Km(km)}" : "")))</dd></div>
-                                }
-                                <div><dt>Changé</dt><dd>@e.Changements.Count fois · @Euros(couts.GetValueOrDefault(e.Organe.Id), 0) TTC</dd></div>
-                            </dl>
-                        }
-                        else
-                        {
-                            <p class="vide">Pas de changement enregistré.</p>
-                        }
-                        @if (ouvert)
-                        {
-                            @if (e.Organe.Notes is not null)
-                            {
-                                <p class="notes">@e.Organe.Notes</p>
-                            }
-                            <ol class="changements">
-                                @foreach (var c in Enumerable.Reverse(e.Changements))
-                                {
-                                    <li>
-                                        <strong>@Date(c.Date)@(c.Km is { } k ? $" · {Km(k)}" : "")</strong>
-                                        <small>@c.Titre@(c.Garage is null ? "" : $" · {c.Garage}")</small>
-                                        <ul>
-                                            @foreach (var l in c.Lignes)
-                                            {
-                                                <li>@l.Designation@(l.Reference is null ? "" : $" ({l.Reference})") · @Euros(l.MontantHt) HT</li>
-                                            }
-                                        </ul>
-                                    </li>
-                                }
-                            </ol>
-                            <a href="historique?organe=@e.Organe.Id">Voir dans l'historique</a>
-                        }
-                    </article>
-                }
-            </div>
-        </section>
-    }
+@{
+    var etats = Etats().ToList();
+    var changees = etats.Where(e => e.Etat.Changements.Count > 0).ToList();
+    var aSurveiller = etats.Where(e => e.Etat.Urgence is Urgence.Bientot or Urgence.Depasse).ToList();
+    var categories = etats.Select(e => e.Etat.Organe.Categorie).Distinct().OrderBy(c => c).ToList();
+    var affichees = etats
+        .Where(e => categorie is null || e.Etat.Organe.Categorie == categorie)
+        .Where(e => tout || e.Etat.Changements.Count > 0)
+        .OrderByDescending(e => e.Etat.Urgence is Urgence.Depasse or Urgence.Bientot)
+        .ThenByDescending(e => e.Etat.Avancement ?? -1)
+        .ThenBy(e => e.Etat.Dernier?.Date ?? DateOnly.MaxValue)
+        .ToList();
+    var plusChere = etats.MaxBy(e => e.Cout);
 }
 
+<section class="stats">
+    <div class="stat carte mise-en-avant">
+        <span>Pièces suivies</span>
+        <strong>@etats.Count</strong>
+        <small>@changees.Count déjà changées au moins une fois</small>
+    </div>
+    <div class="stat carte">
+        <span>À surveiller</span>
+        <strong>@aSurveiller.Count</strong>
+        <small>@(aSurveiller.Count == 0 ? "Tout est dans les temps" : string.Join(", ", aSurveiller.Take(2).Select(e => e.Etat.Organe.Nom)))</small>
+    </div>
+    <div class="stat carte">
+        <span>La plus changée</span>
+        @{ var plusChangee = changees.MaxBy(e => e.Etat.Changements.Count); }
+        <strong>@(plusChangee?.Etat.Changements.Count ?? 0) fois</strong>
+        <small>@plusChangee?.Etat.Organe.Nom</small>
+    </div>
+    <div class="stat carte">
+        <span>La plus coûteuse</span>
+        <strong>@Euros(plusChere?.Cout ?? 0, 0)</strong>
+        <small>@plusChere?.Etat.Organe.Nom</small>
+    </div>
+</section>
+
+<div class="puces filtres-categories" role="group" aria-label="Système">
+    <button class="puce @(categorie is null ? "active" : "")" @onclick="() => categorie = null">Tout</button>
+    @foreach (var c in categories)
+    {
+        <button class="puce @(categorie == c ? "active" : "")" @onclick="() => categorie = c">@c</button>
+    }
+    <label class="case discret"><input type="checkbox" @bind="tout" /> Montrer les pièces jamais changées</label>
+</div>
+
+<section class="tableau-pieces">
+    @foreach (var (etat, vehicule, cout) in affichees)
+    {
+        var d = etat.Dernier;
+        <a class="tuile-piece @Classe(etat.Urgence)" href="pieces/@etat.Organe.Id" style="--accent:@vehicule.Couleur">
+            <div class="tp-haut">
+                <span class="tp-illu"><Illustration OrganeId="@etat.Organe.Id" /></span>
+                <Anneau Valeur="etat.Avancement" Urgence="etat.Urgence" />
+            </div>
+            <span class="tp-cat">@etat.Organe.Categorie@(Etat.VehiculeId is null ? $" · {vehicule.Nom}" : "")</span>
+            <strong class="tp-nom">@etat.Organe.Nom</strong>
+            @if (d is not null)
+            {
+                <div class="tp-chiffres">
+                    <div>
+                        <b>@(etat.KmDepuis is { } k ? Nombre(k) : "–")</b>
+                        <span>km depuis</span>
+                    </div>
+                    <div>
+                        <b>@Mois(etat.MoisDepuis)</b>
+                        <span>d'âge</span>
+                    </div>
+                </div>
+                <small class="tp-pied">Changé le @Date(d.Date)@(d.Km is { } kc ? $" à {Km(kc)}" : "") · @etat.Changements.Count× · @Euros(cout, 0)</small>
+            }
+            else
+            {
+                <small class="tp-pied">Aucun changement enregistré</small>
+            }
+        </a>
+    }
+</section>
+
 @code {
-    [SupplyParameterFromQuery(Name = "organe")] public string? OrganeQuery { get; set; }
+    private string? categorie;
+    private bool tout;
 
-    private string? selection;
-    private bool seulementChanges;
+    private sealed record Ligne(EtatOrgane Etat, Vehicule Vehicule, decimal Cout);
 
-    protected override void OnParametersSet() => selection ??= OrganeQuery;
+    private IEnumerable<Ligne> Etats()
+    {
+        foreach (var v in Etat.Vehicules)
+        {
+            var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id).ToList();
+            var couts = Couts.ParOrgane(inter);
+            foreach (var e in SuiviOrganes.Etats(Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id), inter, Etat.Releves(v.Id), Etat.Aujourdhui))
+                yield return new Ligne(e, v, couts.GetValueOrDefault(e.Organe.Id));
+        }
+    }
 }

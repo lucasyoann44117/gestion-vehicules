@@ -1,0 +1,225 @@
+@page "/3d"
+@inherits PageBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<PageTitle>Vue 3D · Mes véhicules</PageTitle>
+
+<div class="scene-3d">
+    <div class="toile-3d" @ref="toile"></div>
+
+    <header class="barre-3d">
+        <nav class="fil" aria-label="Niveau">
+            <button class="lien-3d @(systeme is null ? "actif" : "")" @onclick="() => Focaliser(null)">T4 Multivan</button>
+            @if (systeme is not null)
+            {
+                <span>›</span>
+                <button class="lien-3d @(piece is null ? "actif" : "")" @onclick="() => Focaliser(systeme)">@nomSysteme</button>
+            }
+            @if (piece is not null)
+            {
+                <span>›</span>
+                <span class="actif">@piece.Nom</span>
+            }
+        </nav>
+        <div class="reglages-3d">
+            <label>Éclaté <input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" /></label>
+            <button class="puce-3d @(etats ? "active" : "")" @onclick="BasculerEtats">Couleurs d'état</button>
+            <button class="puce-3d @(fantome ? "active" : "")" @onclick="BasculerCarrosserie">Carrosserie transparente</button>
+        </div>
+    </header>
+
+    @if (erreur is not null)
+    {
+        <p class="etat-3d">@erreur</p>
+    }
+    else if (!pret)
+    {
+        <p class="etat-3d">Construction du T4…</p>
+    }
+
+    @if (etats)
+    {
+        <div class="legende-3d">
+            <span><i class="ok"></i>OK</span><span><i class="att"></i>Bientôt</span><span><i class="mal"></i>Dépassé</span><span><i class="neutre"></i>Sans suivi</span>
+        </div>
+    }
+
+    <aside class="panneau-3d @(systeme is null && piece is null ? "replie" : "")">
+        @if (piece is not null)
+        {
+            var etat = EtatDe(piece.Organe);
+            <div class="p3-tete">
+                <span class="tp-illu"><Illustration OrganeId="@(piece.Organe ?? piece.Cle)" /></span>
+                <div>
+                    <small>@nomSysteme</small>
+                    <strong>@piece.Nom</strong>
+                </div>
+            </div>
+            @if (etat is null)
+            {
+                <p class="note">Pas de suivi pour cette pièce dans l'historique.</p>
+            }
+            else if (etat.Dernier is { } d)
+            {
+                <div class="tp-chiffres">
+                    <div><b>@(etat.KmDepuis is { } k ? Nombre(k) : "–")</b><span>km depuis</span></div>
+                    <div><b>@Mois(etat.MoisDepuis)</b><span>d'âge</span></div>
+                </div>
+                <p class="note">Changée @etat.Changements.Count fois, la dernière le @Date(d.Date)@(d.Km is { } kc ? $" à {Km(kc)}" : "") (@d.Garage).</p>
+                <Pastille Urgence="etat.Urgence" />
+            }
+            else
+            {
+                <p class="note">Jamais changée depuis le début de l'historique.</p>
+            }
+            <div class="boutons gauche">
+                @if (piece.Organe is not null)
+                {
+                    <a class="btn principal petit" href="pieces/@piece.Organe">Fiche de la pièce</a>
+                    <a class="btn petit" href="diagnostic?piece=@piece.Organe">Pannes liées</a>
+                }
+                <button class="btn petit" @onclick="() => Focaliser(systeme)">Retour</button>
+            </div>
+        }
+        else if (systeme is not null)
+        {
+            <strong class="p3-titre">@nomSysteme</strong>
+            <ul class="p3-liste">
+                @foreach (var p in piecesSysteme)
+                {
+                    var e = EtatDe(p.Organe);
+                    <li>
+                        <button @onclick="() => Choisir(p.Cle)">
+                            <span class="point @Classe(e?.Urgence ?? Urgence.Inconnue)"></span>
+                            <span>@p.Nom</span>
+                            <small>@(e?.Dernier is { } d ? d.Date.Year.ToString() : "")</small>
+                        </button>
+                    </li>
+                }
+            </ul>
+        }
+    </aside>
+
+    @if (systeme is null && pret)
+    {
+        <p class="aide-3d">Touche une zone du camion pour l'ouvrir, puis une pièce pour voir son historique.</p>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "piece")] public string? PieceQuery { get; set; }
+
+    private ElementReference toile;
+    private IJSObjectReference? module;
+    private DotNetObjectReference<Vue3D>? reference;
+    private bool pret, etats, fantome;
+    private int eclat;
+    private string? erreur, systeme, nomSysteme;
+    private PieceVue? piece;
+    private List<PieceVue> piecesSysteme = [];
+
+    public sealed record PieceVue(string Cle, string Nom, string? Organe);
+
+    protected override async Task OnAfterRenderAsync(bool premier)
+    {
+        if (!premier) return;
+        try
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/t4-3d.js");
+            reference = DotNetObjectReference.Create(this);
+            await module.InvokeVoidAsync("demarrer", toile, reference);
+            pret = true;
+            if (PieceQuery is not null) await module.InvokeVoidAsync("choisirPiece", PieceQuery);
+        }
+        catch (JSException e)
+        {
+            erreur = "La 3D n'a pas pu se charger (connexion nécessaire la première fois). " + e.Message;
+        }
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public Task SystemeChoisi(string? id, string? nom, List<PieceVue> liste)
+    {
+        systeme = id;
+        nomSysteme = nom;
+        piecesSysteme = liste;
+        piece = null;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task PieceChoisie(string cle, string nom, string? organe)
+    {
+        piece = new PieceVue(cle, nom, organe);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private EtatOrgane? EtatDe(string? organeId)
+    {
+        if (Etat.Organe(organeId) is not { } o) return null;
+        var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == o.VehiculeId).ToList();
+        return SuiviOrganes.Etats([o], inter, Etat.Releves(o.VehiculeId), Etat.Aujourdhui).Single();
+    }
+
+    private async Task Focaliser(string? id)
+    {
+        piece = null;
+        if (module is not null) await module.InvokeVoidAsync("focaliser", id);
+    }
+
+    private async Task Choisir(string cle)
+    {
+        if (module is not null) await module.InvokeVoidAsync("choisirPiece", cle);
+    }
+
+    private async Task Eclater(ChangeEventArgs e)
+    {
+        eclat = int.Parse(e.Value?.ToString() ?? "0");
+        if (module is not null) await module.InvokeVoidAsync("eclater", eclat / 100.0);
+    }
+
+    private async Task BasculerEtats()
+    {
+        etats = !etats;
+        if (module is null) return;
+        Dictionary<string, string>? couleurs = null;
+        if (etats)
+        {
+            couleurs = [];
+            foreach (var v in Etat.Donnees.Vehicules)
+            {
+                var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id).ToList();
+                foreach (var e in SuiviOrganes.Etats(Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id), inter, Etat.Releves(v.Id), Etat.Aujourdhui))
+                    couleurs[e.Organe.Id] = e.Changements.Count == 0 ? "neutre" : Classe(e.Urgence) == "neutre" ? "ok" : Classe(e.Urgence);
+            }
+        }
+        await module.InvokeVoidAsync("colorer", couleurs);
+    }
+
+    private async Task BasculerCarrosserie()
+    {
+        fantome = !fantome;
+        if (module is not null) await module.InvokeVoidAsync("carrosserie", fantome);
+    }
+
+    public override void Dispose() { }
+
+    public async ValueTask DisposeAsync()
+    {
+        base.Dispose();
+        try
+        {
+            if (module is not null)
+            {
+                await module.InvokeVoidAsync("arreter");
+                await module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        reference?.Dispose();
+    }
+}

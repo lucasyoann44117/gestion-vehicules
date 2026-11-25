@@ -1,0 +1,337 @@
+@page "/diagnostic"
+@inherits PageBase
+@implements IAsyncDisposable
+@inject ServiceDiagnostic Service
+@inject IJSRuntime JS
+
+<Tete Titre="Diagnostic">
+    <button class="btn @(onglet == "codes" ? "principal" : "")" @onclick="@(() => onglet = onglet == "codes" ? "symptomes" : "codes")">
+        @(onglet == "codes" ? "Symptômes" : "Codes défaut")
+    </button>
+</Tete>
+
+@if (basePannes is null)
+{
+    <p class="chargement">Chargement de la base de pannes…</p>
+}
+else if (onglet == "codes")
+{
+    <section class="carte formulaire">
+        <h2>Lire des codes défaut</h2>
+        <p class="intro">Tape un code (00553, P0100…) ou colle le rapport complet de VCDS : les codes sont repérés automatiquement.</p>
+        <textarea rows="4" @bind="texteCodes" @bind:event="oninput" placeholder="Ex. 00553 - Mass Air Flow Sensor (G70): Signal too Low"></textarea>
+        @{ var codes = MoteurDiagnostic.ExtraireCodes(texteCodes); }
+        @if (codes.Count > 0)
+        {
+            <ul class="liste">
+                @foreach (var c in codes)
+                {
+                    var def = basePannes.Codes.FirstOrDefault(x => x.Code.Equals(c, StringComparison.OrdinalIgnoreCase));
+                    <li class="@(def is null ? "" : "att")">
+                        <div>
+                            <strong><code>@c</code> @(def?.Libelle ?? "Code absent de la base")</strong>
+                            @if (def is not null)
+                            {
+                                <small>@string.Join(" · ", def.Pistes)</small>
+                            }
+                            else
+                            {
+                                <small><a href="@ServiceDiagnostic.LienForum($"T4 TDI code {c}")" target="_blank" rel="noopener">Chercher ce code sur T4Zone</a></small>
+                            }
+                        </div>
+                        @foreach (var p in def?.Pannes ?? [])
+                        {
+                            <button class="btn petit" @onclick="() => Ouvrir(p, codes)">@basePannes.Pannes.First(x => x.Id == p).Titre</button>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+
+    <section class="carte">
+        <h2>Brancher le camion</h2>
+        <p class="intro">
+            Le 2.5 TDI ACV de 2002 parle le protocole VAG « KW1281 » sur la ligne K de la prise de diagnostic (sous le tableau de bord).
+            Ton câble USB avec <strong>VCDS</strong> (ou VCDS-Lite) est le bon outil : calculateur <strong>01 Moteur</strong>, puis « Codes défaut ».
+            Les boîtiers Bluetooth ELM327 à 10 € lisent mal ce moteur (il est antérieur à l'EOBD diesel) : vérifie la compatibilité KW1281 avant d'en acheter un.
+            Quand tu auras un boîtier Bluetooth compatible, on pourra le relier directement à l'appli depuis Chrome sur Android.
+        </p>
+    </section>
+}
+else if (panne is null)
+{
+    <section class="recherche-panne">
+        <div class="champ-voix">
+            <textarea rows="2" @bind="description" @bind:event="oninput" placeholder="Décris la panne comme tu la raconterais : « il démarre mal le matin et fume blanc »"></textarea>
+            @if (voixDisponible)
+            {
+                <button class="micro @(ecoute ? "actif" : "")" @onclick="BasculerDictee" aria-label="@(ecoute ? "Arrêter la dictée" : "Dicter la panne")">
+                    <svg aria-hidden="true"><use href="#i-micro" /></svg>
+                </button>
+            }
+        </div>
+        @if (erreurVoix is not null)
+        {
+            <p class="erreur">@erreurVoix</p>
+        }
+        <div class="puces">
+            @foreach (var p in basePannes.Pannes.Take(10))
+            {
+                <button class="puce" @onclick="() => Ouvrir(p.Id)">@p.Titre</button>
+            }
+        </div>
+    </section>
+
+    @if (!string.IsNullOrWhiteSpace(description))
+    {
+        var trouvees = MoteurDiagnostic.Chercher(description, basePannes);
+        <section>
+            <h2>Pistes <small>@trouvees.Count trouvée@(trouvees.Count > 1 ? "s" : "")</small></h2>
+            @if (trouvees.Count == 0)
+            {
+                <p class="vide">Rien de reconnu. Essaie d'autres mots (bruit, fumée, voyant, démarrage…), ou <a href="@ServiceDiagnostic.LienForum("T4 2.5 TDI " + description)" target="_blank" rel="noopener">cherche sur T4Zone</a>.</p>
+            }
+            <div class="grille-pannes">
+                @foreach (var t in trouvees)
+                {
+                    <button class="carte-panne" @onclick="() => Ouvrir(t.Panne.Id)">
+                        <span class="cp-sys">@t.Panne.Systeme</span>
+                        <strong>@t.Panne.Titre</strong>
+                        <span class="jauge"><i style="width:@Largeur(t.Score, trouvees[0].Score)%"></i></span>
+                        <small>Mots reconnus : @string.Join(", ", t.MotsReconnus)</small>
+                    </button>
+                }
+            </div>
+        </section>
+    }
+    else if (PieceQuery is not null)
+    {
+        var liees = basePannes.Pannes.Where(p => p.Causes.Any(c => c.Organes.Contains(PieceQuery))).ToList();
+        <section>
+            <h2>Pannes liées à : @(Etat.Organe(PieceQuery)?.Nom)</h2>
+            <div class="grille-pannes">
+                @foreach (var p in liees)
+                {
+                    <button class="carte-panne" @onclick="() => Ouvrir(p.Id)">
+                        <span class="cp-sys">@p.Systeme</span>
+                        <strong>@p.Titre</strong>
+                        <small>@string.Join(" · ", p.Causes.Where(c => c.Organes.Contains(PieceQuery)).Select(c => c.Libelle))</small>
+                    </button>
+                }
+            </div>
+        </section>
+    }
+}
+else
+{
+    var etats = EtatsOrganes();
+    var causes = MoteurDiagnostic.Classer(panne, reponses, etats, codesLus);
+    var max = Math.Max(1, causes.Max(c => c.Score));
+
+    <article class="hero-panne">
+        <div>
+            <p class="sur-titre">@panne.Systeme@(panne.Urgence is null ? "" : $" · {panne.Urgence}")</p>
+            <h2 class="hp-nom">@panne.Titre</h2>
+            <p class="hp-note">@string.Join(" · ", panne.Descriptions)</p>
+        </div>
+        <button class="btn" @onclick="Fermer">Autre panne</button>
+    </article>
+
+    @if (panne.Questions.Count > 0)
+    {
+        <section>
+            <h2>Recoupage <small>@reponses.Count / @panne.Questions.Count répondues</small></h2>
+            <div class="questions">
+                @for (var i = 0; i < panne.Questions.Count; i++)
+                {
+                    var index = i;
+                    var reponse = reponses.TryGetValue(index, out var r) ? r : (bool?)null;
+                    <div class="question carte @(reponse is null ? "" : "repondue")">
+                        <span>@panne.Questions[index].Texte</span>
+                        <div class="oui-non">
+                            <button class="@(reponse == true ? "actif" : "")" @onclick="() => Repondre(index, true)">Oui</button>
+                            <button class="@(reponse == false ? "actif" : "")" @onclick="() => Repondre(index, false)">Non</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <section>
+        <h2>Causes probables <small>de la plus à la moins probable</small></h2>
+        <ol class="causes">
+            @foreach (var (cc, rang) in causes.Select((c, i) => (c, i)))
+            {
+                var c = cc.Cause;
+                <li class="carte cause @(cc.Ecartee ? "ecartee" : rang == 0 ? "premiere" : "")">
+                    <div class="cause-tete">
+                        <span class="rang">@(rang + 1)</span>
+                        <div>
+                            <strong>@c.Libelle</strong>
+                            <span class="jauge"><i style="width:@Largeur(Math.Max(cc.Score, 0), max)%"></i></span>
+                        </div>
+                        <div class="cause-badges">
+                            @if (c.Difficulte is not null) { <span class="pastille">@c.Difficulte</span> }
+                            @if (c.Cout is not null) { <span class="pastille">@c.Cout</span> }
+                        </div>
+                    </div>
+                    @if (cc.Historique.Count > 0)
+                    {
+                        <ul class="histo-cause">
+                            @foreach (var h in cc.Historique) { <li>@h</li> }
+                        </ul>
+                    }
+                    @if (c.Verifications.Count > 0)
+                    {
+                        <ol class="verifs">
+                            @foreach (var v in c.Verifications) { <li>@v</li> }
+                        </ol>
+                    }
+                    <div class="liens-cause">
+                        @foreach (var o in c.Organes.Select(Etat.Organe).Where(o => o is not null))
+                        {
+                            <a class="btn petit" href="pieces/@o!.Id">@o.Nom</a>
+                        }
+                        <a class="btn petit" href="@ServiceDiagnostic.LienForum($"T4 2.5 TDI {c.Libelle}")" target="_blank" rel="noopener">T4Zone</a>
+                        <a class="btn petit" href="@ServiceDiagnostic.LienImages(c.Image ?? $"VW T4 2.5 TDI {c.Libelle}")" target="_blank" rel="noopener">Images</a>
+                        <a class="btn petit" href="@ServiceDiagnostic.LienTutos($"VW T4 {c.Libelle}")" target="_blank" rel="noopener">Tutos vidéo</a>
+                        @if (c.Codes.Count > 0) { <small>Codes : @string.Join(", ", c.Codes)</small> }
+                    </div>
+                </li>
+            }
+        </ol>
+    </section>
+
+    @if (panne.Recherches.Count > 0)
+    {
+        <section>
+            <h2>Sur les forums</h2>
+            <div class="boutons gauche">
+                @foreach (var r in panne.Recherches)
+                {
+                    <a class="btn" href="@ServiceDiagnostic.LienForum(r)" target="_blank" rel="noopener">« @r » sur T4Zone</a>
+                }
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [SupplyParameterFromQuery(Name = "piece")] public string? PieceQuery { get; set; }
+
+    private BasePannes? basePannes;
+    private string onglet = "symptomes";
+    private string description = "";
+    private string texteCodes = "";
+    private Panne? panne;
+    private Dictionary<int, bool> reponses = [];
+    private List<string> codesLus = [];
+
+    private IJSObjectReference? dictee;
+    private DotNetObjectReference<Diagnostic>? reference;
+    private bool voixDisponible, ecoute;
+    private string? erreurVoix;
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        basePannes = await Service.BaseAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool premier)
+    {
+        if (!premier) return;
+        try
+        {
+            dictee = await JS.InvokeAsync<IJSObjectReference>("import", "./js/dictee.js");
+            voixDisponible = await dictee.InvokeAsync<bool>("disponible");
+            StateHasChanged();
+        }
+        catch (JSException) { voixDisponible = false; }
+    }
+
+    private void Ouvrir(string id, List<string>? codes = null)
+    {
+        panne = basePannes!.Pannes.First(p => p.Id == id);
+        reponses = [];
+        codesLus = codes ?? [];
+        onglet = "symptomes";
+    }
+
+    private void Fermer() => panne = null;
+
+    private void Repondre(int index, bool oui)
+    {
+        if (reponses.TryGetValue(index, out var r) && r == oui) reponses.Remove(index);
+        else reponses[index] = oui;
+    }
+
+    private List<EtatOrgane> EtatsOrganes()
+    {
+        var liste = new List<EtatOrgane>();
+        foreach (var v in Etat.Donnees.Vehicules)
+        {
+            var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id).ToList();
+            liste.AddRange(SuiviOrganes.Etats(Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id), inter, Etat.Releves(v.Id), Etat.Aujourdhui));
+        }
+        return liste;
+    }
+
+    private static string Largeur(double v, double max) =>
+        Math.Clamp(v / max * 100, 3, 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
+    private async Task BasculerDictee()
+    {
+        if (dictee is null) return;
+        erreurVoix = null;
+        if (ecoute)
+        {
+            await dictee.InvokeVoidAsync("arreter");
+            ecoute = false;
+            return;
+        }
+        reference ??= DotNetObjectReference.Create(this);
+        ecoute = await dictee.InvokeAsync<bool>("ecouter", reference);
+    }
+
+    [JSInvokable]
+    public void Dictee(string texte, bool fini)
+    {
+        description = texte;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void DicteeErreur(string code)
+    {
+        erreurVoix = code == "not-allowed" ? "Le micro n'est pas autorisé pour cette page." : $"Dictée interrompue ({code}).";
+        ecoute = false;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void DicteeFin()
+    {
+        ecoute = false;
+        StateHasChanged();
+    }
+
+    public override void Dispose() { }
+
+    public async ValueTask DisposeAsync()
+    {
+        base.Dispose();
+        try
+        {
+            if (dictee is not null)
+            {
+                await dictee.InvokeVoidAsync("arreter");
+                await dictee.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        reference?.Dispose();
+    }
+}
