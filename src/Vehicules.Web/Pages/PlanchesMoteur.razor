@@ -1,3 +1,5 @@
+@page "/planches"
+@page "/planches/{Code}"
 @page "/moteur/planches"
 @page "/moteur/planches/{Code}"
 @inherits PageBase
@@ -6,7 +8,7 @@
 @inject ServiceDiagnostic Diagnostics
 @inject NavigationManager Navigation
 
-<Tete Titre="Planches moteur">
+<Tete Titre="Planches ETKA">
     <a class="btn" href="3d?piece=bloc"><svg aria-hidden="true"><use href="#i-3d" /></svg>Dans le camion</a>
     <a class="btn" href="moteur"><svg aria-hidden="true"><use href="#i-pieces" /></svg>Sous le capot</a>
 </Tete>
@@ -17,15 +19,57 @@
 }
 else
 {
-    <nav class="onglets-planches" aria-label="Groupes de pièces">
-        <a class="@(planche is null ? "actif" : "")" href="moteur/planches"><b>1–9</b>Moteur complet</a>
-        @foreach (var p in catalogue.Planches)
-        {
-            <a class="@(planche?.Code == p.Code ? "actif" : "")" href="moteur/planches/@p.Code"><b>@p.Code</b>@p.Titre</a>
-        }
-    </nav>
+    @if (!accueil)
+    {
+        <nav class="onglets-planches" aria-label="Planches du groupe">
+            <a href="planches"><b>‹</b>Tous les groupes</a>
+            @if (planche is null || planche.Moteur)
+            {
+                <a class="@(planche is null ? "actif" : "")" href="planches/moteur"><b>1</b>Moteur complet</a>
+            }
+            @foreach (var p in PlanchesDuGroupe())
+            {
+                <a class="@(planche?.Code == p.Code ? "actif" : "")" href="planches/@p.Code"><b>@p.Code</b>@p.Titre</a>
+            }
+        </nav>
+    }
 }
 
+@if (accueil && catalogue is not null)
+{
+    <p class="intro">Tout le T4 pièce par pièce, rangé comme dans le catalogue ETKA de Volkswagen : choisis un groupe, puis une planche. Chaque pièce dit si elle a été changée ou si elle est d'origine.</p>
+    <section class="groupes-etka">
+        @foreach (var groupe in catalogue.Planches.GroupBy(p => p.Groupe).OrderBy(g => g.Key))
+        {
+            <article class="carte groupe-etka">
+                <h2>@groupe.Key</h2>
+                <ul>
+                    @if (groupe.Key.StartsWith("1"))
+                    {
+                        <li><a href="planches/moteur"><b>1–9</b><span>Moteur complet<small>Tous les groupes du moteur montés ensemble</small></span><i>›</i></a></li>
+                    }
+                    @foreach (var p in groupe.OrderBy(p => p.Code))
+                    {
+                        var suivis = p.Positions.Select(x => SuiviDe(x.Organe)).ToList();
+                        <li>
+                            <a href="planches/@p.Code">
+                                <b>@p.Code</b>
+                                <span>@p.Titre<small>@p.Positions.Count pièces · @suivis.Count(s => s.Change) changées · @suivis.Count(s => s.Classe == "origine") d'origine</small></span>
+                                @if (suivis.Any(s => s.Classe is "mal" or "att"))
+                                {
+                                    <em class="@(suivis.Any(s => s.Classe == "mal") ? "mal" : "att")"></em>
+                                }
+                                <i>›</i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </article>
+        }
+    </section>
+}
+else
+{
 <div class="atelier-planche">
     <div class="scene-planche">
         <div class="toile-planche" @ref="toile"></div>
@@ -90,11 +134,11 @@ else
         {
             <p class="note">Le moteur monté en entier. Touche un numéro de groupe pour ouvrir sa planche.</p>
             <ul class="groupes-planche">
-                @foreach (var p in catalogue.Planches)
+                @foreach (var p in catalogue.Planches.Where(p => p.Moteur))
                 {
                     var suivis = p.Positions.Select(x => SuiviDe(x.Organe)).ToList();
                     <li class="@(survol == p.Code ? "survol" : "")" @onmouseenter="() => SurvolerAsync(p.Code)" @onmouseleave="() => SurvolerAsync(null)">
-                        <a href="moteur/planches/@p.Code">
+                        <a href="planches/@p.Code">
                             <b>@p.Code</b>
                             <span>@p.Titre<small>@p.Positions.Count pièces · @suivis.Count(s => s.Change) changées · @suivis.Count(s => s.Classe == "origine") d'origine</small></span>
                             @if (suivis.Any(s => s.Classe is "mal" or "att"))
@@ -157,6 +201,7 @@ else
         }
     </aside>
 </div>
+}
 
 @code {
     [Parameter] public string? Code { get; set; }
@@ -175,29 +220,57 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Dès le premier affichage : accueil (liste des groupes) ou planche en 3D.
+        CalculerAccueil();
         catalogue = await Diagnostics.PlanchesAsync();
         fiches = await Diagnostics.FichesAsync();
     }
 
+    /// <summary>Accueil des planches : la liste des groupes, sans 3D.</summary>
+    private bool accueil;
+
     protected override async Task OnParametersSetAsync()
     {
         catalogue ??= await Diagnostics.PlanchesAsync();
-        planche = catalogue.Planches.FirstOrDefault(p => p.Code == Code);
+        CalculerAccueil();
+        planche = Code is null or "moteur" ? null : catalogue.Planches.FirstOrDefault(p => p.Code == Code);
         choisie = null;
+        if (accueil && module is not null)
+        {
+            // La scène 3D quitte la page : on l'arrête, elle redémarrera sur la prochaine planche.
+            try { await module.InvokeVoidAsync("arreter"); await module.DisposeAsync(); } catch (JSDisconnectedException) { }
+            module = null; affichee = null; pret = false;
+        }
         if (module is not null) await AfficherAsync();
     }
+
+    private void CalculerAccueil()
+    {
+        var chemin = Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', '#')[0].TrimEnd('/');
+        accueil = Code is null && chemin == "planches";
+    }
+
+    private bool demarrage;
+
+    /// <summary>Les planches voisines : celles du même groupe (ou celles du moteur en vue complète).</summary>
+    private IEnumerable<Planche> PlanchesDuGroupe() =>
+        catalogue is null ? [] : planche is null
+            ? catalogue.Planches.Where(p => p.Moteur)
+            : catalogue.Planches.Where(p => p.Groupe == planche.Groupe || (planche.Moteur && p.Moteur)).OrderBy(p => p.Code);
 
     private bool defilerOnglet;
 
     protected override async Task OnAfterRenderAsync(bool premier)
     {
-        if (!premier)
+        if (accueil || catalogue is null || demarrage) return;
+        if (module is not null)
         {
             if (!defilerOnglet) return;
             defilerOnglet = false;
             await JS.InvokeVoidAsync("eval", "document.querySelector('.onglets-planches a.actif')?.scrollIntoView({ inline: 'center', block: 'nearest' })");
             return;
         }
+        demarrage = true;
         try
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/planches-3d.js");
@@ -210,6 +283,10 @@ else
         {
             erreur = "Les planches n'ont pas pu se charger (connexion nécessaire la première fois). " + e.Message;
         }
+        finally
+        {
+            demarrage = false;
+        }
         StateHasChanged();
     }
 
@@ -220,7 +297,7 @@ else
         if (affichee == code) return;
         affichee = code;
         var positions = planche is null
-            ? catalogue.Planches.Select((p, i) => new { pos = i + 1, cle = p.Code }).ToList()
+            ? catalogue.Planches.Where(p => p.Moteur).Select((p, i) => new { pos = i + 1, cle = p.Code }).ToList()
             : planche.Positions.Select(x => new { pos = x.Pos, cle = x.Cle }).ToList();
         await module.InvokeVoidAsync("afficher", new { code, positions });
         // L'onglet de la planche ouverte reste visible dans la rangée (téléphone).
@@ -252,7 +329,7 @@ else
     {
         if (planche is null)
         {
-            if (cle is not null) Navigation.NavigateTo($"moteur/planches/{cle}");
+            if (cle is not null) Navigation.NavigateTo($"planches/{cle}");
             return;
         }
         choisie = cle;

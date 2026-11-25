@@ -53,7 +53,7 @@
             <label class="eclat-3d"><input type="range" min="0" max="100" value="@eclat" @oninput="Eclater" aria-label="Éclaté" /></label>
             <button class="puce-3d @(etats ? "active" : "")" @onclick="BasculerEtats">Couleurs d'état</button>
             <button class="puce-3d @(fantome ? "active" : "")" @onclick="BasculerCarrosserie">Caisse transparente</button>
-            <a class="puce-3d" href="moteur/planches">Planches moteur</a>
+            <a class="puce-3d" href="planches">Planches ETKA</a>
         </div>
     </header>
 
@@ -132,9 +132,9 @@
         else if (systeme is not null)
         {
             <p class="note p3-aide">@piecesSysteme.Count pièces. Survole un nom pour la repérer, touche-le pour l'ouvrir.</p>
-            @if (systeme == "moteur")
+            @if (PlancheDeZone(systeme) is { } pl)
             {
-                <a class="btn principal petit" href="moteur/planches">Planches détaillées du moteur (façon ETKA)</a>
+                <a class="btn principal petit" href="planches/@pl">Planche détaillée de cette zone (façon ETKA)</a>
             }
             <ul class="p3-liste">
                 @foreach (var p in piecesSysteme)
@@ -294,6 +294,14 @@
         piece = null;
         if (module is not null) await module.InvokeVoidAsync("vue", cle);
     }
+
+    /// <summary>Planche ETKA qui détaille une zone du camion.</summary>
+    private static string? PlancheDeZone(string? zone) => zone switch
+    {
+        "moteur" => "moteur", "carrosserie" => "800", "refroidissement" => "121", "transmission" => "301",
+        "trainAvant" => "407", "trainArriere" => "501", "roues" => "601", "freinage" => "615",
+        "echappement" => "253", "electricite" => "915", "habitacle" => "881", _ => null,
+    };
 
     private async Task BasculerEclatAsync()
     {

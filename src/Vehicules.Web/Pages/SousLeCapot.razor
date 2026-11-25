@@ -101,7 +101,8 @@ else
         if (v is null || fiches is null) yield break;
         var inter = Etat.Donnees.Interventions.Where(i => i.VehiculeId == v.Id).ToList();
         var couts = Couts.ParOrgane(inter);
-        var organes = Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id && fiches.Pieces.ContainsKey(o.Id));
+        // Seulement ce qui est sous le capot : les fiches du châssis (freins, train, éclairage…) ont leurs propres planches.
+        var organes = Etat.Donnees.Organes.Where(o => o.VehiculeId == v.Id && fiches.Pieces.TryGetValue(o.Id, out var f) && Ordre.Contains(f.Zone));
         foreach (var e in SuiviOrganes.Etats(organes, inter, Etat.Releves(v.Id), Etat.Aujourdhui))
             yield return new Ligne(e, fiches.Pieces[e.Organe.Id], couts.GetValueOrDefault(e.Organe.Id));
     }

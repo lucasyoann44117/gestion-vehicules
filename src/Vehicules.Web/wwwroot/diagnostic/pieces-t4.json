@@ -351,6 +351,222 @@
       "prixPiece": "Radiateur 60 à 150 €, pulseur 80 à 200 €",
       "prixPose": "100 à 250 €",
       "zone": "Habitacle"
+    },
+    "freins-av": {
+      "role": "Les disques et plaquettes avant font l'essentiel du freinage (environ 70 % de l'effort) : l'étrier serre les plaquettes sur le disque.",
+      "emplacement": "Derrière les roues avant, dans la jante.",
+      "usure": "Bruit métallique au freinage, vibrations dans la pédale ou le volant, voyant d'usure, disque creusé avec un rebord.",
+      "dureeVie": "Plaquettes 30 000 à 50 000 km, disques une fois sur deux.",
+      "prixPiece": "60 à 180 € (plaquettes + disques)",
+      "prixPose": "150 à 350 €",
+      "zone": "Freins"
+    },
+    "freins-ar": {
+      "role": "Les freins arrière stabilisent le camion au freinage et servent aussi de frein à main.",
+      "emplacement": "Derrière les roues arrière.",
+      "usure": "Frein à main qui tient mal, bruit, disque rouillé ou creusé.",
+      "dureeVie": "Plaquettes 50 000 à 80 000 km.",
+      "prixPiece": "50 à 150 €",
+      "prixPose": "120 à 300 €",
+      "zone": "Freins"
+    },
+    "flexibles-frein": {
+      "role": "Tuyaux souples qui amènent le liquide de frein aux étriers tout en suivant les mouvements de la roue.",
+      "emplacement": "Entre le châssis et chaque étrier.",
+      "usure": "Craquelures, gonflement, pédale spongieuse, suintement.",
+      "dureeVie": "Environ 10 ans ou au contrôle technique.",
+      "prixPiece": "15 à 35 € pièce",
+      "prixPose": "60 à 150 € les deux",
+      "zone": "Freins"
+    },
+    "liquide-frein": {
+      "role": "Transmet la pression de la pédale aux étriers. Il absorbe l'humidité avec le temps et perd en efficacité.",
+      "emplacement": "Bocal au-dessus du maître-cylindre, sous le capot côté conducteur.",
+      "usure": "Liquide foncé, pédale molle après un freinage long.",
+      "dureeVie": "Tous les 2 ans.",
+      "prixPiece": "10 à 20 €",
+      "prixPose": "50 à 90 €",
+      "zone": "Freins"
+    },
+    "cable-frein-main": {
+      "role": "Relie le levier de frein à main aux freins arrière.",
+      "emplacement": "Sous le plancher, du levier aux roues arrière.",
+      "usure": "Levier qui monte trop haut, frein à main qui tient mal, câble grippé.",
+      "dureeVie": "150 000 km et plus, selon la rouille.",
+      "prixPiece": "30 à 70 € pièce",
+      "prixPose": "80 à 200 €",
+      "zone": "Freins"
+    },
+    "pneus-av": {
+      "role": "Les pneus avant dirigent et freinent le camion : ils s'usent plus vite que l'arrière.",
+      "emplacement": "Roues avant (205/65 R15).",
+      "usure": "Profondeur sous 3 mm, usure sur un bord (géométrie), craquelures, hernie.",
+      "dureeVie": "30 000 à 50 000 km selon la conduite.",
+      "prixPiece": "90 à 160 € pièce",
+      "prixPose": "20 à 30 € le montage",
+      "zone": "Roues"
+    },
+    "pneus-ar": {
+      "role": "Les pneus arrière portent la charge et stabilisent le camion.",
+      "emplacement": "Roues arrière (205/65 R15).",
+      "usure": "Profondeur sous 3 mm, usure irrégulière, craquelures avec l'âge.",
+      "dureeVie": "40 000 à 70 000 km, ou 6 à 8 ans.",
+      "prixPiece": "90 à 160 € pièce",
+      "prixPose": "20 à 30 € le montage",
+      "zone": "Roues"
+    },
+    "jantes": {
+      "role": "Portent les pneus et se fixent au moyeu par cinq vis.",
+      "emplacement": "Sur chaque roue.",
+      "usure": "Voile (vibrations), choc sur le rebord, corrosion qui fait fuir le pneu.",
+      "dureeVie": "Toute la vie du camion si elles ne prennent pas de choc.",
+      "prixPiece": "60 à 200 € pièce",
+      "prixPose": "20 €",
+      "zone": "Roues"
+    },
+    "amortisseurs": {
+      "role": "Freinent les rebonds des ressorts : sans eux, le camion tangue et la tenue de route se dégrade.",
+      "emplacement": "Près de chaque roue, entre le train et la caisse.",
+      "usure": "Camion qui rebondit, fuite d'huile sur le corps, usure des pneus en facettes.",
+      "dureeVie": "80 000 à 120 000 km.",
+      "prixPiece": "40 à 90 € pièce",
+      "prixPose": "150 à 300 € la paire",
+      "zone": "Train avant"
+    },
+    "triangle-inf-avd": {
+      "role": "Le triangle inférieur relie la roue au châssis et la guide quand la suspension travaille.",
+      "emplacement": "Sous la roue avant droite.",
+      "usure": "Bruits sur les bosses, silentblocs fendus, rotule avec du jeu.",
+      "dureeVie": "150 000 km et plus.",
+      "prixPiece": "60 à 150 €",
+      "prixPose": "150 à 300 € avec parallélisme",
+      "zone": "Train avant"
+    },
+    "rotule-inf-avd": {
+      "role": "Articulation entre le triangle inférieur et le porte-moyeu : elle laisse la roue tourner et monter.",
+      "emplacement": "Au bout du triangle inférieur avant droit.",
+      "usure": "Claquement, jeu au contrôle technique, usure anormale du pneu.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "25 à 60 €",
+      "prixPose": "100 à 200 €",
+      "zone": "Train avant"
+    },
+    "rotule-inf-avg": {
+      "role": "Articulation entre le triangle inférieur et le porte-moyeu : elle laisse la roue tourner et monter.",
+      "emplacement": "Au bout du triangle inférieur avant gauche.",
+      "usure": "Claquement, jeu au contrôle technique, usure anormale du pneu.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "25 à 60 €",
+      "prixPose": "100 à 200 €",
+      "zone": "Train avant"
+    },
+    "rotules-sup-av": {
+      "role": "Articulations du haut des porte-moyeux, sur les triangles supérieurs.",
+      "emplacement": "En haut de chaque roue avant.",
+      "usure": "Jeu au contrôle technique, claquements en braquant.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "25 à 60 € pièce",
+      "prixPose": "150 à 300 € la paire",
+      "zone": "Train avant"
+    },
+    "biellettes-stab": {
+      "role": "Relient la barre stabilisatrice au train avant pour limiter le roulis dans les virages.",
+      "emplacement": "Entre la barre stabilisatrice et les triangles.",
+      "usure": "Petits claquements sur les pavés, rotules de biellette avec du jeu.",
+      "dureeVie": "60 000 à 100 000 km.",
+      "prixPiece": "15 à 40 € pièce",
+      "prixPose": "60 à 120 €",
+      "zone": "Train avant"
+    },
+    "roulement-avd": {
+      "role": "Permet à la roue de tourner sans frottement autour de la fusée.",
+      "emplacement": "Dans le moyeu avant droit.",
+      "usure": "Ronronnement qui monte avec la vitesse et change en virage, jeu dans la roue.",
+      "dureeVie": "150 000 km et plus.",
+      "prixPiece": "40 à 90 €",
+      "prixPose": "150 à 250 €",
+      "zone": "Train avant"
+    },
+    "cardan-avd": {
+      "role": "Transmet le couple de la boîte à la roue avant droite tout en suivant la direction et la suspension.",
+      "emplacement": "Entre la boîte et la roue avant droite.",
+      "usure": "Claquement en braquant (joint homocinétique), soufflet percé qui projette de la graisse.",
+      "dureeVie": "200 000 km et plus si les soufflets restent étanches.",
+      "prixPiece": "100 à 250 €",
+      "prixPose": "200 à 400 €",
+      "zone": "Train avant"
+    },
+    "soufflets-cardan": {
+      "role": "Protègent les joints de cardan et gardent leur graisse.",
+      "emplacement": "Aux deux bouts de chaque cardan.",
+      "usure": "Caoutchouc fendu, graisse projetée dans le passage de roue.",
+      "dureeVie": "80 000 à 150 000 km, plus vite avec l'âge.",
+      "prixPiece": "15 à 40 € pièce",
+      "prixPose": "80 à 180 € pièce",
+      "zone": "Train avant"
+    },
+    "direction": {
+      "role": "La crémaillère transforme la rotation du volant en mouvement des roues ; biellettes et rotules font le lien avec les porte-moyeux.",
+      "emplacement": "Derrière le train avant, d'une roue à l'autre.",
+      "usure": "Direction floue, jeu au volant, rotules avec du jeu au contrôle technique, fuite d'huile de direction.",
+      "dureeVie": "Rotules 80 000 à 150 000 km ; crémaillère plus longtemps.",
+      "prixPiece": "20 à 60 € la rotule, 300 à 700 € la crémaillère",
+      "prixPose": "100 à 600 €",
+      "zone": "Direction"
+    },
+    "parallelisme": {
+      "role": "Réglage de l'angle des roues pour qu'elles roulent droit et usent les pneus régulièrement.",
+      "emplacement": "Réglage sur les biellettes de direction.",
+      "usure": "Volant de travers, camion qui tire d'un côté, pneus usés sur un bord.",
+      "dureeVie": "À refaire après chaque changement de pièce du train avant.",
+      "prixPiece": "–",
+      "prixPose": "60 à 100 €",
+      "zone": "Direction"
+    },
+    "eclairage": {
+      "role": "Projecteurs, antibrouillards, clignotants et feux : voir, être vu et signaler.",
+      "emplacement": "Avant, arrière et sur les côtés.",
+      "usure": "Ampoule grillée, optique jaunie ou embuée, réglage trop haut ou trop bas au contrôle technique.",
+      "dureeVie": "Ampoules 1 à 3 ans selon l'usage.",
+      "prixPiece": "2 à 30 € l'ampoule, 80 à 200 € une optique",
+      "prixPose": "10 à 60 €",
+      "zone": "Éclairage"
+    },
+    "essuie-glace": {
+      "role": "Les balais nettoient le pare-brise ; les bras les plaquent sur le verre.",
+      "emplacement": "Au bas du pare-brise.",
+      "usure": "Traces, bruit, caoutchouc durci ou fendu.",
+      "dureeVie": "1 à 2 ans.",
+      "prixPiece": "15 à 40 € la paire",
+      "prixPose": "–",
+      "zone": "Carrosserie"
+    },
+    "plaques": {
+      "role": "Identifient le camion à l'avant et à l'arrière.",
+      "emplacement": "Pare-chocs avant et hayon.",
+      "usure": "Illisibles, fendues ou décolorées.",
+      "dureeVie": "Changées au changement d'immatriculation.",
+      "prixPiece": "20 à 40 € la paire",
+      "prixPose": "–",
+      "zone": "Carrosserie"
+    },
+    "faisceau-porte-avg": {
+      "role": "Le faisceau de porte fait passer les fils (vitre, rétroviseur, verrouillage) entre la caisse et la porte.",
+      "emplacement": "Dans le soufflet entre la caisse et la porte avant gauche.",
+      "usure": "Vitre ou verrouillage qui fonctionne par intermittence, fils cassés à force d'ouvrir la porte.",
+      "dureeVie": "Très variable, souvent 20 ans.",
+      "prixPiece": "20 à 60 € de fils et gaines",
+      "prixPose": "80 à 200 €",
+      "zone": "Électricité"
+    },
+    "filtre-habitacle": {
+      "role": "Filtre l'air soufflé dans l'habitacle (pollen, poussière).",
+      "emplacement": "Derrière la boîte à gants, dans le bloc de chauffage.",
+      "usure": "Odeur, buée qui part mal, souffle faible.",
+      "dureeVie": "Tous les ans ou 15 000 à 20 000 km.",
+      "prixPiece": "10 à 30 €",
+      "prixPose": "20 à 50 €",
+      "zone": "Habitacle"
     }
   }
 }

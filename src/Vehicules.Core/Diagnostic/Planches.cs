@@ -15,6 +15,8 @@ public sealed class Planche
     public string Titre { get; set; } = "";
     public string Groupe { get; set; } = "";
     public string? Description { get; set; }
+    /// <summary>Planche du moteur : elle entre dans la vue « Moteur complet ».</summary>
+    public bool Moteur { get; set; }
     public List<PositionPlanche> Positions { get; set; } = [];
 }
 

@@ -1212,3 +1212,18 @@ a.puce-3d { text-decoration: none; display: inline-flex; align-items: center; }
 /* Les tuiles du véhicule montrent qu'on peut les toucher */
 a.tuile { position: relative; color: inherit; }
 a.tuile::after { content: '›'; position: absolute; right: 12px; top: 8px; font-size: 1.3rem; font-weight: 700; color: rgb(255 255 255 / .55); }
+
+/* Accueil des planches ETKA : les groupes 1 à 9 */
+.groupes-etka { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.groupe-etka { padding: 16px 18px; }
+.groupe-etka h2 { margin: 0 0 10px; font-size: 1.05rem; }
+.groupe-etka ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.groupe-etka a { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 12px; color: var(--encre); text-decoration: none; background: var(--surface-2); }
+.groupe-etka a:hover { background: color-mix(in srgb, var(--atlantis) 10%, var(--surface-2)); text-decoration: none; }
+.groupe-etka b { flex: none; min-width: 44px; padding: 3px 0; text-align: center; border: 1.5px solid currentColor; font-variant-numeric: tabular-nums; font-size: 13px; }
+.groupe-etka span { flex: 1; display: flex; flex-direction: column; font-weight: 650; }
+.groupe-etka small { font-weight: 500; color: var(--doux); font-size: 12px; }
+.groupe-etka em { width: 9px; height: 9px; border-radius: 50%; }
+.groupe-etka em.att { background: #f59e0b; } .groupe-etka em.mal { background: #dc2626; }
+.groupe-etka i { font-style: normal; color: var(--tres-doux); font-weight: 700; }
+@media (max-width: 760px) { .groupes-etka { grid-template-columns: 1fr; } }

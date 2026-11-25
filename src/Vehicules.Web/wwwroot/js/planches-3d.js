@@ -153,6 +153,70 @@ function cadre(l, p, bord, ep, teinte = 'gomme') {
   return g(m);
 }
 
+// ---------- Briques du châssis et de la carrosserie ----------
+const sphere = (r, teinte = 'clair') => new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), mat(teinte));
+
+/** Soufflet en accordéon (cardan, crémaillère), du rayon r1 au rayon r2. */
+function soufflet(r1, r2, l, plis = 6, axe = 'x', teinte = 'gomme') {
+  const p = [[0.001, -l / 2]];
+  for (let i = 0; i <= plis * 2; i++) {
+    const t = i / (plis * 2);
+    p.push([r1 + (r2 - r1) * t + (i % 2 ? 0.006 : 0), -l / 2 + t * l]);
+  }
+  p.push([0.001, l / 2]);
+  return tour(p, teinte, axe, 32);
+}
+
+function amortisseur(h, teinte = 'fonce') {
+  return g(
+    a(cyl(0.024, h * 0.62, teinte, 'y', 24), 0, -h * 0.17, 0),
+    a(cyl(0.008, h * 0.42, 'moyen', 'y', 12), 0, h * 0.29, 0),
+    a(tore(0.014, 0.005, 'moyen', 'z'), 0, h * 0.5, 0),
+    a(tore(0.014, 0.005, 'moyen', 'z'), 0, -h * 0.5, 0));
+}
+
+/** Pièce plate (triangle, bras) : contour [[x, z], …] extrudé sur l'épaisseur, à plat. */
+function plat(points, ep, teinte = 'clair') {
+  const m = extrude(new THREE.Shape(points.map(([x, z]) => new THREE.Vector2(x, z))), ep, teinte);
+  m.rotation.x = Math.PI / 2;
+  return g(m);
+}
+
+/** Panneau vertical (porte) dans le plan X-Y, avec un vitrage éventuel. */
+function panneau(x1, x2, y1, y2, vitre, ep = 0.02, teinte = 'clair') {
+  const f = new THREE.Shape();
+  f.moveTo(x1, y1); f.lineTo(x2, y1); f.lineTo(x2, y2); f.lineTo(x1, y2); f.closePath();
+  if (vitre) {
+    const [vx1, vx2, vy1, vy2] = vitre;
+    const h = new THREE.Path(); h.moveTo(vx1, vy1); h.lineTo(vx1, vy2); h.lineTo(vx2, vy2); h.lineTo(vx2, vy1); h.closePath();
+    f.holes.push(h);
+  }
+  return extrude(f, ep, teinte);
+}
+
+/** Siège (assise, dossier, appui-tête), tourné vers +X, à l'échelle 0,35 des planches de caisse. */
+function siege(teinte = 'fonce') {
+  return g(a(boite(0.17, 0.05, 0.17, teinte, 0.02), 0, 0, 0), a(boite(0.05, 0.2, 0.17, teinte, 0.02), -0.08, 0.11, 0),
+    a(boite(0.04, 0.06, 0.1, teinte, 0.015), -0.085, 0.24, 0), a(cyl(0.012, 0.08, 'moyen'), 0, -0.06, 0));
+}
+
+/** Pneu 205/65 R15 (axe Z) avec ses rainures. */
+function pneu() {
+  const t = tore(0.255, 0.075, 'gomme', 'z');
+  t.scale.z = 1.35;
+  return g(t, [-0.045, 0, 0.045].map(z => a(tore(0.329, 0.003, 'fonce', 'z'), 0, 0, z)));
+}
+
+function cardan(s) {
+  return g(a(cyl(0.03, 0.05, 'clair', 'x'), s * 0.08, 0, 0), a(sphere(0.05), s * 0.13, 0, 0), a(cyl(0.013, 0.5, 'moyen', 'x'), s * 0.42, 0, 0),
+    a(sphere(0.055), s * 0.7, 0, 0), a(cyl(0.012, 0.08, 'moyen', 'x', 16), s * 0.77, 0, 0));
+}
+
+/** Pédale : bras et patin. */
+function pedale(x, z, h = 0.28) {
+  return g(a(boite(0.025, h, 0.02, 'moyen', 0.006), x, 0.1, z), a(boite(0.07, 0.015, 0.06, 'fonce', 0.005), x, 0.1 - h / 2, z + 0.03));
+}
+
 // ---------- Cotes communes du moteur ----------
 const CYL = [-0.24, -0.12, 0, 0.12, 0.24];      // axes des 5 cylindres
 const Y_VILO = -0.02, Y_AAC = 0.39;
@@ -340,6 +404,178 @@ const PIECES = {
   },
 };
 
+// ---------- Le reste du camion, groupe par groupe (comme les groupes principaux d'ETKA) ----------
+// « cotes: true » : la pièce est dessinée côté gauche puis reflétée à droite (écart = demi-voie).
+// « cote: ±1 » : la pièce n'existe que d'un côté (+1 gauche, -1 droite).
+Object.assign(PIECES, {
+  // 301 — Boîte de vitesses et embrayage (axe X le long de l'arbre, moteur vers +X)
+  '301': {
+    'volant-moteur': { eclat: [0.36, 0, 0], faire: () => g(a(versPlanX(engrenage(0.15, 66, 0.02, 'moyen', 0.006)), 0.13, 0, 0), a(cyl(0.14, 0.035, 'clair', 'x', 48), 0.15, 0, 0)) },
+    'disque-embrayage': { eclat: [0.26, 0, 0], faire: () => g(a(cyl(0.115, 0.008, 'fonce', 'x', 48), 0.1, 0, 0), a(cyl(0.035, 0.03, 'moyen', 'x', 24), 0.1, 0, 0),
+      Array.from({ length: 6 }, (_, i) => a(cyl(0.008, 0.02, 'moyen', 'x', 10), 0.1, Math.sin(i * 1.047) * 0.055, Math.cos(i * 1.047) * 0.055))) },
+    'mecanisme-embrayage': { eclat: [0.16, 0, 0], faire: () => a(tour([[0.04, -0.02], [0.13, -0.02], [0.13, 0.015], [0.11, 0.02], [0.05, 0.03], [0.04, 0.03]], 'clair', 'x', 48), 0.07, 0, 0) },
+    'butee-embrayage': { eclat: [0.06, 0, 0], faire: () => a(tour([[0.02, -0.015], [0.035, -0.015], [0.035, 0.015], [0.02, 0.015]], 'moyen', 'x', 32), 0.03, 0, 0) },
+    'boite-vitesses': { eclat: [0, 0, 0], faire: () => g(
+      a(tour([[0.17, 0], [0.17, 0.012], [0.12, 0.13], [0.1, 0.14]], 'clair', 'x', 48), 0, 0, 0),
+      a(boite(0.3, 0.22, 0.24, 'clair', 0.03), -0.29, -0.01, 0),
+      a(cyl(0.1, 0.12, 'clair', 'x', 32), -0.22, -0.1, 0.1),
+      a(cyl(0.03, 0.08, 'moyen', 'z'), -0.22, -0.1, 0.22)) },
+    'bouchons-boite': { eclat: [0, -0.12, 0.2], faire: () => g(a(vis(0.01, 0.02, 'z'), -0.26, -0.11, 0.125), a(vis(0.01, 0.02, 'z'), -0.34, 0.03, 0.125)) },
+    'tringlerie': { eclat: [-0.08, 0.22, 0.08], faire: () => g(tuyau([[-0.36, 0.11, 0.05], [-0.5, 0.16, 0.18], [-0.7, 0.18, 0.3]], 0.008, 'moyen'), a(boite(0.04, 0.06, 0.02, 'moyen', 0.005), -0.36, 0.13, 0.05)) },
+    'rotules-commande': { eclat: [-0.08, 0.36, 0.16], faire: () => g([[-0.36, 0.12, 0.05], [-0.5, 0.17, 0.18], [-0.7, 0.19, 0.3]].map(([x, y, z]) => a(sphere(0.014, 'fonce'), x, y, z))) },
+    'support-boite': { eclat: [0, -0.26, -0.08], faire: () => g(a(boite(0.1, 0.02, 0.12, 'clair', 0.004), -0.32, -0.14, -0.08), a(cyl(0.035, 0.04, 'gomme'), -0.32, -0.17, -0.08), a(boite(0.08, 0.012, 0.09, 'moyen', 0.003), -0.32, -0.2, -0.08)) },
+  },
+
+  // 407 — Train avant (X vers l'avant, Z vers l'extérieur du côté dessiné ; roue en Z = 0)
+  '407': {
+    'pivot': { cotes: true, eclat: [0, 0, 0], faire: () => g(a(boite(0.07, 0.24, 0.06, 'clair', 0.01), 0, 0, -0.05), a(cyl(0.025, 0.08, 'moyen', 'z'), 0, 0, 0), a(boite(0.12, 0.03, 0.03, 'clair', 0.006), 0.08, -0.03, -0.06)) },
+    'roulement-av': { cotes: true, eclat: [0, 0, 0.28], faire: () => g(a(tour([[0.03, -0.02], [0.05, -0.02], [0.05, 0.02], [0.03, 0.02]], 'moyen', 'z', 32), 0, 0, 0.03), a(cyl(0.075, 0.02, 'clair', 'z', 36), 0, 0, 0.07),
+      Array.from({ length: 5 }, (_, i) => a(cyl(0.006, 0.04, 'moyen', 'z', 10), Math.cos(i * 1.2566) * 0.056, Math.sin(i * 1.2566) * 0.056, 0.09))) },
+    'triangle-inf': { cotes: true, eclat: [0, -0.2, -0.05], faire: () => a(plat([[-0.2, -0.45], [0.14, -0.45], [0.02, -0.06], [-0.03, -0.06]], 0.02), 0, -0.13, 0) },
+    'rotule-inf-g': { cote: 1, eclat: [0, -0.1, 0.1], faire: () => g(a(sphere(0.025, 'moyen'), 0, -0.11, -0.06), a(cyl(0.01, 0.05, 'moyen'), 0, -0.08, -0.06)) },
+    'rotule-inf-d': { cote: -1, eclat: [0, -0.1, 0.1], faire: () => g(a(sphere(0.025, 'moyen'), 0, -0.11, -0.06), a(cyl(0.01, 0.05, 'moyen'), 0, -0.08, -0.06)) },
+    'triangle-sup': { cotes: true, eclat: [0, 0.2, -0.05], faire: () => a(plat([[-0.12, -0.32], [0.1, -0.32], [0.02, -0.06], [-0.03, -0.06]], 0.018), 0, 0.13, 0) },
+    'rotules-sup': { cotes: true, eclat: [0, 0.1, 0.1], faire: () => g(a(sphere(0.022, 'moyen'), 0, 0.12, -0.06), a(cyl(0.009, 0.045, 'moyen'), 0, 0.095, -0.06)) },
+    'amortisseurs-av': { cotes: true, eclat: [0, 0.32, -0.08], faire: () => { const m = amortisseur(0.3); m.position.set(-0.05, 0.03, -0.24); m.rotation.x = 0.25; return g(m); } },
+    'barres-torsion': { cotes: true, eclat: [-0.2, -0.22, -0.05], faire: () => g(a(cyl(0.013, 0.75, 'moyen', 'x', 16), -0.45, -0.13, -0.3), a(cyl(0.03, 0.05, 'clair', 'x', 12), -0.06, -0.13, -0.3)) },
+    'barre-stab': { eclat: [0.18, -0.12, 0], faire: () => tuyau([[0.06, -0.08, 0.63], [0.12, -0.1, 0.55], [0.18, -0.1, 0.3], [0.18, -0.1, -0.3], [0.12, -0.1, -0.55], [0.06, -0.08, -0.63]], 0.011, 'moyen') },
+    'biellettes-stab': { cotes: true, eclat: [0.22, 0.02, 0], faire: () => g(a(cyl(0.007, 0.09, 'moyen'), 0.06, -0.04, -0.12), a(sphere(0.012, 'fonce'), 0.06, 0.005, -0.12), a(sphere(0.012, 'fonce'), 0.06, -0.085, -0.12)) },
+  },
+
+  // 409 — Transmissions (cardans), de la boîte (X = 0) vers les roues
+  '409': {
+    'cardan-g': { eclat: [-0.15, 0, 0.16], faire: () => cardan(-1) },
+    'cardan-d': { eclat: [0.15, 0, 0.16], faire: () => cardan(1) },
+    'soufflets': { eclat: [0, 0.16, 0], faire: () => g([-1, 1].flatMap(s => [a(soufflet(0.045, 0.02, 0.11, 6, 'x'), s * 0.22, 0, 0), a(soufflet(0.05, 0.022, 0.12, 6, 'x'), s * 0.6, 0, 0)])) },
+    'colliers': { eclat: [0, 0.28, 0], faire: () => g([-1, 1].flatMap(s => [0.165, 0.275, 0.54, 0.66].map(x => a(tore(0.03, 0.004, 'moyen', 'x'), s * x, 0, 0)))) },
+    'ecrous-moyeu': { eclat: [0, 0, -0.14], faire: () => g([-1, 1].map(s => a(cyl(0.02, 0.02, 'moyen', 'x', 6), s * 0.82, 0, 0))) },
+  },
+
+  // 419 — Direction (X d'une roue à l'autre, Z vers l'avant)
+  '419': {
+    'cremaillere': { eclat: [0, -0.1, 0], faire: () => g(cyl(0.022, 0.7, 'clair', 'x'), a(boite(0.08, 0.08, 0.08, 'clair', 0.01), 0.15, 0.02, 0)) },
+    'soufflets-cremaillere': { eclat: [0, -0.2, 0.06], faire: () => g(a(soufflet(0.03, 0.015, 0.1, 6, 'x'), 0.4, 0, 0), a(soufflet(0.03, 0.015, 0.1, 6, 'x'), -0.4, 0, 0)) },
+    'biellettes-direction': { eclat: [0, 0, 0.14], faire: () => g(a(cyl(0.01, 0.22, 'moyen', 'x'), 0.55, 0, 0), a(cyl(0.01, 0.22, 'moyen', 'x'), -0.55, 0, 0)) },
+    'rotules-direction': { eclat: [0, 0, 0.26], faire: () => g([-1, 1].flatMap(s => [a(sphere(0.02, 'fonce'), s * 0.68, 0, 0), a(cyl(0.008, 0.05, 'moyen'), s * 0.68, 0.035, 0)])) },
+    'colonne': { eclat: [0, 0.08, -0.08], faire: () => tuyau([[0.15, 0.06, -0.03], [0.22, 0.25, -0.22], [0.33, 0.58, -0.52]], 0.015, 'moyen') },
+    'volant': { eclat: [0, 0.3, -0.2], faire: () => {
+      const v = g(tore(0.19, 0.015, 'fonce', 'y'), cyl(0.05, 0.04, 'fonce'), [0, 2.1, 4.2].map(t => { const b = boite(0.16, 0.012, 0.03, 'fonce', 0.004); b.position.set(Math.cos(t) * 0.1, 0, Math.sin(t) * 0.1); b.rotation.y = -t; return b; }));
+      v.position.set(0.35, 0.62, -0.56); v.rotation.x = -0.7; return g(v);
+    } },
+    'pompe-da': { eclat: [-0.15, 0.1, 0.15], faire: () => g(a(cyl(0.05, 0.1, 'clair', 'x'), -0.35, 0.25, 0.25), a(poulie(0.055, 0.024, 'clair', 4), -0.27, 0.25, 0.25)) },
+    'reservoir-da': { eclat: [0, 0.25, 0.15], faire: () => g(a(cyl(0.035, 0.08, 'clair'), -0.12, 0.42, 0.25), a(cyl(0.022, 0.015, 'fonce'), -0.12, 0.47, 0.25)) },
+  },
+
+  // 501 — Train arrière (X vers l'avant, Z vers l'extérieur ; roue en Z = 0)
+  '501': {
+    'bras-tire': { cotes: true, ecart: 0.78, eclat: [0, -0.15, -0.08], faire: () => plat([[0.45, -0.16], [0.45, -0.06], [0, -0.02], [-0.06, -0.06], [-0.06, -0.12], [0, -0.14]], 0.03) },
+    'silentblocs-bras': { cotes: true, ecart: 0.78, eclat: [0.15, 0, -0.06], faire: () => a(cyl(0.03, 0.05, 'gomme', 'z'), 0.45, 0, -0.11) },
+    'moyeu-ar': { cotes: true, ecart: 0.78, eclat: [0, 0, 0.25], faire: () => g(a(cyl(0.07, 0.05, 'clair', 'z', 36), 0, 0, 0.02), Array.from({ length: 5 }, (_, i) => a(cyl(0.006, 0.04, 'moyen', 'z', 10), Math.cos(i * 1.2566) * 0.056, Math.sin(i * 1.2566) * 0.056, 0.06))) },
+    'ressorts-ar': { cotes: true, ecart: 0.78, eclat: [0, 0.35, 0], faire: () => a(ressort(0.065, 0.26, 7, 0.006), 0.15, 0.16, -0.1) },
+    'amortisseurs-ar': { cotes: true, ecart: 0.78, eclat: [-0.05, 0.42, 0], faire: () => a(amortisseur(0.32), -0.1, 0.16, -0.08) },
+    'butees-ar': { cotes: true, ecart: 0.78, eclat: [0, 0.55, 0], faire: () => a(tour([[0.001, 0], [0.03, 0], [0.02, 0.05], [0.001, 0.05]], 'gomme'), 0.15, 0.31, -0.1) },
+  },
+
+  // 601 — Roues et pneus (axe des roues en Z)
+  '601': {
+    'pneu-av': { eclat: [0, 0, 0], faire: () => a(pneu(), -0.36, 0, 0) },
+    'pneu-ar': { eclat: [0, 0, 0], faire: () => a(pneu(), 0.36, 0, 0) },
+    'jante': { eclat: [0, 0, 0.35], faire: () => g(a(tour([[0.2, -0.09], [0.185, -0.07], [0.185, 0.07], [0.2, 0.09]], 'clair', 'z', 48), -0.36, 0, 0), a(cyl(0.185, 0.008, 'clair', 'z', 48), -0.36, 0, 0.03),
+      Array.from({ length: 5 }, (_, i) => a(cyl(0.012, 0.01, 'fonce', 'z', 12), -0.36 + Math.cos(i * 1.2566) * 0.056, Math.sin(i * 1.2566) * 0.056, 0.036))) },
+    'valve': { eclat: [0, -0.12, 0.45], faire: () => a(cyl(0.006, 0.04, 'gomme', 'z', 10), -0.36, -0.19, 0.05) },
+    'vis-roue': { eclat: [0, 0, 0.6], faire: () => g(Array.from({ length: 5 }, (_, i) => a(vis(0.007, 0.03, 'z'), -0.36 + Math.cos(i * 1.2566) * 0.056, Math.sin(i * 1.2566) * 0.056, 0.06))) },
+    'roue-secours': { eclat: [0, -0.2, 0], faire: () => { const r = pneu(); r.rotation.x = Math.PI / 2; return a(g(r), 0, -0.5, 0); } },
+  },
+
+  // 615 — Freins (X vers l'avant, roues avant en X = 0,55, arrière en X = -0,55)
+  '615': {
+    'disque-av': { cotes: true, ecart: 0.7, eclat: [0, 0, 0.2], faire: () => g(a(cyl(0.14, 0.024, 'moyen', 'z', 48), 0.55, 0, 0), a(cyl(0.075, 0.04, 'clair', 'z', 36), 0.55, 0, 0.025)) },
+    'plaquettes-av': { cotes: true, ecart: 0.7, eclat: [0, 0.2, 0.28], faire: () => g(a(boite(0.08, 0.045, 0.012, 'fonce', 0.004), 0.55, 0.115, 0.02), a(boite(0.08, 0.045, 0.012, 'fonce', 0.004), 0.55, 0.115, -0.02)) },
+    'etriers-av': { cotes: true, ecart: 0.7, eclat: [0, 0.32, 0.06], faire: () => g(a(boite(0.13, 0.07, 0.09, 'clair', 0.015), 0.55, 0.125, 0), a(cyl(0.022, 0.03, 'moyen', 'z'), 0.55, 0.125, -0.05)) },
+    'disque-ar': { cotes: true, ecart: 0.7, eclat: [0, 0, 0.2], faire: () => g(a(cyl(0.13, 0.012, 'moyen', 'z', 48), -0.55, 0, 0), a(cyl(0.07, 0.045, 'clair', 'z', 36), -0.55, 0, 0.025)) },
+    'plaquettes-ar': { cotes: true, ecart: 0.7, eclat: [0, 0.2, 0.28], faire: () => g(a(boite(0.07, 0.04, 0.01, 'fonce', 0.004), -0.55, 0.105, 0.015), a(boite(0.07, 0.04, 0.01, 'fonce', 0.004), -0.55, 0.105, -0.015)) },
+    'etriers-ar': { cotes: true, ecart: 0.7, eclat: [0, 0.32, 0.06], faire: () => g(a(boite(0.11, 0.06, 0.07, 'clair', 0.012), -0.55, 0.115, 0), a(boite(0.04, 0.03, 0.02, 'moyen', 0.004), -0.5, 0.115, -0.045)) },
+    'flexibles-frein': { cotes: true, ecart: 0.7, eclat: [0, 0.15, -0.1], faire: () => g(tuyau([[0.55, 0.16, -0.03], [0.5, 0.3, -0.15], [0.45, 0.33, -0.25]], 0.006, 'gomme', 24), tuyau([[-0.55, 0.15, -0.03], [-0.5, 0.28, -0.15], [-0.45, 0.3, -0.25]], 0.006, 'gomme', 24)) },
+    'maitre-cylindre': { eclat: [0.1, 0.15, 0], faire: () => g(a(cyl(0.025, 0.16, 'clair', 'x'), 0.75, 0.35, 0.25), a(boite(0.08, 0.06, 0.07, 'clair', 0.012), 0.75, 0.41, 0.25), a(cyl(0.02, 0.015, 'fonce'), 0.75, 0.45, 0.25)) },
+    'servofrein': { eclat: [0.25, 0.05, 0], faire: () => a(cyl(0.12, 0.14, 'fonce', 'x', 40), 0.92, 0.35, 0.25) },
+    'cables-frein-main': { eclat: [0, -0.18, 0], faire: () => g([-1, 1].map(s => tuyau([[-0.55, 0, s * 0.62], [-0.3, -0.05, s * 0.4], [0, -0.05, s * 0.08], [0.2, 0, 0]], 0.005, 'moyen', 40))) },
+  },
+
+  // 711 — Leviers et pédales (X sur la largeur, Z vers l'avant)
+  '711': {
+    'pedalier': { eclat: [0, 0, 0.18], faire: () => g(a(boite(0.24, 0.06, 0.08, 'clair', 0.01), 0.06, 0.25, 0.05), pedale(0, 0.06), pedale(0.12, 0.06)) },
+    'accelerateur': { eclat: [-0.12, 0, 0.22], faire: () => pedale(-0.16, 0.08, 0.22) },
+    'emetteur-embrayage': { eclat: [0.1, 0.15, -0.15], faire: () => g(a(cyl(0.018, 0.1, 'clair', 'z'), 0.12, 0.25, -0.06), a(cyl(0.012, 0.03, 'fonce'), 0.12, 0.29, -0.09)) },
+    'levier-vitesses': { eclat: [0.15, 0, 0], faire: () => { const t = cyl(0.009, 0.34, 'moyen'); t.position.set(0.45, 0.12, 0.02); t.rotation.x = 0.12; return g(a(boite(0.08, 0.03, 0.08, 'clair', 0.008), 0.45, -0.05, 0), t); } },
+    'pommeau': { eclat: [0.15, 0.25, 0], faire: () => g(a(sphere(0.03, 'fonce'), 0.45, 0.31, 0.04), a(tour([[0.001, 0], [0.05, 0], [0.012, 0.08], [0.001, 0.08]], 'gomme'), 0.45, -0.03, 0)) },
+    'levier-frein-main': { eclat: [0.3, 0.05, 0], faire: () => { const l = boite(0.035, 0.04, 0.3, 'fonce', 0.01); l.position.set(0.72, 0.03, -0.1); l.rotation.x = -0.3; return g(l, a(cyl(0.01, 0.02, 'moyen', 'z'), 0.72, 0.08, 0.06)); } },
+  },
+
+  // 800 — Carrosserie extérieure (échelle 0,35 ; X vers l'avant, Z vers la gauche)
+  '800': {
+    'caisse': { eclat: [0, 0, 0], faire: () => g(a(boite(1.37, 0.54, 0.62, 'clair', 0.03), -0.135, 0.39, 0), a(boite(0.3, 0.3, 0.6, 'clair', 0.03), 0.69, 0.27, 0), a(boite(1.2, 0.15, 0.63, 'fonce', 0.01), -0.17, 0.55, 0)) },
+    'capot': { eclat: [0.12, 0.25, 0], faire: () => a(boite(0.3, 0.015, 0.6, 'clair', 0.006), 0.69, 0.43, 0) },
+    'calandre': { eclat: [0.3, 0.05, 0], faire: () => g(a(boite(0.015, 0.1, 0.5, 'fonce', 0.004), 0.85, 0.34, 0), [0.31, 0.34, 0.37].map(y => a(boite(0.02, 0.006, 0.48, 'moyen', 0.002), 0.86, y, 0))) },
+    'pare-chocs-av': { eclat: [0.45, -0.05, 0], faire: () => a(boite(0.06, 0.07, 0.66, 'clair', 0.02), 0.87, 0.16, 0) },
+    'porte-avg': { eclat: [0, 0, 0.3], faire: () => a(panneau(0.2, 0.55, 0.14, 0.62, [0.24, 0.5, 0.44, 0.6]), 0, 0, 0.33) },
+    'porte-avd': { eclat: [0, 0, -0.3], faire: () => a(panneau(0.2, 0.55, 0.14, 0.62, [0.24, 0.5, 0.44, 0.6]), 0, 0, -0.33) },
+    'porte-coulissante': { eclat: [-0.05, 0, -0.5], faire: () => a(panneau(-0.3, 0.17, 0.14, 0.64, [-0.26, 0.13, 0.46, 0.62]), 0, 0, -0.34) },
+    'hayon': { eclat: [-0.35, 0.1, 0], faire: () => { const p = panneau(-0.3, 0.3, 0.2, 0.65, [-0.26, 0.26, 0.44, 0.62]); return a(versPlanX(p), -0.84, 0, 0); } },
+    'pare-chocs-ar': { eclat: [-0.5, -0.05, 0], faire: () => a(boite(0.06, 0.07, 0.66, 'clair', 0.02), -0.86, 0.16, 0) },
+    'retroviseurs': { eclat: [0, 0.08, 0], faire: () => g([-1, 1].flatMap(s => [a(boite(0.04, 0.06, 0.03, 'fonce', 0.008), 0.55, 0.47, s * 0.38), a(boite(0.015, 0.012, 0.05, 'fonce', 0.004), 0.56, 0.45, s * 0.35)])) },
+    'essuie-glaces': { eclat: [0.15, 0.3, 0], faire: () => g([-1, 1].map(s => { const b = boite(0.012, 0.008, 0.22, 'fonce', 0.003); b.position.set(0.6, 0.47, s * 0.12); b.rotation.y = s * 0.3; return b; })) },
+    'plaques': { eclat: [0, -0.22, 0], faire: () => g(a(boite(0.008, 0.04, 0.18, 'clair', 0.003), 0.905, 0.16, 0), a(boite(0.008, 0.04, 0.18, 'clair', 0.003), -0.895, 0.25, 0)) },
+  },
+
+  // 881 — Intérieur Multivan (même repère que la carrosserie)
+  '881': {
+    'tableau-de-bord': { eclat: [0.25, 0.08, 0], faire: () => g(a(boite(0.12, 0.12, 0.6, 'fonce', 0.02), 0.6, 0.34, 0), a(boite(0.01, 0.04, 0.1, 'moyen', 0.003), 0.54, 0.36, 0)) },
+    'siege-conducteur': { eclat: [0.12, 0.2, 0.18], faire: () => a(siege(), 0.36, 0.22, 0.17) },
+    'siege-passager': { eclat: [0.12, 0.2, -0.18], faire: () => a(siege(), 0.36, 0.22, -0.17) },
+    'sieges-pivotants': { eclat: [0, 0.3, 0], faire: () => g([-1, 1].flatMap(s => { const st = siege(); st.rotation.y = Math.PI; return [a(g(st), 0.02, 0.22, s * 0.14), a(cyl(0.05, 0.015, 'moyen'), 0.02, 0.15, s * 0.14)]; })) },
+    'rails': { eclat: [0, -0.18, 0], faire: () => g([-0.25, -0.08, 0.08, 0.25].map(z => a(boite(0.8, 0.01, 0.02, 'moyen', 0.003), -0.3, 0.125, z))) },
+    'banquette': { eclat: [-0.25, 0.2, 0], faire: () => g(a(boite(0.18, 0.06, 0.58, 'fonce', 0.02), -0.5, 0.2, 0), a(boite(0.05, 0.22, 0.58, 'fonce', 0.02), -0.6, 0.33, 0)) },
+    'table': { eclat: [0, 0.32, -0.12], faire: () => g(a(boite(0.16, 0.012, 0.22, 'clair', 0.004), -0.22, 0.3, -0.18), a(cyl(0.008, 0.18, 'moyen'), -0.22, 0.21, -0.18)) },
+    'rangements': { eclat: [-0.2, 0.1, 0.22], faire: () => a(boite(0.14, 0.3, 0.12, 'clair', 0.01), -0.72, 0.28, 0.24) },
+    'rideaux': { eclat: [0, 0.12, 0], faire: () => g([-1, 1].flatMap(s => [-0.45, -0.05].map(x => a(boite(0.3, 0.12, 0.005, 'gomme', 0.002), x, 0.55, s * 0.315)))) },
+  },
+
+  // 941 — Éclairage
+  '941': {
+    'projecteurs': { eclat: [0.22, 0, 0], faire: () => g([-1, 1].flatMap(s => [a(boite(0.02, 0.07, 0.15, 'clair', 0.006), 0.85, 0.36, s * 0.2), a(cyl(0.025, 0.006, 'moyen', 'x'), 0.862, 0.36, s * 0.17)])) },
+    'antibrouillards': { eclat: [0.32, -0.05, 0], faire: () => g([-1, 1].map(s => a(cyl(0.025, 0.02, 'clair', 'x'), 0.89, 0.18, s * 0.22))) },
+    'clignotants-av': { eclat: [0.2, 0.05, 0], faire: () => g([-1, 1].map(s => a(boite(0.02, 0.03, 0.05, 'moyen', 0.005), 0.85, 0.36, s * 0.3))) },
+    'repetiteurs': { eclat: [0.05, 0.15, 0], faire: () => g([-1, 1].map(s => a(boite(0.03, 0.012, 0.008, 'moyen', 0.003), 0.62, 0.36, s * 0.315))) },
+    'feux-ar': { eclat: [-0.25, 0, 0], faire: () => g([-1, 1].map(s => a(boite(0.02, 0.16, 0.05, 'moyen', 0.006), -0.84, 0.38, s * 0.29))) },
+    'troisieme-feu': { eclat: [-0.2, 0.1, 0], faire: () => a(boite(0.02, 0.015, 0.12, 'moyen', 0.004), -0.83, 0.665, 0) },
+    'eclaireurs-plaque': { eclat: [-0.3, -0.05, 0], faire: () => g([-1, 1].map(s => a(boite(0.012, 0.01, 0.03, 'moyen', 0.003), -0.86, 0.27, s * 0.06))) },
+  },
+
+  // 915 — Batteries et câblage
+  '915': {
+    'batterie': { eclat: [0, 0.28, 0.1], faire: () => g(a(boite(0.1, 0.07, 0.06, 'fonce', 0.006), 0.36, 0.16, 0.17), a(cyl(0.007, 0.015, 'moyen'), 0.33, 0.2, 0.17), a(cyl(0.007, 0.015, 'moyen'), 0.39, 0.2, 0.17)) },
+    'batterie-aux': { eclat: [0, 0.28, -0.1], faire: () => g(a(boite(0.09, 0.065, 0.055, 'fonce', 0.006), 0.36, 0.16, -0.17), a(cyl(0.007, 0.015, 'moyen'), 0.33, 0.2, -0.17), a(cyl(0.007, 0.015, 'moyen'), 0.39, 0.2, -0.17)) },
+    'coupleur': { eclat: [0, 0.4, 0], faire: () => a(boite(0.03, 0.02, 0.04, 'moyen', 0.004), 0.36, 0.2, 0) },
+    'cables-batterie': { eclat: [0, 0.15, 0], faire: () => g(tuyau([[0.39, 0.21, 0.17], [0.55, 0.22, 0.17], [0.7, 0.25, 0.1]], 0.006, 'fonce', 24), tuyau([[0.39, 0.21, -0.17], [0.38, 0.21, -0.02], [0.36, 0.21, 0]], 0.005, 'fonce', 24)) },
+    'platine-relais': { eclat: [0.12, 0.25, 0.12], faire: () => g(a(boite(0.08, 0.06, 0.1, 'clair', 0.006), 0.58, 0.3, 0.18), [-0.03, 0, 0.03].map(z => a(boite(0.02, 0.025, 0.02, 'fonce', 0.003), 0.58, 0.345, 0.18 + z))) },
+    'faisceau-porte': { eclat: [0, 0, 0.22], faire: () => tuyau([[0.56, 0.36, 0.3], [0.53, 0.37, 0.32], [0.5, 0.36, 0.33]], 0.012, 'gomme', 16) },
+    'tresse-masse': { eclat: [0.15, -0.12, 0], faire: () => tuyau([[0.72, 0.14, -0.1], [0.75, 0.12, -0.08], [0.78, 0.12, -0.05]], 0.006, 'moyen', 16) },
+  },
+
+  // 819 — Chauffage et climatisation
+  '819': {
+    'eberspacher': { eclat: [0, -0.22, -0.12], faire: () => g(a(cyl(0.03, 0.12, 'fonce', 'x'), 0.42, 0.08, -0.2), tuyau([[0.35, 0.08, -0.2], [0.3, 0.05, -0.25], [0.25, 0.04, -0.3]], 0.006, 'moyen', 16)) },
+    'pompe-eau-aux': { eclat: [0.1, -0.18, -0.12], faire: () => a(cyl(0.015, 0.05, 'fonce', 'z'), 0.5, 0.09, -0.13) },
+    'radiateur-chauffage-av': { eclat: [0.12, 0.2, 0], faire: () => a(boite(0.03, 0.08, 0.12, 'clair', 0.004), 0.62, 0.3, 0) },
+    'pulseur': { eclat: [0.12, 0.15, -0.15], faire: () => a(cyl(0.035, 0.05, 'fonce', 'z'), 0.62, 0.27, -0.12) },
+    'chauffage-arriere': { eclat: [-0.18, -0.18, 0], faire: () => g(a(boite(0.1, 0.05, 0.12, 'clair', 0.008), -0.5, 0.13, 0), a(cyl(0.02, 0.03, 'fonce', 'z'), -0.5, 0.13, -0.075)) },
+    'durites-chauffage': { eclat: [0, -0.12, 0.12], faire: () => g(tuyau([[0.5, 0.1, 0.25], [0, 0.1, 0.27], [-0.45, 0.12, 0.06]], 0.006, 'gomme', 40), tuyau([[0.5, 0.11, 0.22], [0, 0.11, 0.24], [-0.45, 0.13, 0.03]], 0.006, 'gomme', 40)) },
+    'condenseur': { eclat: [0.28, 0, 0], faire: () => a(boite(0.012, 0.12, 0.5, 'moyen', 0.003), 0.87, 0.28, 0) },
+    'detendeur': { eclat: [0.15, 0.22, 0.12], faire: () => a(boite(0.04, 0.05, 0.05, 'moyen', 0.006), 0.6, 0.3, 0.12) },
+    'climatronic': { eclat: [0.22, 0.25, 0], faire: () => a(boite(0.01, 0.04, 0.1, 'fonce', 0.003), 0.67, 0.42, 0) },
+  },
+});
+
 // Pièces dessinées dans un autre groupe : réutilisées sans être dessinées deux fois en vue complète.
 PIECES['121']['pompe-eau'] = { doublon: true, eclat: [0.18, 0, 0.10], faire: () => PIECES['109']['pompe-eau'].faire() };
 
@@ -354,7 +590,11 @@ export function piecesMoteur(selection, fabriqueMat) {
     return Object.entries(selection).flatMap(([code, cles]) =>
       Object.entries(PIECES[code] ?? {})
         .filter(([cle, d]) => !d.doublon && (!cles || cles.includes(cle)))
-        .map(([cle, d]) => ({ code, cle, eclat: d.eclat, objet: d.faire() })));
+        .map(([cle, d]) => {
+          // La matière peut dépendre de la pièce (fonte, plastique noir, rouille…).
+          fabrique = teinte => fabriqueMat(teinte, cle);
+          return { code, cle, eclat: d.eclat, objet: d.faire() };
+        }));
   } finally {
     fabrique = null;
   }
@@ -371,6 +611,20 @@ const MISE_EN_PAGE = {
   '903': { vue: [0.45, 0.3, 1], ensemble: [0.68, 0, 0.12] },
   '253': { vue: [0.35, 0.5, -1], ensemble: [0, -0.30, -0.55] },
   'ensemble': { vue: [0.9, 0.6, 0.85] },
+  // Hors moteur : pas de moteur en filigrane ; la caisse en filigrane pour ce qui est réparti dans le camion.
+  '301': { vue: [0.55, 0.45, 1], filigrane: null },
+  '407': { vue: [0.75, 0.45, 1], filigrane: null },
+  '409': { vue: [0.15, 0.55, 1], filigrane: null },
+  '419': { vue: [0.5, 0.6, 1], filigrane: null },
+  '501': { vue: [-0.6, 0.45, 1], filigrane: null },
+  '601': { vue: [0.35, 0.35, 1], filigrane: null },
+  '615': { vue: [0.6, 0.55, 1], filigrane: null },
+  '711': { vue: [0.6, 0.4, 1], filigrane: null },
+  '800': { vue: [0.8, 0.45, 1], filigrane: null },
+  '881': { vue: [0.5, 1.1, 0.9], filigrane: 'caisse' },
+  '941': { vue: [0.9, 0.4, 0.8], filigrane: 'caisse' },
+  '915': { vue: [0.7, 0.8, 0.9], filigrane: 'caisse' },
+  '819': { vue: [0.7, 0.7, 0.9], filigrane: 'caisse' },
 };
 
 // ---------- Scène ----------
@@ -466,23 +720,31 @@ export function afficher(planche) {
       if (ensemble && def.doublon) continue;
       const position = ensemble ? repere : planche.positions.find(p => p.cle === cle);
       if (!ensemble && !position) continue;
-      // Conteneur neutre : l'éclaté déplace le conteneur sans écraser la place de la pièce.
-      const objet = g(def.faire());
-      habiller(objet);
-      const boite = new THREE.Box3().setFromObject(objet);
-      const element = {
-        cle: ensemble ? code : cle, pos: position.pos, groupe: code, objet,
-        centre: boite.getCenter(new THREE.Vector3()),
-        eclat: new THREE.Vector3(...def.eclat).multiplyScalar(ensemble ? 0.35 : 1),
-        decalage: new THREE.Vector3(...(ensemble ? MISE_EN_PAGE[code].ensemble : [0, 0, 0])),
-      };
-      objet.userData.element = element;
-      scene.add(objet);
-      elements.push(element);
+      // Côté gauche et reflet à droite pour les pièces en double (train, freins) ; sinon une seule fois.
+      const cotes = def.cotes ? [1, -1] : def.cote ? [def.cote] : [0];
+      for (const s of cotes) {
+        let dessin = def.faire();
+        if (s) { const reflet = g(dessin); reflet.position.z = s * (def.ecart ?? 0.75); reflet.scale.z = s; dessin = reflet; }
+        // Conteneur neutre : l'éclaté déplace le conteneur sans écraser la place de la pièce.
+        const objet = g(dessin);
+        habiller(objet);
+        const boite = new THREE.Box3().setFromObject(objet);
+        const [ex, ey, ez] = def.eclat;
+        const element = {
+          cle: ensemble ? code : cle, pos: position.pos, groupe: code, objet,
+          centre: boite.getCenter(new THREE.Vector3()),
+          eclat: new THREE.Vector3(ex, ey, s ? ez * s : ez).multiplyScalar(ensemble ? 0.35 : 1),
+          decalage: new THREE.Vector3(...(ensemble ? MISE_EN_PAGE[code].ensemble : [0, 0, 0])),
+        };
+        objet.userData.element = element;
+        scene.add(objet);
+        elements.push(element);
+      }
     }
   }
-  // Pièces de contexte : le moteur en filigrane sur les planches de détail.
-  if (!ensemble && planche.code !== '103') scene.add(filigrane());
+  // Pièces de contexte en filigrane : le moteur pour ses planches, la caisse pour l'intérieur et l'électricité.
+  const typeFiligrane = ensemble ? null : (MISE_EN_PAGE[planche.code]?.filigrane !== undefined ? MISE_EN_PAGE[planche.code].filigrane : (planche.code === '103' ? null : 'moteur'));
+  if (typeFiligrane) scene.add(filigrane(typeFiligrane));
 
   // Un seul numéro par position (en vue complète, un par groupe).
   const parPos = new Map();
@@ -523,12 +785,16 @@ function habiller(objet) {
   objet.userData.traits = traits;
 }
 
-function filigrane() {
+function filigrane(type = 'moteur') {
   const mt = new THREE.LineBasicMaterial({ color: 0xa9a69c, transparent: true, opacity: 0.55 });
   const gr = new THREE.Group();
-  for (const [l, h, p, y] of [[0.62, 0.30, 0.26, 0.10], [0.64, 0.10, 0.24, 0.30], [0.60, 0.06, 0.20, 0.435], [0.60, 0.12, 0.24, -0.11]]) {
+  // [longueur, hauteur, largeur, x, y] des volumes : le moteur, ou la caisse du T4 à l'échelle 0,35.
+  const volumes = type === 'caisse'
+    ? [[1.37, 0.54, 0.62, -0.135, 0.39], [0.3, 0.3, 0.6, 0.69, 0.27]]
+    : [[0.62, 0.30, 0.26, 0, 0.10], [0.64, 0.10, 0.24, 0, 0.30], [0.60, 0.06, 0.20, 0, 0.435], [0.60, 0.12, 0.24, 0, -0.11]];
+  for (const [l, h, p, x, y] of volumes) {
     const ls = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(l, h, p)), mt);
-    ls.position.y = y;
+    ls.position.set(x, y, 0);
     gr.add(ls);
   }
   gr.userData.filigrane = true;

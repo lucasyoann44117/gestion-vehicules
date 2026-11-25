@@ -297,7 +297,39 @@ async function chargerCatalogueMoteur() {
   } catch { return null; }
 }
 
-function matiereMoteur(teinte) {
+// Matières des pièces telles qu'on les voit capot ouvert : fonte grise, alu brut, plastique noir, papier, rouille.
+const papier = () => new THREE.MeshStandardMaterial({ color: 0xd8c9a0, roughness: 0.95 });
+const plastiqueNoir = () => new THREE.MeshStandardMaterial({ color: 0x17191c, metalness: 0, roughness: 0.6 });
+const MATIERES_REELLES = {
+  'bloc': t => t === 'clair' ? M.alu() : M.fonte(),
+  'joint-culasse': () => M.acier(),
+  'culasse': () => M.alu(),
+  'couvre-culasse': t => t === 'moyen' ? M.noir() : plastiqueNoir(),
+  'joint-couvre': () => M.gomme(),
+  'reniflard': t => t === 'gomme' ? M.gomme() : plastiqueNoir(),
+  'carter-huile': () => M.fonte(),
+  'bouchon-remplissage': () => plastiqueNoir(),
+  'jauge': t => t === 'fonce' ? M.orange() : M.acier(),
+  'filtre-huile': t => t === 'clair' ? plastiqueNoir() : M.alu(),
+  'poulie-vilo': () => M.fonte(),
+  'pignon-aac': () => M.acier(), 'pignon-vilo': () => M.acier(), 'pignon-pompe': () => M.acier(),
+  'carter-distribution': () => new THREE.MeshStandardMaterial({ color: 0x17191c, roughness: 0.6, transparent: true, opacity: 0.35, depthWrite: false }),
+  'boite-air': () => plastiqueNoir(), 'couvercle-boite': () => plastiqueNoir(),
+  'element-filtrant': t => t === 'moyen' ? plastiqueNoir() : papier(),
+  'debitmetre': t => t === 'clair' ? plastiqueNoir() : M.noir(),
+  'n75': t => t === 'moyen' ? M.acier() : plastiqueNoir(),
+  'turbo': t => t === 'clair' ? M.alu() : M.rouille(),
+  'collecteur': () => M.rouille(), 'joints-collecteur': () => M.acier(),
+  'pipe-admission': () => M.alu(),
+  'injecteurs': () => M.acier(), 'tuyaux-hp': () => M.acier(),
+  'filtre-gazole': t => t === 'clair' ? plastiqueNoir() : M.alu(),
+  'bougies': t => t === 'clair' ? M.acier() : M.cuivre(),
+  'supports-moteur': t => t === 'gomme' ? M.gomme() : M.noir(),
+};
+
+function matiereMoteur(teinte, cle) {
+  const reelle = MATIERES_REELLES[cle]?.(teinte);
+  if (reelle) return reelle;
   switch (teinte) {
     case 'clair': return M.alu();
     case 'moyen': return M.acier();
