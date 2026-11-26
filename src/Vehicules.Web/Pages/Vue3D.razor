@@ -4,6 +4,7 @@
 @inject IJSRuntime JS
 @inject ServiceDiagnostic Diagnostics
 @inject ServiceModeles3D Modeles3D
+@inject NavigationManager Navigation
 
 <PageTitle>Vue 3D · Mes véhicules</PageTitle>
 
@@ -168,6 +169,14 @@
     @if (credit is not null && systeme is null)
     {
         <small class="credit-3d">@credit</small>
+    }
+    else if (pret && systeme is null)
+    {
+        @* Caisse détaillée absente : on la prend dans les fichiers de l'appareil (t4-caisse.glb), elle y reste gardée. *@
+        <label class="import-3d">
+            @(importEnCours ? "Import de la caisse…" : messageImport ?? "Caisse détaillée : choisir le fichier t4-caisse.glb")
+            <InputFile OnChange="ImporterCaisseAsync" accept=".glb,model/gltf-binary" disabled="@importEnCours" />
+        </label>
     }
 </div>
 
@@ -339,6 +348,30 @@
             }
         }
         await module.InvokeVoidAsync("colorer", couleurs);
+    }
+
+    private bool importEnCours;
+    private string? messageImport;
+
+    private async Task ImporterCaisseAsync(InputFileChangeEventArgs e)
+    {
+        if (module is null) return;
+        importEnCours = true;
+        messageImport = null;
+        try
+        {
+            await using var flux = e.File.OpenReadStream(40_000_000);
+            using var memoire = new MemoryStream();
+            await flux.CopyToAsync(memoire);
+            messageImport = await module.InvokeAsync<string?>("importerCaisse", memoire.ToArray());
+            // Gardée sur l'appareil : on reconstruit la vue avec la nouvelle caisse.
+            if (messageImport is null) Navigation.NavigateTo("3d", forceLoad: true);
+        }
+        catch (Exception ex) when (ex is IOException or JSException)
+        {
+            messageImport = "Import impossible : " + ex.Message;
+        }
+        finally { importEnCours = false; }
     }
 
     private async Task BasculerCarrosserie()

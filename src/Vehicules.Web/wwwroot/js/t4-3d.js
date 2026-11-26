@@ -367,6 +367,27 @@ async function octetsCaisse(lienPrive) {
   return null;
 }
 
+/**
+ * Garde sur l'appareil un fichier de caisse choisi par l'utilisateur (copié sur le téléphone ou le PC) :
+ * le modèle ne passe ainsi ni par le site public ni par internet. Renvoie un message d'erreur, ou null.
+ */
+export async function importerCaisse(octets) {
+  const tampon = octets instanceof Uint8Array ? octets.slice().buffer : octets;
+  if (new TextDecoder().decode(tampon.slice(0, 4)) !== 'glTF') return 'Ce fichier n\'est pas un modèle 3D (.glb).';
+  if (!('caches' in self)) return 'Ce navigateur ne permet pas de garder le modèle.';
+  const cache = await caches.open(CACHE_CAISSE);
+  await cache.put(new URL(CAISSE_DETAILLEE, document.baseURI).href,
+    new Response(tampon, { headers: { 'Content-Type': 'model/gltf-binary' } }));
+  caisseDetaillee = null;
+  return null;
+}
+
+/** Retire la caisse gardée sur l'appareil (retour à la caisse dessinée). */
+export async function oublierCaisse() {
+  if ('caches' in self) await caches.delete(CACHE_CAISSE);
+  caisseDetaillee = null;
+}
+
 function chargerCaisseDetaillee(lienPrive) {
   caisseDetaillee ??= (async () => {
     try {
