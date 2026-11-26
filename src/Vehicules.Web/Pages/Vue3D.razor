@@ -3,6 +3,7 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 @inject ServiceDiagnostic Diagnostics
+@inject ServiceModeles3D Modeles3D
 
 <PageTitle>Vue 3D · Mes véhicules</PageTitle>
 
@@ -237,7 +238,9 @@
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/t4-3d.js");
             reference = DotNetObjectReference.Create(this);
-            await module.InvokeVoidAsync("demarrer", toile, reference);
+            // Lien privé vers la caisse détaillée ; le module la garde sur l'appareil après le premier chargement.
+            var lienCaisse = await Modeles3D.LienCaisseAsync();
+            await module.InvokeVoidAsync("demarrer", toile, reference, lienCaisse);
             await module.InvokeVoidAsync("observerPanneau", panneau);
             toutes = await module.InvokeAsync<List<PieceTrouvable>>("listePieces");
             listeZones = await module.InvokeAsync<List<Zone>>("zones");

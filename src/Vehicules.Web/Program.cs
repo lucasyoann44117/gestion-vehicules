@@ -25,5 +25,6 @@ else
 builder.Services.AddScoped<Etat>();
 builder.Services.AddScoped<ServiceDiagnostic>();
 builder.Services.AddScoped<ServicePhotos>();
+builder.Services.AddScoped<ServiceModeles3D>();
 
 await builder.Build().RunAsync();

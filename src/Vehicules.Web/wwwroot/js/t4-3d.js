@@ -339,16 +339,45 @@ let caissePosee = false;
 /** Mention de l'auteur du modèle de caisse, quand il est affiché (licence CC BY). */
 export function credit() { return caissePosee ? CREDIT_CAISSE : null; }
 
-function chargerCaisseDetaillee() {
+// Gardée sur l'appareil après le premier chargement (5 Mo), pour la suite et hors ligne.
+// Changer le nom du cache quand le fichier du modèle est remplacé.
+const CACHE_CAISSE = 'vehicules-modeles-v1';
+
+/**
+ * Fichier de la caisse : d'abord celui gardé sur l'appareil, sinon le stockage privé Supabase
+ * (lien signé fourni par l'appli), sinon le fichier local de développement (wwwroot/modeles, hors dépôt).
+ */
+async function octetsCaisse(lienPrive) {
+  const cle = new URL(CAISSE_DETAILLEE, document.baseURI).href;
+  const cache = 'caches' in self ? await caches.open(CACHE_CAISSE).catch(() => null) : null;
+  const garde = await cache?.match(cle);
+  if (garde) return garde.arrayBuffer();
+  for (const source of [lienPrive, cle]) {
+    if (!source) continue;
+    try {
+      const r = await fetch(source);
+      if (!r.ok) continue;
+      const octets = await r.arrayBuffer();
+      // Un fichier GLB commence par « glTF » : on écarte une page d'erreur servie à la place.
+      if (new TextDecoder().decode(octets.slice(0, 4)) !== 'glTF') continue;
+      await cache?.put(cle, new Response(octets, { headers: { 'Content-Type': 'model/gltf-binary' } })).catch(() => {});
+      return octets;
+    } catch { /* hors ligne ou refusé : source suivante */ }
+  }
+  return null;
+}
+
+function chargerCaisseDetaillee(lienPrive) {
   caisseDetaillee ??= (async () => {
     try {
+      const octets = await octetsCaisse(lienPrive);
+      if (!octets) return null;
       const { GLTFLoader } = await import('https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js');
-      const url = new URL(CAISSE_DETAILLEE, document.baseURI).href;
-      const tete = await fetch(url, { method: 'HEAD' });
-      if (!tete.ok) return null;
-      return (await new GLTFLoader().loadAsync(url)).scene;
+      return (await new GLTFLoader().parseAsync(octets, '')).scene;
     } catch { return null; }
   })();
+  // Échec (pas encore connecté, hors ligne sans copie) : on retentera à la prochaine ouverture.
+  caisseDetaillee.then(s => { if (!s) caisseDetaillee = null; });
   return caisseDetaillee;
 }
 
@@ -746,9 +775,9 @@ function construire() {
 
 // ---------- Rendu et interaction ----------
 
-export async function demarrer(element, refDotnet) {
+export async function demarrer(element, refDotnet, lienCaisse = null) {
   arreter();
-  const caisse = chargerCaisseDetaillee();
+  const caisse = chargerCaisseDetaillee(lienCaisse);
   catalogueMoteur ??= await chargerCatalogueMoteur();
   const modeleCaisse = await caisse;
   hote = element;
