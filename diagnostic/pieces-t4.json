@@ -1,0 +1,1064 @@
+{
+  "avertissement": "Prix indicatifs en euros TTC (ordre de grandeur pour un T4 2.5 TDI, pièces de marque équivalente et main-d'œuvre de garage indépendant). À confirmer par un devis.",
+  "pieces": {
+    "joints-moteur": {
+      "role": "Le bloc 5 cylindres est le cœur du moteur : pistons, bielles et vilebrequin y transforment la combustion en rotation. Les joints (couvre-culasse, reniflard, spi) le gardent étanche.",
+      "emplacement": "Au centre du compartiment, posé en travers.",
+      "usure": "Suintements d'huile, odeur d'huile chaude, fumée bleue si l'usure est interne.",
+      "dureeVie": "Le bloc dure toute la vie du camion ; les joints 150 000 à 250 000 km.",
+      "prixPiece": "20 à 90 € le joint",
+      "prixPose": "80 à 300 €",
+      "zone": "Moteur",
+      "tutos": [
+        {
+          "titre": "Couvre-culasse : dépose et repose sur ACV (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=4388"
+        },
+        {
+          "titre": "Reniflard et goulotte de remplissage : joints (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=1123"
+        },
+        {
+          "titre": "Jauge d'huile TDI 102 : fuite à l'embase (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=32"
+        }
+      ]
+    },
+    "culasse": {
+      "role": "Ferme le haut des cylindres et porte l'arbre à cames, les soupapes et les poussoirs : elle règle l'entrée d'air et la sortie des gaz.",
+      "emplacement": "Sur le bloc, sous le couvre-culasse noir.",
+      "usure": "Perte de compression, joint de culasse qui lâche (liquide qui baisse, fumée blanche), bruit de distribution.",
+      "dureeVie": "Refaite une fois dans la vie du moteur en général (la tienne en avril 2026).",
+      "prixPiece": "500 à 900 € de pièces pour une réfection",
+      "prixPose": "2 000 à 3 500 €",
+      "zone": "Moteur",
+      "tutos": [
+        {
+          "titre": "Refroidissement et joint de culasse (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=refroidissement-et-joint-de-culasse"
+        },
+        {
+          "titre": "Couvre-culasse : dépose et repose sur ACV (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=4388"
+        }
+      ]
+    },
+    "distribution": {
+      "role": "La courroie de distribution synchronise le vilebrequin, l'arbre à cames et la pompe d'injection. Si elle casse, les soupapes touchent les pistons.",
+      "emplacement": "Côté droit du moteur, sous le carter plastique.",
+      "usure": "Aucun signe fiable avant la casse : on la change au kilométrage ou à l'âge.",
+      "dureeVie": "Environ 90 000 à 120 000 km ou 5 ans sur le 2.5 TDI.",
+      "prixPiece": "150 à 350 € le kit (galets, courroie, pompe à eau)",
+      "prixPose": "600 à 1 000 €",
+      "zone": "Moteur",
+      "tutos": [
+        {
+          "titre": "Distribution moteur ACV : changement (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=9847"
+        },
+        {
+          "titre": "Distribution TDI : remplacement et outillage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=distribution-tdi-remplacement-outillage"
+        }
+      ]
+    },
+    "pompe-eau": {
+      "role": "Fait circuler le liquide de refroidissement entre le moteur, le radiateur et le chauffage.",
+      "emplacement": "Entraînée par la distribution, côté droit.",
+      "usure": "Fuite rosée sous la pompe, bruit de roulement, surchauffe.",
+      "dureeVie": "Changée avec la distribution.",
+      "prixPiece": "40 à 100 €",
+      "prixPose": "Comprise avec la distribution",
+      "zone": "Refroidissement",
+      "tutos": [
+        {
+          "titre": "Distribution moteur ACV : changement (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=9847"
+        },
+        {
+          "titre": "Vidange du liquide de refroidissement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=vidange-liquide-de-refroidissement"
+        }
+      ]
+    },
+    "courroie-accessoires": {
+      "role": "Entraîne l'alternateur, le compresseur de clim et la pompe de direction assistée.",
+      "emplacement": "À l'avant du moteur, avec ses galets.",
+      "usure": "Couinement à froid ou en braquant, craquelures, voyant batterie.",
+      "dureeVie": "60 000 à 120 000 km.",
+      "prixPiece": "30 à 150 € avec les galets",
+      "prixPose": "100 à 250 €",
+      "zone": "Moteur",
+      "tutos": [
+        {
+          "titre": "Courroie d'accessoires 2.5 TDI 102 : vue complète (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=courroie-accessoires-2-5-tdi-102-ch-vue-complete"
+        },
+        {
+          "titre": "Courroie d'accessoires ACV : couinement (tendeur) (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=courroie-d-accessoires-moteur-acv-102cv-couinement"
+        }
+      ]
+    },
+    "huile-moteur": {
+      "role": "Lubrifie, refroidit et nettoie l'intérieur du moteur.",
+      "emplacement": "Remplissage sur le couvre-culasse, vidange sous le carter.",
+      "usure": "Huile noire et fluide, niveau qui baisse.",
+      "dureeVie": "Vidange tous les 15 000 km ou 1 an.",
+      "prixPiece": "40 à 80 € (5,5 L)",
+      "prixPose": "120 à 200 € la vidange complète",
+      "zone": "Entretien",
+      "tutos": [
+        {
+          "titre": "Huile moteur : choix (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=huile-moteur-t4-choix"
+        },
+        {
+          "titre": "Vidange et filtre à huile TDI (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=1130"
+        },
+        {
+          "titre": "Carter bas moteur : démontage sur ACV (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=carter-bas-moteur-demontage-sur-abl-et-acv"
+        }
+      ]
+    },
+    "filtre-huile": {
+      "role": "Retient les particules de l'huile moteur.",
+      "emplacement": "Cartouche verticale à l'avant du bloc.",
+      "usure": "Se change à chaque vidange.",
+      "dureeVie": "15 000 km.",
+      "prixPiece": "10 à 25 €",
+      "prixPose": "Avec la vidange",
+      "zone": "Entretien",
+      "tutos": [
+        {
+          "titre": "Vidange et filtre à huile TDI (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=1130"
+        }
+      ]
+    },
+    "filtre-gasoil": {
+      "role": "Filtre le gazole et sépare l'eau avant la pompe d'injection.",
+      "emplacement": "Sur la traverse avant, au-dessus du moteur.",
+      "usure": "Démarrage difficile, perte de puissance, prise d'air.",
+      "dureeVie": "30 000 km ou 2 ans.",
+      "prixPiece": "20 à 40 €",
+      "prixPose": "40 à 80 €",
+      "zone": "Alimentation",
+      "tutos": [
+        {
+          "titre": "Filtre à gazole : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=filtre-a-gazole-remplacement"
+        }
+      ]
+    },
+    "filtre-air": {
+      "role": "Filtre l'air aspiré par le moteur.",
+      "emplacement": "Boîte noire à gauche, derrière le phare.",
+      "usure": "Filtre gris, perte de puissance, fumée noire.",
+      "dureeVie": "30 000 km (le filtre Green se lave).",
+      "prixPiece": "20 à 60 €",
+      "prixPose": "Quelques minutes",
+      "zone": "Admission",
+      "tutos": [
+        {
+          "titre": "Filtre à air : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=filtre-a-air-remplacement"
+        }
+      ]
+    },
+    "debitmetre": {
+      "role": "Mesure la quantité d'air qui entre dans le moteur pour doser le gazole.",
+      "emplacement": "Entre la boîte à air et la durite du turbo.",
+      "usure": "Perte de puissance, fumée noire, code 00553.",
+      "dureeVie": "150 000 à 250 000 km.",
+      "prixPiece": "60 à 180 €",
+      "prixPose": "Quelques minutes",
+      "zone": "Admission",
+      "tutos": [
+        {
+          "titre": "Débitmètre : vérification et réparation (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=debitmetre-verification-et-reparation"
+        },
+        {
+          "titre": "TDI manque de puissance : causes possibles (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=tdi-manque-de-puissance-defauts-possibles-et-questions"
+        }
+      ]
+    },
+    "turbo": {
+      "role": "Utilise les gaz d'échappement pour comprimer l'air d'admission : il donne la puissance du TDI.",
+      "emplacement": "À l'arrière du moteur, sur le collecteur d'échappement.",
+      "usure": "Sifflement fort, fumée bleue, perte de puissance, jeu dans l'axe.",
+      "dureeVie": "250 000 à 400 000 km selon l'entretien.",
+      "prixPiece": "400 à 800 €",
+      "prixPose": "700 à 1 200 €",
+      "zone": "Admission",
+      "tutos": [
+        {
+          "titre": "Diagnostiquer un turbo avec VCDS (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=diagnostiquer-un-turbo-avec-vcds"
+        },
+        {
+          "titre": "TDI manque de puissance : causes possibles (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=tdi-manque-de-puissance-defauts-possibles-et-questions"
+        }
+      ]
+    },
+    "electrovanne-n75": {
+      "role": "Pilote la pression du turbo en commandant la wastegate par dépression.",
+      "emplacement": "Près de la boîte à air, avec ses petites durites.",
+      "usure": "Turbo intermittent, mode dégradé, code 01247.",
+      "dureeVie": "Variable, souvent grippée vers 200 000 km.",
+      "prixPiece": "40 à 90 €",
+      "prixPose": "Quelques minutes",
+      "zone": "Admission",
+      "tutos": [
+        {
+          "titre": "Durites des électrovannes N75 et N18 (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=durites-d-electrovannes-n75-et-n-18-remplacement"
+        }
+      ]
+    },
+    "egr": {
+      "role": "Réinjecte une partie des gaz d'échappement dans l'admission pour réduire la pollution.",
+      "emplacement": "Sur la pipe d'admission.",
+      "usure": "S'encrasse : fumée noire, perte de puissance. La tienne est nettoyée et partiellement bloquée depuis 2009.",
+      "dureeVie": "Nettoyage tous les 80 000 km environ.",
+      "prixPiece": "100 à 250 €",
+      "prixPose": "100 à 300 €",
+      "zone": "Admission",
+      "tutos": [
+        {
+          "titre": "Nettoyage et neutralisation de la vanne EGR (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=conduit-d-admission-nettoyage-et-neutralisation-de-la-vanne-egr"
+        },
+        {
+          "titre": "Nettoyage du conduit d'admission (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=conduit-d-admission-nettoyage"
+        },
+        {
+          "titre": "Collecteur d'admission : joints sur TDI (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=collecteur-d-admission-changement-des-joints-sur-tdi"
+        }
+      ]
+    },
+    "pompe-injection": {
+      "role": "Pompe VP37 : met le gazole sous pression et l'envoie aux injecteurs au bon moment. Elle porte l'électrovanne d'arrêt N109 et l'électrovanne d'avance N108.",
+      "emplacement": "Côté droit, entraînée par sa propre courroie.",
+      "usure": "Fuites au couvercle, démarrage difficile à chaud ou à froid, perte de puissance.",
+      "dureeVie": "300 000 à 500 000 km.",
+      "prixPiece": "600 à 1 200 € en échange standard",
+      "prixPose": "900 à 1 600 €",
+      "zone": "Alimentation",
+      "tutos": [
+        {
+          "titre": "Pompe à injection (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=pompe-a-injection"
+        },
+        {
+          "titre": "Réglage de l'avance sur TDI (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=injection-reglage-de-l-avance-sur-tdi"
+        },
+        {
+          "titre": "Avance injection TDI pour les nuls (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=avance-injection-tdi-par-un-nul-pour-les-nuls"
+        }
+      ]
+    },
+    "injecteurs": {
+      "role": "Pulvérisent le gazole dans chaque cylindre ; les retours ramènent le surplus au réservoir.",
+      "emplacement": "Sur la culasse, un par cylindre, reliés par les petites durites de retour.",
+      "usure": "Fumée noire, claquements, fuite aux bouchons ou durites de retour.",
+      "dureeVie": "200 000 à 300 000 km (tarage).",
+      "prixPiece": "Tarage 20 à 40 € par injecteur, neuf 150 à 250 €",
+      "prixPose": "100 à 300 €",
+      "zone": "Alimentation",
+      "tutos": [
+        {
+          "titre": "Injecteurs : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=injecteurs-remplacement"
+        },
+        {
+          "titre": "Injecteurs : nettoyage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=injecteurs-nettoyage"
+        },
+        {
+          "titre": "Nez d'injecteurs Bosch TDI (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=33"
+        }
+      ]
+    },
+    "bougies-prechauffage": {
+      "role": "Chauffent les cylindres avant le démarrage à froid (voyant en spirale).",
+      "emplacement": "Vissées dans la culasse, reliées par un bus.",
+      "usure": "Démarrage difficile à froid, fumée blanche au démarrage.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "60 à 120 € les 5",
+      "prixPose": "100 à 200 €",
+      "zone": "Démarrage",
+      "tutos": [
+        {
+          "titre": "Bougies de préchauffage : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=bougies-de-prechauffage-remplacement"
+        }
+      ]
+    },
+    "relais-prechauffage": {
+      "role": "Alimente les bougies de préchauffage selon la température du moteur.",
+      "emplacement": "Sur la platine de relais sous le tableau de bord (relais 103).",
+      "usure": "Plus de préchauffage, voyant qui ne s'allume pas, batterie qui se vide.",
+      "dureeVie": "Souvent toute la vie.",
+      "prixPiece": "30 à 60 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Démarrage",
+      "tutos": [
+        {
+          "titre": "Coupure moteur sur TDI : le relais 109 (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=coupure-moteur-sur-tdi-reparation"
+        },
+        {
+          "titre": "Fusibles : emplacements (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=426"
+        }
+      ]
+    },
+    "sonde-temperature": {
+      "role": "Sonde G62 : donne la température du moteur au calculateur (dosage, préchauffage, avance) et à l'aiguille.",
+      "emplacement": "Sur la sortie d'eau de la culasse.",
+      "usure": "Démarrage difficile, test d'avance faux, codes 00522 ou 17664.",
+      "dureeVie": "150 000 km environ.",
+      "prixPiece": "15 à 40 €",
+      "prixPose": "30 à 60 €",
+      "zone": "Refroidissement",
+      "tutos": [
+        {
+          "titre": "TDI manque de puissance : causes possibles (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=tdi-manque-de-puissance-defauts-possibles-et-questions"
+        }
+      ]
+    },
+    "thermostat": {
+      "role": "Garde le liquide fermé côté moteur tant qu'il est froid, puis ouvre vers le radiateur.",
+      "emplacement": "Dans son boîtier sur le bloc.",
+      "usure": "Moteur qui chauffe (bloqué fermé) ou qui ne chauffe pas (bloqué ouvert).",
+      "dureeVie": "100 000 à 200 000 km.",
+      "prixPiece": "20 à 50 €",
+      "prixPose": "80 à 150 €",
+      "zone": "Refroidissement",
+      "tutos": [
+        {
+          "titre": "Changer le calorstat et sa pipe (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=15205"
+        },
+        {
+          "titre": "Pipe d'eau sur culasse vers chauffage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=pipe-d-eau-sur-culasse-vers-chauffage-remplacement"
+        }
+      ]
+    },
+    "liquide-refroidissement": {
+      "role": "Le G12 évacue la chaleur du moteur vers le radiateur et alimente le chauffage.",
+      "emplacement": "Vase d'expansion à droite, radiateur à l'avant.",
+      "usure": "Niveau qui baisse, couleur brune.",
+      "dureeVie": "Vidange tous les 4 à 5 ans.",
+      "prixPiece": "20 à 40 €",
+      "prixPose": "80 à 150 €",
+      "zone": "Refroidissement",
+      "tutos": [
+        {
+          "titre": "Vidange du liquide de refroidissement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=vidange-liquide-de-refroidissement"
+        },
+        {
+          "titre": "Refroidissement et joint de culasse (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=refroidissement-et-joint-de-culasse"
+        }
+      ]
+    },
+    "ventilateurs-radiateur": {
+      "role": "Soufflent l'air à travers le radiateur à l'arrêt et en ville ; temporisés après l'arrêt.",
+      "emplacement": "Derrière le radiateur, à l'avant.",
+      "usure": "Surchauffe dans les bouchons, couinement, batterie vidée (relais 98).",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "120 à 300 € le bloc",
+      "prixPose": "100 à 200 €",
+      "zone": "Refroidissement",
+      "tutos": [
+        {
+          "titre": "Ventilateurs : réparation des supports de résistance (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=ventilateurs-reparation-supports-de-resistance"
+        },
+        {
+          "titre": "Ventilateurs : interrupteur de mise en direct (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=4164"
+        }
+      ]
+    },
+    "pompe-eau-auxiliaire": {
+      "role": "Petite pompe électrique qui fait circuler l'eau moteur arrêté, pour le chauffage stationnaire et l'après-arrêt.",
+      "emplacement": "Sur les durites de chauffage.",
+      "usure": "Bruit après l'arrêt, chauffage stationnaire qui coupe, batterie vidée.",
+      "dureeVie": "Variable.",
+      "prixPiece": "60 à 150 €",
+      "prixPose": "50 à 100 €",
+      "zone": "Refroidissement"
+    },
+    "alternateur": {
+      "role": "Recharge la batterie et alimente l'électricité quand le moteur tourne.",
+      "emplacement": "À l'avant du moteur, en haut, entraîné par la courroie.",
+      "usure": "Voyant batterie, tension sous 13,5 V, odeur de chaud.",
+      "dureeVie": "150 000 à 250 000 km.",
+      "prixPiece": "150 à 350 €",
+      "prixPose": "300 à 550 €",
+      "zone": "Électricité",
+      "tutos": [
+        {
+          "titre": "Alternateur : régulateur et balais (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=alternateur-changement-regulateur-balais-integres"
+        },
+        {
+          "titre": "Alternateur : remise en état (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=alternateur-remise-en-etat-avec-demontage"
+        }
+      ]
+    },
+    "demarreur": {
+      "role": "Lance le moteur au tour de clé.",
+      "emplacement": "Côté boîte de vitesses, en bas.",
+      "usure": "Clic sans rotation, démarrage aléatoire.",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "120 à 300 €",
+      "prixPose": "250 à 550 €",
+      "zone": "Électricité",
+      "tutos": [
+        {
+          "titre": "Démarreur : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=demarreur-remplacement"
+        },
+        {
+          "titre": "Démarreur : restauration (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=demarreur-restauration-integrale"
+        }
+      ]
+    },
+    "batterie": {
+      "role": "Fournit le courant au démarrage et quand le moteur est arrêté.",
+      "emplacement": "Dans le compartiment moteur, côté conducteur (à droite quand on fait face au camion).",
+      "usure": "Démarreur qui tourne lentement, surtout l'hiver.",
+      "dureeVie": "5 à 7 ans.",
+      "prixPiece": "100 à 200 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Électricité",
+      "tutos": [
+        {
+          "titre": "Batterie moteur : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=batterie-moteur-remplacement"
+        },
+        {
+          "titre": "Fuite de courant : trouver la cause (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=fuite-de-courant-sur-batterie-moteur-recherche-de-la-cause"
+        }
+      ]
+    },
+    "batterie-auxiliaire": {
+      "role": "Alimente l'aménagement (chauffage stationnaire, prises, frigo) sans vider la batterie de démarrage.",
+      "emplacement": "Sous le siège passager.",
+      "usure": "Chauffage stationnaire qui coupe, autonomie faible.",
+      "dureeVie": "5 à 8 ans.",
+      "prixPiece": "100 à 200 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Électricité"
+    },
+    "compresseur-clim": {
+      "role": "Comprime le gaz de climatisation ; entraîné par la courroie via un embrayage électrique.",
+      "emplacement": "À l'avant du moteur, en bas.",
+      "usure": "Plus de froid, bruit, blocage qui peut caler le moteur.",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "250 à 500 €",
+      "prixPose": "500 à 900 € avec la recharge",
+      "zone": "Climatisation",
+      "tutos": [
+        {
+          "titre": "Changer le compresseur de clim (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=17028"
+        },
+        {
+          "titre": "Poulie de compresseur : roulement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=poulie-compresseur-de-clim-changement-du-roulement"
+        }
+      ]
+    },
+    "clim": {
+      "role": "Circuit de climatisation : gaz, condenseur à l'avant, pressostat, relais 140.",
+      "emplacement": "Condenseur devant le radiateur.",
+      "usure": "Froid qui baisse (fuite lente), pressostat qui coupe.",
+      "dureeVie": "Recharge tous les 2 à 3 ans.",
+      "prixPiece": "Recharge 60 à 120 €",
+      "prixPose": "Diagnostic 60 à 150 €",
+      "zone": "Climatisation",
+      "tutos": [
+        {
+          "titre": "Climatronic : diagnostic (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=5129"
+        },
+        {
+          "titre": "Changer le compresseur de clim (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=17028"
+        }
+      ]
+    },
+    "pompe-vide": {
+      "role": "Crée la dépression du master vac (assistance de freinage) et pilote le turbo et l'EGR.",
+      "emplacement": "Sur la culasse, entraînée par l'arbre à cames.",
+      "usure": "Pédale de frein dure, turbo paresseux.",
+      "dureeVie": "Longue ; le tuyau vers le master vac se fend souvent avant.",
+      "prixPiece": "80 à 250 €",
+      "prixPose": "150 à 400 €",
+      "zone": "Freinage",
+      "tutos": [
+        {
+          "titre": "Pompe à vide : révision et nettoyage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=pompe-a-vide-revision-et-nettoyage"
+        }
+      ]
+    },
+    "echappement": {
+      "role": "Évacue les gaz, réduit le bruit (silencieux) et la pollution (catalyseur). Sur ton camion : ligne inox depuis 2009, catalyseur juste avant le silencieux arrière.",
+      "emplacement": "Sous le camion, du collecteur à l'arrière droit.",
+      "usure": "Bruit, trous, contrôle technique (bruit, opacité).",
+      "dureeVie": "Inox : très longue ; catalyseur 200 000 km.",
+      "prixPiece": "Catalyseur 150 à 400 €, silencieux 100 à 250 €",
+      "prixPose": "150 à 500 €",
+      "zone": "Échappement",
+      "tutos": [
+        {
+          "titre": "Ligne d'échappement inox (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=echappement-ligne-en-inox"
+        },
+        {
+          "titre": "Réparation après le catalyseur (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=echappement-reparation-apres-le-pot-catalytique"
+        },
+        {
+          "titre": "Catalyseur : dépose (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=catalyseur-depose"
+        }
+      ]
+    },
+    "support-moteur": {
+      "role": "Fixent le moteur à la caisse en absorbant les vibrations.",
+      "emplacement": "Sous le moteur et côté boîte.",
+      "usure": "Vibrations au ralenti, à-coups en accélérant, claquement.",
+      "dureeVie": "200 000 km environ.",
+      "prixPiece": "40 à 120 € l'un",
+      "prixPose": "100 à 300 €",
+      "zone": "Moteur",
+      "tutos": [
+        {
+          "titre": "Berceau moteur : dépose et remontage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=berceau-moteur-depose-decapage-peinture-remontage"
+        }
+      ]
+    },
+    "huile-boite": {
+      "role": "Lubrifie les pignons et synchros de la boîte 5 vitesses.",
+      "emplacement": "Boîte à gauche du moteur.",
+      "usure": "Passages durs, sifflement.",
+      "dureeVie": "Vidange conseillée tous les 100 000 km.",
+      "prixPiece": "30 à 60 €",
+      "prixPose": "80 à 150 €",
+      "zone": "Transmission",
+      "tutos": [
+        {
+          "titre": "Vidange de la boîte 02G (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=220&t=305"
+        },
+        {
+          "titre": "Boîte 02G (TDI 102) : ouverture et contrôle (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=boite-de-vitesses-02g-tdi-102-ouverture-et-controle"
+        },
+        {
+          "titre": "Boîte et pont : préconisations (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=boite-de-vitesse-et-pont-preconisation-traction-et-syncro"
+        }
+      ]
+    },
+    "commande-boite": {
+      "role": "Tringlerie entre le levier et la boîte de vitesses.",
+      "emplacement": "Sous le camion, du levier à la boîte.",
+      "usure": "Levier flou, vitesses dures à trouver.",
+      "dureeVie": "Kit à refaire tous les 100 000 à 150 000 km.",
+      "prixPiece": "30 à 80 € le kit",
+      "prixPose": "150 à 300 €",
+      "zone": "Transmission",
+      "tutos": [
+        {
+          "titre": "Rotules de tringlerie TDI 102 (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=220&t=1225"
+        },
+        {
+          "titre": "Levier de vitesses : pièces de calage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=levier-de-vitesses-remplacement-des-pieces-assurant-le-calage"
+        }
+      ]
+    },
+    "chauffage-stationnaire": {
+      "role": "Eberspächer D4WS : chaudière au gazole qui chauffe le liquide moteur et l'habitacle moteur arrêté.",
+      "emplacement": "Sous le plancher avant droit.",
+      "usure": "Démarre puis coupe, fumée, codes défaut (le tien : 01414).",
+      "dureeVie": "Entretien tous les 2 à 3 ans, la faire tourner chaque mois.",
+      "prixPiece": "Bougie 40 à 80 €, ventilateur 150 à 300 €",
+      "prixPose": "150 à 400 € chez un spécialiste",
+      "zone": "Chauffage",
+      "tutos": [
+        {
+          "titre": "Chauffage auxiliaire ou stationnaire ? (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=chauffage-auxiliaire-ou-stationnaire-e"
+        }
+      ]
+    },
+    "tableau-de-bord": {
+      "role": "Regroupe le combiné d'instruments, les commandes et le Climatronic (climatisation automatique avec réglage de l'avant et de l'arrière).",
+      "emplacement": "Devant le conducteur et le passager.",
+      "usure": "Aiguilles qui bloquent (soudures du combiné), afficheur du Climatronic qui s'éteint, fusibles 30 A du pulseur arrière.",
+      "dureeVie": "Toute la vie du camion ; le combiné se ressoude.",
+      "prixPiece": "Combiné d'occasion 80 à 250 €",
+      "prixPose": "Réparation du combiné 100 à 200 €",
+      "zone": "Habitacle",
+      "tutos": [
+        {
+          "titre": "Climatronic : diagnostic (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=5129"
+        },
+        {
+          "titre": "Climatronic : panne de chauffage (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=6989"
+        },
+        {
+          "titre": "Climatronic : changer l'éclairage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=climatronic-changer-l-eclairage"
+        }
+      ]
+    },
+    "sieges-pivotants": {
+      "role": "Deux sièges individuels du Multivan qui pivotent et se déplacent sur les rails, pour rouler face à la route ou faire salon autour de la table.",
+      "emplacement": "Derrière les sièges avant, sur les rails du plancher.",
+      "usure": "Verrous de rails grippés, mécanisme de pivot dur, tissu usé.",
+      "dureeVie": "Toute la vie ; graisser les verrous.",
+      "prixPiece": "Siège d'occasion 100 à 300 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Habitacle"
+    },
+    "table-multivan": {
+      "role": "Table pliante d'origine, rangée contre la paroi, qui se déplie entre les sièges pivotants et la banquette.",
+      "emplacement": "Côté droit, entre les sièges du milieu et la banquette.",
+      "usure": "Pied qui prend du jeu, charnières.",
+      "dureeVie": "Toute la vie.",
+      "prixPiece": "Occasion 50 à 150 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Habitacle"
+    },
+    "banquette-lit": {
+      "role": "Banquette 3 places qui se rabat en lit (« mode nuit ») ; un coffre de rangement et le chauffage arrière sont dessous.",
+      "emplacement": "À l'arrière, sur les rails.",
+      "usure": "Mécanisme de rabattement dur, verrous de rails, coutures.",
+      "dureeVie": "Toute la vie ; graisser les articulations.",
+      "prixPiece": "Occasion 200 à 600 €",
+      "prixPose": "À faire soi-même",
+      "zone": "Habitacle"
+    },
+    "chauffage-arriere": {
+      "role": "Petit radiateur alimenté par le liquide moteur et pulseur V47 qui soufflent l'air chaud à l'arrière.",
+      "emplacement": "Sous la banquette arrière, trappe d'accès.",
+      "usure": "Fuite de liquide (niveau qui baisse), pulseur muet (fusible 30 A, code 01027), résistance de pulseur.",
+      "dureeVie": "200 000 km environ pour le radiateur.",
+      "prixPiece": "Radiateur 60 à 150 €, pulseur 80 à 200 €",
+      "prixPose": "100 à 250 €",
+      "zone": "Habitacle",
+      "tutos": [
+        {
+          "titre": "Chauffage arrière : électrovanne (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=chauffage-ar-en-roulant-reparation-electrovanne"
+        }
+      ]
+    },
+    "freins-av": {
+      "role": "Les disques et plaquettes avant font l'essentiel du freinage (environ 70 % de l'effort) : l'étrier serre les plaquettes sur le disque.",
+      "emplacement": "Derrière les roues avant, dans la jante.",
+      "usure": "Bruit métallique au freinage, vibrations dans la pédale ou le volant, voyant d'usure, disque creusé avec un rebord.",
+      "dureeVie": "Plaquettes 30 000 à 50 000 km, disques une fois sur deux.",
+      "prixPiece": "60 à 180 € (plaquettes + disques)",
+      "prixPose": "150 à 350 €",
+      "zone": "Freins",
+      "tutos": [
+        {
+          "titre": "Disques et plaquettes AV (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=freins-changement-disques-et-plaquettes-av"
+        },
+        {
+          "titre": "Bruits de freins et rectification (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=freins-suppression-de-bruit-et-rectification-disques"
+        }
+      ]
+    },
+    "freins-ar": {
+      "role": "Les freins arrière stabilisent le camion au freinage et servent aussi de frein à main.",
+      "emplacement": "Derrière les roues arrière.",
+      "usure": "Frein à main qui tient mal, bruit, disque rouillé ou creusé.",
+      "dureeVie": "Plaquettes 50 000 à 80 000 km.",
+      "prixPiece": "50 à 150 €",
+      "prixPose": "120 à 300 €",
+      "zone": "Freins",
+      "tutos": [
+        {
+          "titre": "Disques et plaquettes AR (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=freins-changement-disques-et-plaquettes-ar"
+        },
+        {
+          "titre": "Étriers arrière grippés : réfection (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=31&t=2786"
+        }
+      ]
+    },
+    "flexibles-frein": {
+      "role": "Tuyaux souples qui amènent le liquide de frein aux étriers tout en suivant les mouvements de la roue.",
+      "emplacement": "Entre le châssis et chaque étrier.",
+      "usure": "Craquelures, gonflement, pédale spongieuse, suintement.",
+      "dureeVie": "Environ 10 ans ou au contrôle technique.",
+      "prixPiece": "15 à 35 € pièce",
+      "prixPose": "60 à 150 € les deux",
+      "zone": "Freins",
+      "tutos": [
+        {
+          "titre": "Freins avant : changer les flexibles (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=freins-avant-changer-les-flexibles"
+        }
+      ]
+    },
+    "liquide-frein": {
+      "role": "Transmet la pression de la pédale aux étriers. Il absorbe l'humidité avec le temps et perd en efficacité.",
+      "emplacement": "Bocal au-dessus du maître-cylindre, sous le capot côté conducteur.",
+      "usure": "Liquide foncé, pédale molle après un freinage long.",
+      "dureeVie": "Tous les 2 ans.",
+      "prixPiece": "10 à 20 €",
+      "prixPose": "50 à 90 €",
+      "zone": "Freins",
+      "tutos": [
+        {
+          "titre": "Remplacement du maître-cylindre (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=154&t=14919"
+        }
+      ]
+    },
+    "cable-frein-main": {
+      "role": "Relie le levier de frein à main aux freins arrière.",
+      "emplacement": "Sous le plancher, du levier aux roues arrière.",
+      "usure": "Levier qui monte trop haut, frein à main qui tient mal, câble grippé.",
+      "dureeVie": "150 000 km et plus, selon la rouille.",
+      "prixPiece": "30 à 70 € pièce",
+      "prixPose": "80 à 200 €",
+      "zone": "Freins",
+      "tutos": [
+        {
+          "titre": "Frein à main : ressort de rappel (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=frein-a-main-reparation-ressort-de-rappel"
+        }
+      ]
+    },
+    "pneus-av": {
+      "role": "Les pneus avant dirigent et freinent le camion : ils s'usent plus vite que l'arrière.",
+      "emplacement": "Roues avant (205/65 R15).",
+      "usure": "Profondeur sous 3 mm, usure sur un bord (géométrie), craquelures, hernie.",
+      "dureeVie": "30 000 à 50 000 km selon la conduite.",
+      "prixPiece": "90 à 160 € pièce",
+      "prixPose": "20 à 30 € le montage",
+      "zone": "Roues"
+    },
+    "pneus-ar": {
+      "role": "Les pneus arrière portent la charge et stabilisent le camion.",
+      "emplacement": "Roues arrière (205/65 R15).",
+      "usure": "Profondeur sous 3 mm, usure irrégulière, craquelures avec l'âge.",
+      "dureeVie": "40 000 à 70 000 km, ou 6 à 8 ans.",
+      "prixPiece": "90 à 160 € pièce",
+      "prixPose": "20 à 30 € le montage",
+      "zone": "Roues"
+    },
+    "jantes": {
+      "role": "Portent les pneus et se fixent au moyeu par cinq vis.",
+      "emplacement": "Sur chaque roue.",
+      "usure": "Voile (vibrations), choc sur le rebord, corrosion qui fait fuir le pneu.",
+      "dureeVie": "Toute la vie du camion si elles ne prennent pas de choc.",
+      "prixPiece": "60 à 200 € pièce",
+      "prixPose": "20 €",
+      "zone": "Roues",
+      "tutos": [
+        {
+          "titre": "Levage : les points (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=229&t=1958"
+        }
+      ]
+    },
+    "amortisseurs": {
+      "role": "Freinent les rebonds des ressorts : sans eux, le camion tangue et la tenue de route se dégrade.",
+      "emplacement": "Près de chaque roue, entre le train et la caisse.",
+      "usure": "Camion qui rebondit, fuite d'huile sur le corps, usure des pneus en facettes.",
+      "dureeVie": "80 000 à 120 000 km.",
+      "prixPiece": "40 à 90 € pièce",
+      "prixPose": "150 à 300 € la paire",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Amortisseurs T4 : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=amortisseurs-t4-remplacement"
+        },
+        {
+          "titre": "Code couleur des ressorts (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=226&t=1210"
+        }
+      ]
+    },
+    "triangle-inf-avd": {
+      "role": "Le triangle inférieur relie la roue au châssis et la guide quand la suspension travaille.",
+      "emplacement": "Sous la roue avant droite.",
+      "usure": "Bruits sur les bosses, silentblocs fendus, rotule avec du jeu.",
+      "dureeVie": "150 000 km et plus.",
+      "prixPiece": "60 à 150 €",
+      "prixPose": "150 à 300 € avec parallélisme",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Rotules inférieures, supérieures et de direction (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=226&t=1008"
+        },
+        {
+          "titre": "Résserrer une barre de torsion (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=resserrer-une-barre-de-torsion-farceuse"
+        }
+      ]
+    },
+    "rotule-inf-avd": {
+      "role": "Articulation entre le triangle inférieur et le porte-moyeu : elle laisse la roue tourner et monter.",
+      "emplacement": "Au bout du triangle inférieur avant droit.",
+      "usure": "Claquement, jeu au contrôle technique, usure anormale du pneu.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "25 à 60 €",
+      "prixPose": "100 à 200 €",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Rotule inférieure : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=rotule-de-suspension-inferieure-remplacement"
+        }
+      ]
+    },
+    "rotule-inf-avg": {
+      "role": "Articulation entre le triangle inférieur et le porte-moyeu : elle laisse la roue tourner et monter.",
+      "emplacement": "Au bout du triangle inférieur avant gauche.",
+      "usure": "Claquement, jeu au contrôle technique, usure anormale du pneu.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "25 à 60 €",
+      "prixPose": "100 à 200 €",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Rotule inférieure : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=rotule-de-suspension-inferieure-remplacement"
+        }
+      ]
+    },
+    "rotules-sup-av": {
+      "role": "Articulations du haut des porte-moyeux, sur les triangles supérieurs.",
+      "emplacement": "En haut de chaque roue avant.",
+      "usure": "Jeu au contrôle technique, claquements en braquant.",
+      "dureeVie": "100 000 à 150 000 km.",
+      "prixPiece": "25 à 60 € pièce",
+      "prixPose": "150 à 300 € la paire",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Rotule supérieure sans déposer le cardan (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=rotule-de-suspension-superieure-changer-sans-deposer-le-cardan"
+        }
+      ]
+    },
+    "biellettes-stab": {
+      "role": "Relient la barre stabilisatrice au train avant pour limiter le roulis dans les virages.",
+      "emplacement": "Entre la barre stabilisatrice et les triangles.",
+      "usure": "Petits claquements sur les pavés, rotules de biellette avec du jeu.",
+      "dureeVie": "60 000 à 100 000 km.",
+      "prixPiece": "15 à 40 € pièce",
+      "prixPose": "60 à 120 €",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Barre stabilisatrice AV : silentbloc de biellette (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=215&t=14966"
+        }
+      ]
+    },
+    "roulement-avd": {
+      "role": "Permet à la roue de tourner sans frottement autour de la fusée.",
+      "emplacement": "Dans le moyeu avant droit.",
+      "usure": "Ronronnement qui monte avec la vitesse et change en virage, jeu dans la roue.",
+      "dureeVie": "150 000 km et plus.",
+      "prixPiece": "40 à 90 €",
+      "prixPose": "150 à 250 €",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Roulement de roue avant : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=roulement-de-roue-avant-remplacement"
+        }
+      ]
+    },
+    "cardan-avd": {
+      "role": "Transmet le couple de la boîte à la roue avant droite tout en suivant la direction et la suspension.",
+      "emplacement": "Entre la boîte et la roue avant droite.",
+      "usure": "Claquement en braquant (joint homocinétique), soufflet percé qui projette de la graisse.",
+      "dureeVie": "200 000 km et plus si les soufflets restent étanches.",
+      "prixPiece": "100 à 250 €",
+      "prixPose": "200 à 400 €",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Cardan : remplacer un soufflet (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=cardan-remplacement-d-un-soufflet"
+        }
+      ]
+    },
+    "soufflets-cardan": {
+      "role": "Protègent les joints de cardan et gardent leur graisse.",
+      "emplacement": "Aux deux bouts de chaque cardan.",
+      "usure": "Caoutchouc fendu, graisse projetée dans le passage de roue.",
+      "dureeVie": "80 000 à 150 000 km, plus vite avec l'âge.",
+      "prixPiece": "15 à 40 € pièce",
+      "prixPose": "80 à 180 € pièce",
+      "zone": "Train avant",
+      "tutos": [
+        {
+          "titre": "Cardan : remplacer un soufflet (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=cardan-remplacement-d-un-soufflet"
+        }
+      ]
+    },
+    "direction": {
+      "role": "La crémaillère transforme la rotation du volant en mouvement des roues ; biellettes et rotules font le lien avec les porte-moyeux.",
+      "emplacement": "Derrière le train avant, d'une roue à l'autre.",
+      "usure": "Direction floue, jeu au volant, rotules avec du jeu au contrôle technique, fuite d'huile de direction.",
+      "dureeVie": "Rotules 80 000 à 150 000 km ; crémaillère plus longtemps.",
+      "prixPiece": "20 à 60 € la rotule, 300 à 700 € la crémaillère",
+      "prixPose": "100 à 600 €",
+      "zone": "Direction",
+      "tutos": [
+        {
+          "titre": "Rotules de direction : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=rotules-de-direction-remplacement"
+        },
+        {
+          "titre": "Crémaillère : reconditionnement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=direction-reconditionnement-de-la-cremaillere"
+        },
+        {
+          "titre": "Direction assistée : vidange du circuit (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=217&t=1614"
+        }
+      ]
+    },
+    "parallelisme": {
+      "role": "Réglage de l'angle des roues pour qu'elles roulent droit et usent les pneus régulièrement.",
+      "emplacement": "Réglage sur les biellettes de direction.",
+      "usure": "Volant de travers, camion qui tire d'un côté, pneus usés sur un bord.",
+      "dureeVie": "À refaire après chaque changement de pièce du train avant.",
+      "prixPiece": "–",
+      "prixPose": "60 à 100 €",
+      "zone": "Direction",
+      "tutos": [
+        {
+          "titre": "Parallélisme à la ficelle (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=geometrie-parallelisme-a-la-ficelle"
+        },
+        {
+          "titre": "Réglage de la géométrie (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=reglage-geometrie-complete"
+        }
+      ]
+    },
+    "eclairage": {
+      "role": "Projecteurs, antibrouillards, clignotants et feux : voir, être vu et signaler.",
+      "emplacement": "Avant, arrière et sur les côtés.",
+      "usure": "Ampoule grillée, optique jaunie ou embuée, réglage trop haut ou trop bas au contrôle technique.",
+      "dureeVie": "Ampoules 1 à 3 ans selon l'usage.",
+      "prixPiece": "2 à 30 € l'ampoule, 80 à 200 € une optique",
+      "prixPose": "10 à 60 €",
+      "zone": "Éclairage",
+      "tutos": [
+        {
+          "titre": "Feux arrière : ampoules (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=2631"
+        },
+        {
+          "titre": "Réglage de la hauteur des phares (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=254&t=2622"
+        },
+        {
+          "titre": "Voyant de préchauffage qui clignote : contacteur de frein (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=1094"
+        }
+      ]
+    },
+    "essuie-glace": {
+      "role": "Les balais nettoient le pare-brise ; les bras les plaquent sur le verre.",
+      "emplacement": "Au bas du pare-brise.",
+      "usure": "Traces, bruit, caoutchouc durci ou fendu.",
+      "dureeVie": "1 à 2 ans.",
+      "prixPiece": "15 à 40 € la paire",
+      "prixPose": "–",
+      "zone": "Carrosserie"
+    },
+    "plaques": {
+      "role": "Identifient le camion à l'avant et à l'arrière.",
+      "emplacement": "Pare-chocs avant et hayon.",
+      "usure": "Illisibles, fendues ou décolorées.",
+      "dureeVie": "Changées au changement d'immatriculation.",
+      "prixPiece": "20 à 40 € la paire",
+      "prixPose": "–",
+      "zone": "Carrosserie"
+    },
+    "faisceau-porte-avg": {
+      "role": "Le faisceau de porte fait passer les fils (vitre, rétroviseur, verrouillage) entre la caisse et la porte.",
+      "emplacement": "Dans le soufflet entre la caisse et la porte avant gauche.",
+      "usure": "Vitre ou verrouillage qui fonctionne par intermittence, fils cassés à force d'ouvrir la porte.",
+      "dureeVie": "Très variable, souvent 20 ans.",
+      "prixPiece": "20 à 60 € de fils et gaines",
+      "prixPose": "80 à 200 €",
+      "zone": "Électricité",
+      "tutos": [
+        {
+          "titre": "Câblage de portière : le réparer (BuSpirit)",
+          "url": "https://buspirit.org/forum/viewtopic.php?f=232&t=878"
+        },
+        {
+          "titre": "Garniture de porte : démontage (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=garniture-de-porte-demontage"
+        }
+      ]
+    },
+    "filtre-habitacle": {
+      "role": "Filtre l'air soufflé dans l'habitacle (pollen, poussière).",
+      "emplacement": "Derrière la boîte à gants, dans le bloc de chauffage.",
+      "usure": "Odeur, buée qui part mal, souffle faible.",
+      "dureeVie": "Tous les ans ou 15 000 à 20 000 km.",
+      "prixPiece": "10 à 30 €",
+      "prixPose": "20 à 50 €",
+      "zone": "Habitacle",
+      "tutos": [
+        {
+          "titre": "Filtre à pollen : remplacement (T4Zone)",
+          "url": "https://t4zone.info/cms/wiki/wiki.php?title=filtre-a-pollen-remplacement"
+        }
+      ]
+    }
+  }
+}
